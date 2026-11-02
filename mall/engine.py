@@ -168,7 +168,7 @@ def cuts_for(audio, paras):
 
 
 # ---------------------------------------------------------------- build
-def render_scene_file(path, dur, bg_img, fn):
+def render_scene_file(path, dur, bg_img, fn, cover_first_frame=False):
     n = int(round(dur * FPS))
     tmp = path.replace(".mp4", ".part.mp4")
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{R.H}",
@@ -177,7 +177,10 @@ def render_scene_file(path, dur, bg_img, fn):
     pr = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(n):
         img = bg_img.convert("RGBA")
-        fn(img, i / FPS)
+        # Frame 0 of the video shows the fully revealed hook, so TikTok's default
+        # cover (first frame) is readable even when a custom cover can't be set.
+        t = (dur * 0.95) if (cover_first_frame and i == 0) else i / FPS
+        fn(img, t)
         R.badge(img)
         pr.stdin.write(img.convert("RGB").tobytes())
     pr.stdin.close()
@@ -201,7 +204,7 @@ def build(spec, audio, out_dir, max_len=30.0):
         dur = b - a
         fn = SCENES[s["type"]](s, bg, dur)
         p = os.path.join(work, f"s{i}.mp4")
-        render_scene_file(p, dur, BG_NAVY if bg == "navy" else BG_MINT, fn)
+        render_scene_file(p, dur, BG_NAVY if bg == "navy" else BG_MINT, fn, cover_first_frame=(i == 0))
         files.append(p)
     lst = os.path.join(work, "list.txt")
     open(lst, "w").write("".join(f"file '{p}'\n" for p in files))
