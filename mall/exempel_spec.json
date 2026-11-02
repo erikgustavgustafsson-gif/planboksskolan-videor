@@ -1,0 +1,30 @@
+{
+  "slug": "2026-11-02_betala-dig-sjalv-forst",
+  "title": "Därför blir du aldrig rik på din lön",
+  "caption": "Sparar du det som blir över i slutet av månaden? Då blir det förmodligen ingenting 😅 Vänd på det: 10 % till sparkontot samma dag lönen kommer.\n\nHur mycket sparar du varje månad? 👇\n\n#spartips #sparapengar #privatekonomi #lön #betaladigsjälvförst #plånboksskolan",
+  "pinned_comment": "Har du ett automatiskt sparande inställt? Ja 🙋 / Nej, men nu fixar jag det 💪",
+  "sources": ["Eget räkneexempel: 10 % av 30 000 kr = 3 000 kr/mån = 36 000 kr/år"],
+  "cover": {
+    "title": ["DÄRFÖR BLIR DU", "ALDRIG RIK", "PÅ DIN LÖN"],
+    "pill": "Betala dig själv först",
+    "label": "10 % av lönen =",
+    "big": "36 000 kr/år",
+    "big_color": "green"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Sluta spara det som blir över. Det blir aldrig något över.",
+     "kicker": "DÄRFÖR BLIR DU ALDRIG RIK", "big": "SLUTA SPARA", "sub": "det som blir över",
+     "punch": ["Det blir aldrig", "något över."]},
+    {"type": "cards", "say": "De flesta betalar räkningar, handlar och spenderar först. Sparandet kommer sist.",
+     "title": "SÅ GÖR DE FLESTA",
+     "cards": [["Räkningar", "hyra, el, mobil"], ["Mat & shopping", "nöjen, streaming, kaffe"], ["Sparande", "det som blir över…"]],
+     "last_red": true, "stamp": "0 kr"},
+    {"type": "statement", "say": "Vänd på det. Samma dag lönen kommer, flytta tio procent automatiskt till ett sparkonto. Det tar två minuter att ställa in i bankappen.",
+     "title": "VÄND PÅ DET", "lines": ["Lönen kommer"], "highlight": "10 % → sparkonto", "chip": "2 min i bankappen"},
+    {"type": "number", "say": "Tjänar du trettiotusen blir det tretusen i månaden. Trettiosextusen om året.",
+     "top": "Lön: 30 000 kr", "value": 3000, "suffix": " kr/mån", "color": "green",
+     "value2": 36000, "suffix2": " kr", "color2": "yellow", "sub2": "om året"},
+    {"type": "cta", "say": "Betala dig själv först. Inte sist.",
+     "line1": "Betala dig själv", "big": "FÖRST.", "line2": "Inte sist."}
+  ]
+}
