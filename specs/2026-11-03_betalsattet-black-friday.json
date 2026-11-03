@@ -1,0 +1,79 @@
+{
+  "slug": "2026-11-03_betalsattet-black-friday",
+  "title": "Betalsättet som skyddar dig",
+  "caption": "Butiken går i konkurs eller varan kommer aldrig? Har du betalat med kreditkort eller faktura räknas det som ett kreditköp, och då kan du kräva pengarna av kortbolaget eller fakturabolaget 💳 Med Swish och bankkort gäller inte den regeln.\n\nHur betalar du helst på nätet? 👇\n\n#blackfriday #blackweek #konsumenttips #kreditkort #privatekonomi #nätshopping #plånboksskolan",
+  "pinned_comment": "Hur betalar du helst när du handlar på nätet? 💳 Kort / 📄 Faktura / 📱 Swish 👇",
+  "sources": [
+    "https://hk-fw-web-prod.azurewebsites.net/en/articles/getting-your-money-back-if-you-made-a-credit-purchase (Hallå konsument: Få pengarna tillbaka om du handlat på kredit)",
+    "https://www.konsumenternas.se/konsumentstod/lag-ratt/rattsfall-och-beslut/betalningar/kreditkop/krav-mot-kreditgivaren/ (Konsumenternas Bank- och finansbyrå: krav mot kreditgivaren, 29 § konsumentkreditlagen)"
+  ],
+  "cover": {
+    "title": [
+      "BLACK FRIDAY?",
+      "BETALA SÅ HÄR"
+    ],
+    "pill": "Konsumentkreditlagen",
+    "label": "Pengarna tillbaka från",
+    "big": "kortbolaget",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Handlar du på Black Friday? Betalsättet kan avgöra om du får tillbaka pengarna.",
+      "kicker": "INNAN DU KLICKAR KÖP",
+      "big": "BETALSÄTTET",
+      "sub": "avgör om du får",
+      "punch": [
+        "pengarna",
+        "tillbaka."
+      ]
+    },
+    {
+      "type": "cards",
+      "say": "Butiken går i konkurs. Varan kommer aldrig. Eller så är den trasig.",
+      "title": "OM NÅGOT GÅR FEL",
+      "cards": [
+        [
+          "Konkurs",
+          "butiken försvinner"
+        ],
+        [
+          "Varan kommer aldrig",
+          "trots betalning"
+        ],
+        [
+          "Trasig vara",
+          "säljaren svarar inte"
+        ]
+      ],
+      "last_red": true
+    },
+    {
+      "type": "statement",
+      "say": "Kreditkort eller faktura räknas som kreditköp. Då kan du kräva pengarna av kortbolaget eller fakturabolaget.",
+      "title": "KREDITKÖP",
+      "lines": [
+        "Kreditkort eller faktura"
+      ],
+      "highlight": "Kräv kortbolaget",
+      "chip": "Konsumentkreditlagen"
+    },
+    {
+      "type": "statement",
+      "say": "Med Swish eller bankkort gäller inte den regeln.",
+      "title": "MEN …",
+      "lines": [
+        "Swish eller bankkort"
+      ],
+      "highlight": "Inte samma skydd"
+    },
+    {
+      "type": "cta",
+      "say": "Välj betalsätt med omsorg, och följ Plånboksskolan.",
+      "line1": "Välj",
+      "big": "BETALSÄTT",
+      "line2": "med omsorg"
+    }
+  ]
+}
