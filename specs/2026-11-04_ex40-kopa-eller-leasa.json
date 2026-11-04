@@ -1,0 +1,82 @@
+{
+  "slug": "2026-11-04_ex40-kopa-eller-leasa",
+  "title": "Köpa eller leasa Sveriges populäraste elbil? Jag räknade",
+  "caption": "Volvo EX40, Sveriges mest registrerade elbil 2026. Köp: snittpris 583 225 kr hos Volvo Car Retail. En ny bil tappar i snitt 46 % på tre år (snitt av 7 källor) = ca 269 500 kr. Leasing: 4 790 kr/mån × 36 = 172 440 kr inkl. service. Leasing vinner med ca 97 000 kr – men bara inom 1 000 mil/år och utan skador vid återlämning. Även med lägsta uppskattningen (35 %) vinner leasing.\n\nLeasar du eller äger du din bil? 👇\n\n#privatleasing #elbil #volvo #billån #privatekonomi #spartips #plånboksskolan",
+  "pinned_comment": "Så räknade jag: snittpris 4 nya EX40 Single Motor Extended Range hos Volvo Car Retail (579 000–591 100 kr), snitt-värdetapp 46,2 % från 7 källor (spann 35–55 %). Gäller kampanj-/lagerbilar. Försäkring och skatt betalar du i båda fallen. Övermil och skador vid återlämning kan äta upp vinsten. Vad hade du valt? 🚗",
+  "sources": [
+    "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/ex40 (EX40 Single Motor Extended Range: 579 000 / 579 900 / 582 900 / 591 100 kr, privatleasing 4 790 kr/mån, 36 mån, 1 000 mil/år, service ingår; hämtat 2026-11-04)",
+    "https://www.borskollen.se/nyheter/27/svenska-elbilsforsaljningen-rusar-har-ar-de-10-mest-populara-elbilarna-i-ar (EX40 mest registrerade elbil jan–jun 2026)",
+    "https://tidochpengar.se/rakna-ut-vardeminskningen-pa-en-bil/ (46 % på tre år)",
+    "https://omev.se/2025/09/19/vardeminskning-for-laddbara-personbilar/ (värd 50–60 % efter tre år → 45 %)",
+    "https://nybil.nu/vardeminskning-ny-bil-andrahandsvarde/ (värd 50–55 % → 47,5 %)",
+    "https://dinbilkostnad.se/bilkostnad/vardeminskning (40–50 % → 45 %)",
+    "https://minbilkoll.se/guide/vardeminskning-bil-procent (50–60 % → 55 %)",
+    "https://efn.se/bensindrivna-bilar-riskerar-att-bli-vardelosa (ca 50 %)",
+    "https://www.news55.se/privatekonomi/vardefall-bland-bilar-sa-mycket-tappar-karran-i-varde-pa-vagen/ (Blocket: 30–40 % → 35 %)",
+    "Uträkning: (46+45+47,5+45+55+50+35)/7 = 46,2 %; 583 225 × 0,462 = 269 533 kr; 4 790 × 36 = 172 440 kr; skillnad 97 093 kr. Vid 35 %: 204 129 kr (leasing ändå 31 689 kr billigare)."
+  ],
+  "cover": {
+    "title": [
+      "KÖPA ELLER",
+      "LEASA?"
+    ],
+    "pill": "Sveriges populäraste elbil",
+    "label": "Leasing vinner med",
+    "big": "≈ 97 000 kr",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Sveriges populäraste elbil. Köpa eller leasa? Jag räknade.",
+      "kicker": "VOLVO EX40",
+      "big": "KÖPA ELLER LEASA?",
+      "sub": "räknat på riktiga priser",
+      "punch": [
+        "Svaret förvånar."
+      ],
+      "image": "media/2026-11-04_bil.png",
+      "cutout": true,
+      "image_width": 860,
+      "image_y": 1360
+    },
+    {
+      "type": "number",
+      "say": "Köper du tappar den i snitt fyrtiosex procent på tre år: tvåhundrasjuttiotusen.",
+      "top": "KÖPA: 583 225 kr",
+      "value": 269533,
+      "prefix": "−",
+      "suffix": " kr",
+      "color": "red",
+      "sub": "värdetapp på 3 år",
+      "note": "Snitt 46,2 % från 7 källor (spann 35–55 %)"
+    },
+    {
+      "type": "number",
+      "say": "Leasar du: fyratusen sjuhundranittio i månaden, hundrasjuttiotvåtusen totalt.",
+      "top": "LEASA: 4 790 kr/mån",
+      "value": 172440,
+      "suffix": " kr",
+      "color": "green",
+      "sub": "36 mån, service ingår",
+      "note": "Volvo Car Retail, nov 2026"
+    },
+    {
+      "type": "statement",
+      "say": "Leasing vinner med nästan hundratusen. Men bara under tusen mil om året, utan skador.",
+      "title": "LEASING VINNER",
+      "lines": [
+        "med nästan"
+      ],
+      "highlight": "97 000 kr",
+      "chip": "max 1 000 mil/år"
+    },
+    {
+      "type": "cta",
+      "say": "Räkna alltid på totalen. Följ Plånboksskolan.",
+      "line1": "Räkna alltid på",
+      "big": "TOTALEN.",
+      "line2": "Inte månadspriset."
+    }
+  ]
+}
