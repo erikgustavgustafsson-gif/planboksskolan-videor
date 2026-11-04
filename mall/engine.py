@@ -32,10 +32,49 @@ def soft(bg):
 # ---------------------------------------------------------------- scene renderers
 # Each takes (spec_scene, bg_name, dur) and returns fn(img, t).
 
+_IMG_CACHE = {}
+
+
+def load_image(path, width, cutout=False):
+    """Load a scene image scaled to `width`. cutout=True removes a flat white
+    background (flood fill from the borders) so the subject sits on our background."""
+    key = (path, width, cutout)
+    if key in _IMG_CACHE:
+        return _IMG_CACHE[key]
+    import numpy as np
+    from PIL import ImageFilter
+    im = Image.open(path).convert("RGBA")
+    if cutout:
+        rgb = np.asarray(im.convert("RGB")).astype(np.int16)
+        near_white = (rgb.min(axis=2) > 225) & ((rgb.max(axis=2) - rgb.min(axis=2)) < 18)
+        mask = Image.fromarray((near_white * 255).astype("uint8"))
+        # keep only white regions connected to the border
+        filled = mask.copy()
+        h, w = near_white.shape
+        for x, y in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)]:
+            if near_white[y, x]:
+                ImageDraw.floodfill(filled, (x, y), 128)
+        bgmask = np.asarray(filled) == 128
+        alpha = Image.fromarray(((~bgmask) * 255).astype("uint8")).filter(ImageFilter.GaussianBlur(1.2))
+        im.putalpha(alpha)
+        bbox = alpha.point(lambda v: 255 if v > 20 else 0).getbbox()
+        if bbox:
+            im = im.crop(bbox)
+    im = im.resize((width, int(im.height * width / im.width)), Image.LANCZOS)
+    _IMG_CACHE[key] = im
+    return im
+
+
 def scene_hook(s, bg, dur):
     c = fg(bg)
+    img = None
+    if s.get("image"):
+        img = load_image(s["image"], s.get("image_width", 860), s.get("cutout", False))
 
     def fn(b, t):
+        if img is not None:
+            p = ease_out(prog(t, 0.0, 0.5))
+            paste(b, img, W / 2, s.get("image_y", 1330) + 60 * (1 - p), alpha=p)
         y = 560
         if s.get("kicker"):
             T(b, t, 0.0, s["kicker"], 56, c, y, w="ExtraBold")

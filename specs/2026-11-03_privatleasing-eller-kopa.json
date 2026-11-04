@@ -1,10 +1,10 @@
 {
   "slug": "2026-11-03_privatleasing-eller-kopa",
   "title": "Privatleasing eller köpa bil? Det finstilta",
-  "caption": "En laddhybrid tappade 285 655 kr på tre år. Därför lockar leasing – men leasing är en tjänst, inte ett köp. Konsumentköplagen gäller inte, skador vid återlämning prissätts enligt CABAS och totalen blir ofta runt 10 % dyrare än billån.\n\nLeasar du eller äger du din bil? 👇\n\n#privatleasing #bil #billån #privatekonomi #konsumenträtt #spartips #plånboksskolan",
+  "caption": "En Volvo C40 tappade 281 380 kr på tre år. Därför lockar leasing – men leasing är en tjänst, inte ett köp. Konsumentköplagen gäller inte, skador vid återlämning prissätts enligt CABAS och totalen blir ofta runt 10 % dyrare än billån.\n\nLeasar du eller äger du din bil? 👇\n\n#privatleasing #bil #billån #privatekonomi #konsumenträtt #spartips #plånboksskolan",
   "pinned_comment": "Läs återlämningsvillkoren INNAN du skriver på: vad räknas som normalt slitage, vad kostar övermil, och kan avtalet sägas upp? Leasar du – hur blev återlämningen? 🚗",
   "sources": [
-    "https://www.dagensps.se/motor/lista-de-dyraste-vardetappen-bilarna-som-rasat-mest-i-pris/ (Vi Bilägares analys: Ford Kuga PHEV 586 800 → 301 145 kr, −285 655 kr / 46,4 % på tre år)",
+    "https://www.dagensps.se/motor/lista-de-dyraste-vardetappen-bilarna-som-rasat-mest-i-pris/ (Vi Bilägares analys 2022–2025: Volvo C40 Recharge Twin Motor 689 900 → 408 520 kr, −281 380 kr / 30,6 % på tre år)",
     "https://www.m3.se/article/2794582/privatleasing-elbil.html (Konsumentverket: privatleasing är en tjänst, konsumentköplagen skyddar inte)",
     "https://www.svt.se/nyheter/inrikes/konsumentkritik-mot-privatleasing (Konsumentverket: avtal kan inte sägas upp ensidigt, bolaget bedömer 'normalt skick')",
     "https://dnbportal.se/app/uploads/2023/12/DNB-Finans-Skotselguide-v74a-DNB.pdf (skador prissätts enligt CABAS)",
@@ -18,20 +18,24 @@
     ],
     "pill": "Det finstilta ingen läser",
     "label": "Värdetapp på 3 år:",
-    "big": "−285 655 kr",
+    "big": "−281 380 kr",
     "big_color": "red"
   },
   "scenes": [
     {
       "type": "hook",
-      "say": "Den här bilen tappade tvåhundraåttiofemtusen kronor på tre år. Därför lockar leasing.",
+      "say": "Den här Volvon tappade tvåhundraåttiotusen kronor på tre år. Därför lockar leasing.",
       "kicker": "VÄRDETAPP PÅ 3 ÅR",
-      "big": "−285 655 KR",
-      "sub": "Ford Kuga laddhybrid",
+      "big": "−281 380 KR",
+      "sub": "Volvo C40 Recharge",
       "punch": [
         "Därför lockar",
         "leasing."
-      ]
+      ],
+      "image": "media/2026-11-03_bil.png",
+      "cutout": true,
+      "image_width": 880,
+      "image_y": 1360
     },
     {
       "type": "cards",
