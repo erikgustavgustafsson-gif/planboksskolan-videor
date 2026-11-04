@@ -8,8 +8,8 @@
 | 2026-10-31 | Anna vs Erik | Ränta på ränta, börja spara tidigt | – |
 | 2026-11-02 | Därför blir du aldrig rik på din lön | Betala dig själv först, automatiskt sparande | Eget räkneexempel |
 | 2026-11-03 | Black Friday-fällan | Prishöjning före rea, 30-dagarsregeln (från kön) | Prisinformationslagen / Konsumentverket |
+| 2026-11-04 | Din bank tjänar pengar på dina pengar | Lönekonto 0 % ränta vs sparkonto, insättningsgaranti 1 150 000 kr (från kön) | Riksgälden (riksgalden.se, pressmeddelande 2025-10-30) |
 
 ## Färdiga men ännu inte publicerade (från chatten 2026-11-02)
-- Lönekontot (0 % ränta, insättningsgaranti 1 150 000 kr)
 - Julklappen som växer (ISK för barn, 300 000 kr skattefritt per person)
 - USA-aktier dolda avgifter (courtage + valutaväxling 0,25 %)
