@@ -1,0 +1,66 @@
+{
+  "slug": "2026-11-05_iphone-kontant-eller-abonnemang",
+  "title": "iPhone kontant eller med abonnemang? Jag räknade",
+  "caption": "iPhone 17 256 GB hos Elgiganten. Kontant: 12 489 kr + Tre 25 GB för 349 kr/mån i 24 mån = 20 865 kr. Med abonnemang hos Tre: 749 kr/mån i 24 mån + 250 kr startavgift = 18 226 kr. Abonnemanget vinner med 2 639 kr – men du binder dig i 24 månader.\n\nKöper du mobilen kontant eller med abonnemang? 👇\n\n#iphone #mobilabonnemang #spartips #privatekonomi #elgiganten #plånboksskolan",
+  "pinned_comment": "Så räknade jag: samma telefon (iPhone 17 256 GB) och samma abonnemang (Tre Surfa 25 GB) i båda fallen, priser från Elgiganten 5 nov 2026. Väljer du ett billigare abonnemang utan bindning när du köper kontant kan kontant vinna igen – räkna på din egen surf. Vad hade du valt? 📱",
+  "sources": [
+    "https://www.elgiganten.se/product/mobiler-tablets-smartklockor/mobiltelefon/iphone-17-5g-smartphone-256gb-svart/982749 (köp utan abonnemang 12 489 kr inkl. moms / 9 991 kr exkl. moms; Tre 3Surfa 25GB: startavgift 250 kr, abonnemang 299 kr + delbetalning 450 kr = 749 kr/mån, minsta totala kostnad 18 226 kr för 24 mån, ord. pris 349 kr/mån; hämtat 2026-11-05)",
+    "Uträkning: 12 489 + 349 × 24 = 20 865 kr; 250 + 749 × 24 = 18 226 kr; skillnad 2 639 kr. Telefonen via delbetalning: 450 × 24 = 10 800 kr (1 689 kr under kontantpriset)."
+  ],
+  "cover": {
+    "title": ["KONTANT ELLER", "ABONNEMANG?"],
+    "pill": "iPhone 17, riktiga priser",
+    "label": "Abonnemanget vinner med",
+    "big": "2 639 kr",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Köpa iPhone kontant eller med abonnemang? Jag räknade.",
+      "kicker": "IPHONE 17",
+      "big": "KONTANT ELLER ABONNEMANG?",
+      "sub": "räknat på riktiga priser",
+      "punch": ["Svaret förvånar."],
+      "image": "media/2026-11-05_mobil.png",
+      "cutout": true,
+      "image_width": 760,
+      "image_y": 1360
+    },
+    {
+      "type": "number",
+      "say": "Kontant: tolvtusen fyrahundra för telefonen, plus abonnemanget. Tjugotusen åttahundra på två år.",
+      "top": "KONTANT: 12 489 kr",
+      "value": 20865,
+      "suffix": " kr",
+      "color": "red",
+      "sub": "totalt på 24 mån",
+      "note": "+ Tre 25 GB, 349 kr/mån"
+    },
+    {
+      "type": "number",
+      "say": "Med abonnemang hos Tre: sjuhundrafyrtionio i månaden. Artontusen tvåhundra totalt.",
+      "top": "ABONNEMANG: 749 kr/mån",
+      "value": 18226,
+      "suffix": " kr",
+      "color": "green",
+      "sub": "totalt på 24 mån",
+      "note": "inkl. startavgift, Elgiganten nov 2026"
+    },
+    {
+      "type": "statement",
+      "say": "Abonnemanget vinner med tvåtusen sexhundra. Men du är bunden i två år.",
+      "title": "ABONNEMANG VINNER",
+      "lines": ["med"],
+      "highlight": "2 639 kr",
+      "chip": "24 mån bindning"
+    },
+    {
+      "type": "cta",
+      "say": "Räkna alltid på totalen. Följ Plånboksskolan.",
+      "line1": "Räkna alltid på",
+      "big": "TOTALEN.",
+      "line2": "Inte månadspriset."
+    }
+  ]
+}
