@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integritetspolicy | Jämför Privatleasing</title>
+  <meta name="description" content="Så behandlar Jämför Privatleasing dina personuppgifter när du jämför och beställer privatleasing.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Cpath d='M16 34l10 10 22-24' stroke='%232EC4B6' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; font-display: swap; src: url(fonts/inter.woff2) format("woff2"); }
+    :root { color-scheme: light; --navy: #0E2A47; --turkos: #2EC4B6; --muted: #5B6478; }
+    body { margin: 0; font-family: "Inter", system-ui, sans-serif; color: var(--navy); background: #F5F7FA; line-height: 1.6; }
+    nav { background: var(--navy); padding: 14px 16px; }
+    nav a { color: #fff; font-weight: 800; font-size: 20px; text-decoration: none; }
+    nav a span { color: var(--turkos); }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 60px; }
+    h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0 0 8px; }
+    h2 { font-size: 20px; margin: 28px 0 6px; }
+    p, li { color: #2A3B52; }
+    .liten { color: var(--muted); font-size: 14px; }
+    .kort { background: #fff; padding: 16px 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(14,42,71,.06); }
+    a { color: #1F7A6B; }
+    footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+  </style>
+  <script src="foretag.js"></script>
+</head>
+<body>
+  <nav><a href="./">Jämför<span>Privatleasing</span></a></nav>
+  <main>
+    <h1>Integritetspolicy</h1>
+    <p class="liten">Gäller från lanseringen 2026.</p>
+    <h2>Personuppgiftsansvarig</h2>
+    <div class="kort"><b data-f="varumarke"></b><br>
+      Drivs av <span data-f="namn"></span>, enskild firma<span class="valfri">, org.nr <span data-f="orgnr"></span></span><br>
+      <span class="valfri">Adress: <span data-f="adress"></span><br></span>
+      <span class="valfri">E-post: <span data-f="epost"></span></span></div>
+    <h2>Vilka uppgifter vi behandlar</h2>
+    <p>När du skickar en beställning behandlar vi det du fyller i: namn, e-postadress, telefonnummer, postnummer, önskad leveranstid och din beställning (bil, avtal, tillval och önskemål). Vi ber aldrig om personnummer. Det lämnar du till leasingbolaget vid kreditprövningen.</p>
+    <p>När du bara jämför bilar behandlar vi inga personuppgifter. Sidan använder inga kakor (cookies) för spårning eller annonser, och typsnitt och bilder ligger på vår egen server.</p>
+    <h2>Varför och med vilken rätt</h2>
+    <ul>
+      <li><b>Förmedla din beställning till handlaren</b> så att handlaren kan skicka dig ett leasingavtal. Rättslig grund: du ger oss uppdraget när du skickar beställningen (åtgärder innan avtal på din begäran, artikel 6.1 b i GDPR).</li>
+      <li><b>Skicka en bekräftelse</b> till dig och svara på frågor om beställningen. Samma rättsliga grund.</li>
+      <li><b>Bokföring</b> om beställningen leder till ersättning från handlaren. Rättslig grund: rättslig förpliktelse (bokföringslagen). Då sparas bara det som behövs för verifikationen.</li>
+    </ul>
+    <h2>Vem som får uppgifterna</h2>
+    <ul>
+      <li><b>Handlaren</b> som erbjudandet kommer från, eller den handlare vi skickar beställningen till om märket inte anger någon.</li>
+      <li><b>Tjänsteleverantörer</b> som hjälper oss att driva sidan: e-posttjänsten som skickar beställningen och webbhotellet. Vissa kan behandla uppgifter utanför EU. Då sker det med stöd av EU-kommissionens standardavtalsklausuler eller EU–USA-ramverket för dataskydd.</li>
+    </ul>
+    <p>Vi säljer aldrig dina uppgifter och använder dem inte för reklam.</p>
+    <h2>Hur länge vi sparar uppgifterna</h2>
+    <p>Beställningar sparas i högst 12 månader, så att vi kan följa upp om du fick ditt avtal. Uppgifter som behövs för bokföringen sparas i 7 år enligt bokföringslagen.</p>
+    <h2>Dina rättigheter</h2>
+    <p>Du har rätt att få veta vilka uppgifter vi har om dig, få dem rättade eller raderade, invända mot behandlingen och få ut dem i ett läsbart format. Kontakta oss på e-postadressen ovan. Är du missnöjd kan du klaga hos Integritetsskyddsmyndigheten (IMY), <a href="https://www.imy.se">imy.se</a>.</p>
+  </main>
+  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="villkor.html">Villkor</a></footer>
+  <script>
+    // Fyller i företagsuppgifterna från foretag.js där det står data-f="..."
+    document.querySelectorAll("[data-f]").forEach(el => {
+      const v = FORETAG[el.dataset.f];
+      if (v) el.textContent = v; else (el.closest(".valfri") || el).remove();
+    });
+  </script>
+</body>
+</html>

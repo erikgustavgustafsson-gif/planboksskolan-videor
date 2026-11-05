@@ -18,9 +18,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Leasingkollen – jämför privatleasing</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>Jämför privatleasing 2026 – alla bilar, kampanjer och totalpris | Jämför Privatleasing</title>
+  <meta name="description" content="Jämför privatleasing på 140 nya bilar från 20 märken. Vi räknar med alla avgifter, visar bästa kampanjerna och låter dig välja tillval och beställa direkt. Priserna kontrolleras varje dag.">
+  <link rel="canonical" href="https://jamforprivatleasing.se/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0E2A47">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:site_name" content="Jämför Privatleasing">
+  <meta property="og:title" content="Jämför privatleasing – hitta bästa leasingkampanjen 2026">
+  <meta property="og:description" content="140 bilar, alla avgifter inräknade, priser kontrollerade varje dag. Välj tillval och beställ direkt.">
+  <meta property="og:url" content="https://jamforprivatleasing.se/">
+  <meta property="og:image" content="https://jamforprivatleasing.se/bilder/ex40.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Cpath d='M16 34l10 10 22-24' stroke='%232EC4B6' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <!-- Typsnittet ligger på vår egen server (inga anrop till Google = bättre integritet) -->
+  <style>@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url(fonts/inter.woff2) format("woff2"); }</style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","name":"Jämför Privatleasing","url":"https://jamforprivatleasing.se/","inLanguage":"sv-SE","description":"Jämför privatleasing på nya bilar i Sverige med alla avgifter inräknade."},
+    {"@type":"Organization","name":"Jämför Privatleasing","url":"https://jamforprivatleasing.se/"},
+    {"@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"Hur räknar ni ut bästa erbjudande?","acceptedAnswer":{"@type":"Answer","text":"Vi delar det du betalar till leasingbolaget under 36 månader med bilens nypris. Ju lägre andel, desto mer bil för pengarna."}},
+      {"@type":"Question","name":"Vad ingår i totalkostnaden?","acceptedAnswer":{"@type":"Answer","text":"Månadspris, avi- och adminavgift, obligatorisk försäkring, uppläggningsavgift och förhöjd första hyra under 36 månader."}},
+      {"@type":"Question","name":"Är beställningen bindande?","acceptedAnswer":{"@type":"Answer","text":"Nej. Vi skickar beställningen till handlaren, som skickar avtalet till dig. Först när du godkänner avtalet med BankID är det bindande."}}
+    ]}
+  ]}
+  </script>
 
   <style>
     /* ---------- CSS-variabler: sidans färger på ett ställe ---------- */
@@ -328,6 +352,15 @@
     @media (min-width: 640px) and (max-width: 900px) { .topplista { grid-auto-columns: 42%; } }
     @media (max-width: 600px) { .herobild { display: none; } .heroslogan { letter-spacing: .15em; } }
     @media (max-width: 480px) { .infokort { grid-template-columns: 1fr; } header.hero { padding: 28px 0 36px; } .bocklista { font-size: 16px; } }
+
+    .sidfot { background: var(--navy); color: #C9D2E3; margin-top: 40px; padding: 36px 0 28px; font-size: 14px; }
+    .fotrad { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; padding: 0 16px; }
+    .sidfot b { color: #fff; display: block; margin-bottom: 8px; }
+    .sidfot a { color: #C9D2E3; display: block; text-decoration: none; padding: 3px 0; }
+    .sidfot a:hover { color: var(--yellow); }
+    .sidfot .logo { color: #fff; font-size: 20px; padding: 0; }
+    .sidfot p { margin: 8px 0 0; }
+    @media (max-width: 700px) { .fotrad { grid-template-columns: 1fr; } }
   </style>
 </head>
 
@@ -335,7 +368,7 @@
   <!-- ===== HTML: det som syns på sidan ===== -->
   <nav class="topnav">
     <div class="wrap navrad">
-      <a class="logo" href="#">Leasing<span>kollen</span></a>
+      <a class="logo" href="./">Jämför<span>Privatleasing</span></a>
       <div class="navlankar"><a href="#kampanjer">Kampanjer</a><a href="#alla">Alla bilar</a><a href="#sa-funkar-det">Så funkar det</a><a href="#fragor">Frågor &amp; svar</a></div>
     </div>
   </nav>
@@ -343,7 +376,7 @@
   <header class="hero">
     <div class="wrap herorad">
       <div class="herotext">
-        <h1>Hitta Sveriges bästa privatleasing</h1>
+        <h1>Jämför privatleasing och hitta bästa kampanjen</h1>
         <p class="heroslogan">Jämför. Välj tillval. Beställ.</p>
         <p>Vi jämför privatleasing hos alla stora bilmärken och räknar med alla avgifter, så att du ser vad bilen faktiskt kostar på 36 månader.</p>
         <div class="trust" id="trust"></div>
@@ -465,6 +498,13 @@
   </dialog>
 
 
+  <footer class="sidfot">
+    <div class="wrap fotrad">
+      <div><a class="logo" href="./">Jämför<span>Privatleasing</span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
+      <div><b>Information</b><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="villkor.html">Användarvillkor</a><a href="#fragor">Frågor &amp; svar</a></div>
+      <div><b>Företag</b><span id="fotforetag"></span></div>
+    </div>
+  </footer>
   <section class="wrap kallor" style="padding: 0 16px;">
     <details>
       <summary>Bildkällor</summary>
@@ -472,9 +512,10 @@
     </details>
   </section>
 
-  <footer>Leasingkollen · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+  <footer>Jämför Privatleasing · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
   <!-- ===== JavaScript: datan och logiken ===== -->
+  <script src="foretag.js"></script>
   <script src="konfig.js"></script>
   <script>
     /* ---------------------------------------------------------------
@@ -1424,8 +1465,8 @@
        med exakta priser. För övriga bilar skriver kunden sina önskemål och
        handlaren lämnar pris i avtalet.
        ================================================================ */
-    // NÄR SIDAN GÅR LIVE: Leasingkollen skickar beställningen åt kunden.
-    // BESTALLNING_EPOST = Leasingkollens egen adress (får en kopia av varje beställning).
+    // NÄR SIDAN GÅR LIVE: Jämför Privatleasing skickar beställningen åt kunden.
+    // BESTALLNING_EPOST = Jämför Privatleasings egen adress (får en kopia av varje beställning).
     // Har en bil fältet handlarEpost går beställningen direkt till handlaren, med kopia till oss.
     // Saknas handlarEpost går den till oss, och vi skickar den vidare till handlaren.
     // Tom adress = sidan är inte live än, kunden kopierar beställningen själv.
@@ -1539,7 +1580,7 @@
           <div><label for="kt">Telefon</label><input id="kt" type="tel" autocomplete="tel" value="${esc(k.tel)}"></div>
           <div><label for="kpn">Postnummer (för närmaste handlare)</label><input id="kpn" inputmode="numeric" autocomplete="postal-code" value="${esc(k.postnr)}"></div>
           <div class="hel"><label for="kl">När vill du ha bilen?</label><select id="kl">${["Så snart som möjligt", "Inom 3 månader", "Inom 6 månader", "Jag är flexibel"].map(o => `<option ${o === k.leverans ? "selected" : ""}>${o}</option>`).join("")}</select></div>
-          <label class="hel" style="display:flex;gap:8px;align-items:flex-start;color:var(--text)"><input type="checkbox" id="ks" style="width:auto;margin-top:3px" ${k.samtycke ? "checked" : ""}> Jag godkänner att Leasingkollen skickar mina uppgifter och min beställning till handlaren, så att de kan skicka mitt leasingavtal. Uppgifterna används inte till något annat.</label>
+          <label class="hel" style="display:flex;gap:8px;align-items:flex-start;color:var(--text)"><input type="checkbox" id="ks" style="width:auto;margin-top:3px" ${k.samtycke ? "checked" : ""}> Jag godkänner att Jämför Privatleasing skickar mina uppgifter och min beställning till handlaren, så att de kan skicka mitt leasingavtal. Uppgifterna används inte till något annat (<a href="integritetspolicy.html" target="_blank">integritetspolicy</a>).</label>
         </div><div class="kinfo">Du behöver inte lämna personnummer här. Kreditprövning och signering görs med BankID hos leasingbolaget.</div>`;
       }
       if (steg === 3) {
@@ -1556,7 +1597,7 @@
           <tr><td><b>Totalt på 36 månader</b></td><td><b>${kr(r.total)}</b></td></tr>
           ${r.nypris ? `<tr><td>Bilens nypris med dina val</td><td>${kr(r.nypris)} (du betalar ${pct(r.andel)})</td></tr>` : ""}
         </table>
-        <div class="kinfo"><b>Så går det till:</b> 1. Du trycker på Skicka beställningen. 2. Leasingkollen skickar beställningen till handlaren åt dig. 3. Handlaren skickar avtalet till dig och du godkänner det med BankID. Inget är bindande förrän du har signerat.${r.okand ? " Priset för dina önskemål står i avtalet." : ""}</div>
+        <div class="kinfo"><b>Så går det till:</b> 1. Du trycker på Skicka beställningen. 2. Jämför Privatleasing skickar beställningen till handlaren åt dig. 3. Handlaren skickar avtalet till dig och du godkänner det med BankID. Inget är bindande förrän du har signerat.${r.okand ? " Priset för dina önskemål står i avtalet." : ""}</div>
         <div id="kskicka"></div>`;
       }
       document.getElementById("konfBody").innerHTML = h;
@@ -1584,7 +1625,7 @@
     function bestallningText() {
       const { bil, kund } = K, r = berakna();
       return [
-        "BESTÄLLNING AV PRIVATLEASING – via Leasingkollen",
+        "BESTÄLLNING AV PRIVATLEASING – via Jämför Privatleasing",
         "",
         `Bil: ${bil.marke} ${bil.modell}`,
         `Erbjudande: ${bil.kalla} – ${bil.url}`,
@@ -1629,7 +1670,7 @@
             _subject: `Ny beställning: ${bil.marke} ${bil.modell} – ${kund.namn}`,
             _template: "box", _captcha: "false", _replyto: kund.epost,
             ...(bil.handlarEpost ? { _cc: BESTALLNING_EPOST } : {}),
-            _autoresponse: `Tack ${kund.namn}! Leasingkollen har skickat din beställning av ${bil.marke} ${bil.modell} (${kr(r.manad + r.adm + r.fors)}/mån) till ${bil.kalla.split(/ \(|,/)[0]}. Handlaren skickar avtalet till dig, och du godkänner det med BankID. Inget är bindande förrän du har signerat.\n\n${text}`,
+            _autoresponse: `Tack ${kund.namn}! Jämför Privatleasing har skickat din beställning av ${bil.marke} ${bil.modell} (${kr(r.manad + r.adm + r.fors)}/mån) till ${bil.kalla.split(/ \(|,/)[0]}. Handlaren skickar avtalet till dig, och du godkänner det med BankID. Inget är bindande förrän du har signerat.\n\n${text}`,
             Bil: `${bil.marke} ${bil.modell}`, Manadspris: `${kr(r.manad + r.adm + r.fors)}/mån`, Totalt_36_man: kr(r.total),
             Namn: kund.namn, Epost: kund.epost, Telefon: kund.tel, Postnummer: kund.postnr, Leverans: kund.leverans,
             Erbjudande: bil.url, Bestallning: text,
@@ -1703,6 +1744,7 @@
     }
     document.getElementById("topp").addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
     document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Beställ med tillval direkt här</span>`;
+    document.getElementById("fotforetag").innerHTML = [FORETAG.namn + " (enskild firma)", FORETAG.orgnr && "Org.nr " + FORETAG.orgnr, FORETAG.epost].filter(Boolean).map(esc).join("<br>");
     // Kör rita() när något ändras, och en gång direkt när sidan laddas.
     [sok, drivmedel, mil, forsakring, sortera].forEach(el => el.addEventListener("input", rita));
     rita();

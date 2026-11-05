@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sidan finns inte | Jämför Privatleasing</title>
+  <meta name="description" content="Sidan finns inte.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Cpath d='M16 34l10 10 22-24' stroke='%232EC4B6' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; font-display: swap; src: url(fonts/inter.woff2) format("woff2"); }
+    :root { color-scheme: light; --navy: #0E2A47; --turkos: #2EC4B6; --muted: #5B6478; }
+    body { margin: 0; font-family: "Inter", system-ui, sans-serif; color: var(--navy); background: #F5F7FA; line-height: 1.6; }
+    nav { background: var(--navy); padding: 14px 16px; }
+    nav a { color: #fff; font-weight: 800; font-size: 20px; text-decoration: none; }
+    nav a span { color: var(--turkos); }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 60px; }
+    h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0 0 8px; }
+    h2 { font-size: 20px; margin: 28px 0 6px; }
+    p, li { color: #2A3B52; }
+    .liten { color: var(--muted); font-size: 14px; }
+    .kort { background: #fff; padding: 16px 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(14,42,71,.06); }
+    a { color: #1F7A6B; }
+    footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+  </style>
+  <script src="foretag.js"></script>
+</head>
+<body>
+  <nav><a href="./">Jämför<span>Privatleasing</span></a></nav>
+  <main>
+    <h1>Sidan finns inte</h1>
+    <p>Länken kan vara gammal. <a href="./">Gå till jämförelsen</a> för att se alla bilar och kampanjer.</p>
+  </main>
+  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="villkor.html">Villkor</a></footer>
+  <script>
+    // Fyller i företagsuppgifterna från foretag.js där det står data-f="..."
+    document.querySelectorAll("[data-f]").forEach(el => {
+      const v = FORETAG[el.dataset.f];
+      if (v) el.textContent = v; else (el.closest(".valfri") || el).remove();
+    });
+  </script>
+</body>
+</html>
