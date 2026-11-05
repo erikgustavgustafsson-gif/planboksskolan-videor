@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<!--
+  LEASINGKOLLEN – jämför privatleasing mellan bilmärken i Sverige
+  ================================================================
+  Så är sidan uppbyggd (läs gärna uppifrån och ner):
+
+  1. <head>    – inställningar: titel, typsnitt och all STIL (CSS).
+                 CSS bestämmer hur saker ser ut: färger, storlekar, avstånd.
+  2. <body>    – själva INNEHÅLLET (HTML): rubriker, knappar, tabellen.
+                 HTML bestämmer vad som finns på sidan.
+  3. <script>  – LOGIKEN (JavaScript): datan om bilarna och koden som
+                 sorterar, filtrerar och räknar ut totalkostnaden.
+
+  Vill du lägga till en bil? Scrolla ner till "BILAR" i <script> och
+  kopiera en rad. Det är det enda du behöver ändra.
+-->
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leasingkollen – jämför privatleasing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- CSS-variabler: sidans färger på ett ställe ---------- */
+    :root {
+      --navy: #0E2A47;      /* mörkblå huvudfärg */
+      --mint: #E3F4F1;      /* ljus bakgrund i rutorna */
+      --mint-dark: #1F7A6B;
+      --yellow: #2EC4B6;    /* accentfärg (turkos) */
+      --red: #D9534F;
+      --text: #0E2A47;
+      --muted: #5B6478;
+      --card: #FFFFFF;
+      --line: #E3E7EE;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      color: var(--text);
+      background: #F5F7FA;
+      line-height: 1.45;
+    }
+
+    /* ---------- Toppen av sidan ---------- */
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 32px 20px 40px;
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: clamp(28px, 6vw, 44px); margin: 0 0 8px; line-height: 1.1; }
+    h1 span { color: var(--yellow); }
+    header p { margin: 0; color: #C9D2E3; max-width: 620px; }
+
+    /* ---------- Kontrollerna (filter och val) ---------- */
+    .controls {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      margin: -24px auto 16px;
+      box-shadow: 0 6px 20px rgba(22,33,58,.08);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
+    select, input {
+      width: 100%;
+      font: inherit;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    /* ---------- Sammanfattning ("billigast just nu") ---------- */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat { background: var(--mint); border-radius: 14px; padding: 14px 16px; }
+    .stat b { display: block; font-size: 22px; }
+    .stat small { color: var(--muted); }
+
+    /* ---------- Kort för varje bil ---------- */
+    .list { display: grid; gap: 10px; }
+    .car {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 200px 1fr auto;
+      gap: 6px 16px;
+      align-items: center;
+    }
+    /* Bilden: ligger i första kolumnen och sträcker sig över alla rader */
+    .car .pic {
+      grid-row: 1 / span 3;
+      width: 200px;
+      height: 125px;
+      background: #F3F6F9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .car .pic svg { width: 92%; height: auto; }
+    .car img.pic { object-fit: cover; padding: 0; }
+    /* Knappen till erbjudandet */
+    .cta {
+      display: inline-block; margin-top: 8px; padding: 10px 16px;
+      background: var(--navy); color: #fff; border-radius: 10px;
+      font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap;
+    }
+    .cta:hover { background: var(--mint-dark); }
+    .car a.piclink { grid-row: 1 / span 3; display: block; }
+    /* Bildkällor längst ner */
+    .kallor { font-size: 12px; color: var(--muted); }
+    .kallor summary { cursor: pointer; font-weight: 600; }
+    .kallor ul { columns: 2; padding-left: 18px; }
+    .kallor a { color: inherit; }
+    .car h3 { margin: 0; font-size: 17px; }
+    .car .brand { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+    .price { text-align: right; }
+    .price .month { font-size: 22px; font-weight: 800; }
+    .price .total { font-size: 13px; color: var(--muted); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 2 / -1; }
+    .tag { font-size: 12px; padding: 3px 8px; border-radius: 999px; background: #EEF1F6; }
+    .tag.el { background: var(--mint); color: var(--mint-dark); font-weight: 600; }
+    .tag.warn { background: #FFF4D6; }
+    .source { grid-column: 2 / -1; font-size: 12px; color: var(--muted); }
+    .source a { color: var(--navy); }
+    /* Märket som visar hur bra erbjudandet är (andel av nypriset) */
+    .betyg { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; }
+    .betyg.mb { background: #1F7A6B; color: #fff; }
+    .betyg.b  { background: var(--mint); color: var(--mint-dark); }
+    .betyg.ok { background: #EEF1F6; color: var(--muted); }
+    .betyg.d  { background: #FBE3E2; color: #A93A36; }
+    .rank { color: var(--yellow); background: var(--navy); border-radius: 6px; padding: 0 6px; font-size: 12px; font-weight: 800; margin-right: 6px; }
+
+    /* ---------- Faktarutan längst ner ---------- */
+    .info { background: var(--card); border-radius: 14px; padding: 16px 18px; margin: 24px 0; border: 1px solid var(--line); }
+    .info h2 { margin-top: 0; font-size: 18px; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); padding: 24px 16px 40px; }
+
+    /* På mobil: priset under namnet i stället för bredvid */
+    @media (max-width: 520px) {
+      .car { grid-template-columns: 1fr; }
+      .car .pic { grid-row: auto; width: 100%; height: 150px; }
+      .car .pic svg { width: auto; height: 90%; }
+      .tags, .source { grid-column: 1 / -1; }
+      .car a.piclink { grid-row: auto; }
+      .cta { display: block; text-align: center; }
+      .kallor ul { columns: 1; }
+      .car img.pic { height: 190px; }
+      .price { text-align: left; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== HTML: det som syns på sidan ===== -->
+  <header>
+    <div class="wrap">
+      <h1>Leasing<span>kollen</span></h1>
+      <p>Jämför privatleasing hos bilmärkena i Sverige. Vi räknar på <b>vad du betalar totalt på 36 månader</b>, inte bara månadspriset.</p>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding: 0 16px;">
+    <!-- Filter och val. Varje element har ett id så att JavaScript kan hitta det. -->
+    <section class="controls">
+      <div>
+        <label for="sok">Sök märke eller modell</label>
+        <input id="sok" type="search" placeholder="t.ex. Volvo">
+      </div>
+      <div>
+        <label for="drivmedel">Drivmedel</label>
+        <select id="drivmedel">
+          <option value="alla">Alla</option>
+          <option value="El">El</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Laddhybrid">Laddhybrid</option>
+          <option value="Bensin">Bensin</option>
+        </select>
+      </div>
+      <div>
+        <label for="mil">Körsträcka per år</label>
+        <select id="mil">
+          <option value="1000">1 000 mil</option>
+          <option value="1500">1 500 mil</option>
+          <option value="2000">2 000 mil</option>
+        </select>
+      </div>
+      <div>
+        <label for="forsakring">Din försäkring (kr/mån)</label>
+        <input id="forsakring" type="number" min="0" step="50" value="0">
+      </div>
+      <div>
+        <label for="sortera">Sortera</label>
+        <select id="sortera">
+          <option value="andel">Bästa erbjudande</option>
+          <option value="total">Billigast totalt</option>
+          <option value="manad">Lägst månadspris</option>
+          <option value="marke">Märke A–Ö</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="summary" id="summary"></section>
+    <section class="list" id="lista"></section>
+
+    <section class="info">
+      <h2>Så räknar vi</h2>
+      <p><b>Bästa erbjudande</b> = hur stor del av bilens nypris du betalar under 36 månader. Exempel: betalar du 100 000 kr i leasing för en bil som kostar 250 000 kr kontant blir det 40 %. Ju lägre andel, desto mer bil får du för pengarna. Under 40 % är mycket bra, under 45 % bra, upp till 55 % okej och över det dyrt. Nypriset (inkl. moms) kommer från <a href="https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42?tillverkningsar=2026" target="_blank" rel="noopener">Skatteverkets nybilspriser 2026</a> och gäller modellens billigaste version, så andelen är ungefärlig.</p>
+      <p><b>Totalt 36 mån</b> = (månadspris + ev. administrationsavgift) × 36 + uppläggningsavgift + ev. förhöjd första hyra + din försäkring × 36. Vi har läst villkoren hos varje säljare: avtalstid, körsträcka, avgifter och om första hyran är förhöjd. Erbjudanden vi inte kunde bekräfta har vi tagit bort. Väljer du mer än 1 000 mil per år lägger vi på tillägget när märket eller handlaren har publicerat det. Annars står det "fråga handlaren".</p>
+      <p><b>Inte med:</b> el eller bensin, fordonsskatt, vinterhjul (oftast ett tillägg på 300–600 kr/mån) och kostnader för skador eller övermil när du lämnar tillbaka bilen.</p>
+      <p><b>Bilderna</b> kommer från Wikimedia Commons och används enligt sina fria licenser (oftast CC BY-SA 4.0). Fotograf och licens för varje bild finns i listan Bildkällor längst ner. Vi har beskurit och förminskat bilderna, och de beskurna versionerna delas under samma licens. Bilden kan visa en annan version eller årsmodell än den i erbjudandet.</p>
+      <p>Priserna är "från"-priser från märkenas och återförsäljarnas sajter (många hittade via <a href="https://minbilkoll.se/leasing" target="_blank" rel="noopener">minbilkoll.se</a>). Erbjudanden för företag (exkl. moms) är inte med, och kampanjer ändras ofta. Kolla alltid det aktuella priset via länken innan du bestämmer dig. Det här är inte finansiell rådgivning.</p>
+    </section>
+  </main>
+
+  <section class="wrap kallor" style="padding: 0 16px;">
+    <details>
+      <summary>Bildkällor</summary>
+      <ul id="kallor"></ul>
+    </details>
+  </section>
+
+  <footer>Leasingkollen · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+
+  <!-- ===== JavaScript: datan och logiken ===== -->
+  <script>
+    /* ---------------------------------------------------------------
+       BILAR – här ligger all data. En rad per bil.
+       Varje erbjudande är kontrollerat mot säljarens egen sida (5 nov 2026):
+       pris, avtalstid, mil/år, avgifter och om första hyran är förhöjd.
+
+       Hjälpfunktionen B() tar värdena i en bestämd ordning:
+         B(märke, modell, foto, drivmedel, kr/mån, mil/år, nypris, extra)
+
+       nypris  = vad bilen kostar kontant enligt Skatteverket (null = saknas)
+       extra   = valfria tillägg som skriver över standardvärdena:
+         start   = uppläggningsavgift (kr, en gång)
+         adm     = administrations-/aviavgift (kr/mån)
+         forhojd = första förhöjd hyra (kr, en gång) – en dold kostnad!
+         mer     = pris för fler mil, t.ex. {1500: 345, 2000: 650}
+         service = false om service INTE ingår
+         not     = något viktigt i villkoren som inte syns i siffrorna
+         kalla   = vem som erbjuder avtalet, url = länk dit
+       ---------------------------------------------------------------- */
+    const KONTROLL = "5 nov 2026"; // uppdateras vid varje daglig kontroll
+    const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
+    const LEASABIL = { start: 495, kalla: "Leasabil" };
+    const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", url: "https://easyprivatleasing.toyota.se/" };
+    const PEUGEOT = { typ: "Märket", kalla: "Peugeot (Ayvens)", url: "https://www.peugeot.se/kop/finansiering/privatleasing.html", not: "Fordonsskatt faktureras utöver hyran" };
+    const VW = { typ: "Märket", kalla: "Volkswagen (VW Finans)", start: 495, not: "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer" };
+    const VWU = "https://privatleasing.volkswagen.se/tillval/";
+    const SKODA = { typ: "Märket", kalla: "Škoda (VW Finans)", start: 495, url: "https://privatleasing.skoda.se/valjmodell", not: "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer" };
+    const KIA = { typ: "Märket", kalla: "Kia", start: 592, adm: 59 };
+    const KU = m => "https://www.kia.com/se/nya-bilar/" + m + "/upptack/";
+    const MB = { typ: "Märket", kalla: "Mercedes-Benz", start: 695, adm: 65, url: "https://www.mercedes-benz.se/passengercars/finance/financing-leasing/offers-private.html", not: "Fordonsskatt tillkommer. Mercedes-Benz Finans kan begära förhöjd första avgift efter kreditprövning" };
+    const TESLA = { typ: "Märket", kalla: "Tesla (via DNB Finans), uppgifter från Leasabil", forhojd: 30000, service: null, not: "Priset förutsätter 30 000 kr i kontantinsats. Avtalet tecknas direkt hos Tesla" };
+    const HA = "https://hedinautomotive.se/bilar/kop-bil/";
+    const LB = "https://leasabil.com/bilmarken/";
+
+    function B(marke, modell, foto, drivmedel, manad, mil, nypris, extra = {}) {
+      return {
+        marke, modell, foto, drivmedel, manad, mil, nypris,
+        start: 0, adm: 0, forhojd: 0, mer: null, service: true, not: "",
+        typ: "Återförsäljare", kalla: "", url: "",
+        ...extra          // "..." kopierar in extra-värdena och skriver över standardvärdena ovan
+      };
+    }
+
+    const BILAR = [
+      B("Volvo", "EX30 Single Motor Plus", "ex30", "El", 3795, 1000, 457000, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ex30" }),
+      B("Volvo", "EX30 Cross Country P5 Long Range Plus", "ex30cc", "El", 3990, 1000, 542000, { mer: {1500: 380, 2000: 839}, kalla: "Volvo Car Kungsängen", url: "https://bilweb.se/stockholms-lan/volvo-ex30-cross-country-plus-2027-suv-445689" }),
+      B("Volvo", "EX40 Extended Range Plus SE", "ex40", "El", 4790, 1000, 579900, { kalla: "Volvo-handlare via Wayke", url: "https://www.wayke.se/objekt/019cfc13-6c95-7413-b1f1-c19f8c9cfb6a", not: "Begränsat antal lagerbilar" }),
+      B("Polestar", "2 Long Range Single Motor", "pol2", "El", 5495, 1500, 599000, { kalla: "Finnvedens Bil via Blocket", url: "https://www.blocket.se/mobility/item/26097353" }),
+      B("Polestar", "4 coupé Rear Motor Business edition Pilot", "pol4", "El", 7295, 1500, 619000, { kalla: "Polestar-handlare via Wayke", url: "https://www.wayke.se/objekt/01a04238-b8b8-7581-9401-3a65797cbf6f", not: "Leverans senast 31 dec 2026" }),
+      // --- Volkswagen (märkets egna priser) ---
+      B("Volkswagen", "ID.Polo Life", "idpolo", "El", 3495, 1000, 373700, { ...VW, url: VWU + "nya_id_polo_life" }),
+      B("Volkswagen", "ID.Cross Trend", "idcross", "El", 2995, 1000, 356900, { ...VW, url: VWU + "id_cross_trend" }),
+      B("Volkswagen", "ID.Cross Life 52 kWh", "idcross", "El", 4195, 1000, 461900, { ...VW, url: VWU + "id_cross_life" }),
+      B("Volkswagen", "ID.3 Neo", "id3", "El", 3995, 1000, 409900, { ...VW, url: VWU + "id_3_neo_trend" }),
+      B("Volkswagen", "ID.4 GTX SWE Edition", "id4", "El", 5495, 1000, 599900, { ...VW, url: VWU + "id_4_gtx_swe_edition" }),
+      B("Volkswagen", "ID.Tiguan Life", "idtiguan", "El", 5995, 1000, 559900, { ...VW, url: VWU + "id_tiguan_life" }),
+      B("Volkswagen", "ID.7 Pro S Edition", "id7", "El", 6495, 1000, 594900, { ...VW, url: VWU + "id_7_pro_s_edition" }),
+      B("Volkswagen", "ID.7 Tourer Pro S Edition", "id7t", "El", 6495, 1000, 599900, { ...VW, url: VWU + "id_7_tourer_pro_s_edition" }),
+      B("Volkswagen", "Polo Life SWE Edition", "polo", "Bensin", 2995, 1000, 279900, { ...VW, url: VWU + "polo_life_swe_edition" }),
+      B("Volkswagen", "Taigo R-Line Edition", "taigo", "Bensin", 3295, 1000, 320900, { ...VW, url: VWU + "taigo_r-line_edition" }),
+      B("Volkswagen", "Golf Life Edition", "golf", "Bensin", 3495, 1000, 332200, { ...VW, url: VWU + "golf_life_edition" }),
+      B("Volkswagen", "Golf Sportscombi Life Edition", "golfsc", "Bensin", 3995, 1000, 344200, { ...VW, url: VWU + "golf_sportscombi_life_edition" }),
+      B("Volkswagen", "T-Roc Life", "troc", "Bensin", 3495, 1000, 389900, { ...VW, url: VWU + "nya_t-roc_life" }),
+      B("Volkswagen", "Tiguan Life Edition", "tiguan", "Bensin", 3795, 1000, 429300, { ...VW, url: VWU + "tiguan_life_edition" }),
+      B("Volkswagen", "Tayron Life Edition", "tayron", "Bensin", 3995, 1000, 449900, { ...VW, url: VWU + "tayron_life_edition" }),
+      B("Volkswagen", "Passat Sportscombi Business Limited Edition eHybrid", "passat", "Laddhybrid", 4995, 1000, 496000, { ...VW, url: VWU + "passat_business_lim_ed_ehybrid" }),
+      // --- Škoda (märkets egna priser) ---
+      B("Skoda", "Epiq 35 Essence", "epiq", "El", 2795, 1000, 315900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
+      B("Skoda", "Epiq 40 Essence", "epiq", "El", 2995, 1000, 337900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
+      B("Skoda", "Epiq 55 Essence", "epiq", "El", 3295, 1000, 384900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
+      B("Skoda", "Kamiq Selection", "kamiq", "Bensin", 2815, 1000, 327500, SKODA),
+      B("Skoda", "Octavia Combi Selection", "octaviac", "Bensin", 2945, 1000, 361500, SKODA),
+      B("Skoda", "Fabia Selection", "fabia", "Bensin", 2995, 1000, 278900, SKODA),
+      B("Skoda", "Karoq Selection", "karoq", "Bensin", 3030, 1000, 394500, SKODA),
+      B("Skoda", "Elroq 60 Explore Edition", "elroq", "El", 3995, 1000, 469900, SKODA),
+      B("Skoda", "Kodiaq Selection", "kodiaq", "Bensin", 4395, 1000, 434900, SKODA),
+      B("Skoda", "Enyaq 85 Solid Edition", "enyaq", "El", 4995, 1000, 569900, SKODA),
+      B("Skoda", "Superb Combi Selection iV", "superb", "Laddhybrid", 4995, 1000, 476000, SKODA),
+      B("Skoda", "Enyaq Coupé 85 Solid Edition", "enyaqc", "El", 5995, 1000, 594900, SKODA),
+      B("Skoda", "Peaq 90 Selection", "peaq", "El", 6945, 1000, 654900, SKODA),
+      // --- Kia (märkets egna priser) ---
+      B("Kia", "Picanto 1.0 GDI AMT Action", "picanto", "Bensin", 3145, 1000, 206300, { ...KIA, mer: {1500: 107, 2000: 357}, url: KU("picanto") }),
+      B("Kia", "Stonic 1.0 T-GDi Action", "stonic", "Bensin", 3295, 1000, 266900, { ...KIA, mer: {1500: 175, 2000: 520}, url: KU("stonic") }),
+      B("Kia", "K4 Sportswagon 1.0 T-GDi Action", "k4sw", "Bensin", 3595, 1000, 312000, { ...KIA, mer: {1500: 160, 2000: 399}, url: KU("k4") }),
+      B("Kia", "Seltos 1.6 T-GDi Action", "seltos", "Bensin", 3795, 1000, 332600, { ...KIA, mer: {1500: 170, 2000: 421}, url: KU("seltos") }),
+      B("Kia", "Seltos Hybrid Action", "seltos", "Hybrid", 3995, 1000, 374400, { ...KIA, mer: {1500: 287, 2000: 559}, url: KU("seltos") }),
+      B("Kia", "EV4 Long Range", "ev4", "El", 6195, 1000, 541400, { ...KIA, mer: {1500: 319, 2000: 798}, url: KU("ev4") }),
+      B("Kia", "EV5 Long Range", "ev5", "El", 6495, 1000, 553900, { ...KIA, url: KU("ev5") }),
+      B("Kia", "Sorento Plug-in Hybrid AWD", "sorento", "Laddhybrid", 7845, 1000, 614900, { ...KIA, mer: {1500: 317, 2000: 801}, url: KU("sorento-plug-in-hybrid") }),
+      B("Kia", "Sportage Plug-in Hybrid AWD Advance", "sportage", "Laddhybrid", 4695, 1000, 543900, { ...HEDIN, url: HA + "228511/pc-nc-kia-sportage-2027" }),
+      // --- Mercedes-Benz (märkets egna priser, 1 500 mil/år) ---
+      B("Mercedes-Benz", "GLA 250+ electric Advanced Edition", "gla", "El", 5495, 1500, 559000, MB),
+      B("Mercedes-Benz", "CLA 250+ electric Advanced Edition", "cla", "El", 5995, 1500, 599000, MB),
+      B("Mercedes-Benz", "CLA 250+ Shooting Brake electric", "clasb", "El", 6295, 1500, 615000, MB),
+      B("Mercedes-Benz", "GLB 250+ electric Advanced Edition", "glb", "El", 6495, 1500, 619000, MB),
+      B("Mercedes-Benz", "C 300 4MATIC electric Advanced Edition", "cclass", "El", 6995, 1500, 649000, MB),
+      B("Mercedes-Benz", "GLC 300 4MATIC electric Advanced Edition", "glc", "El", 7995, 1500, 719000, MB),
+      B("Mercedes-Benz", "Mercedes-AMG CLA 45 4MATIC+ electric", "cla", "El", 9595, 1500, 799000, MB),
+      B("Mercedes-Benz", "E 300 e Sedan", "eclass", "Laddhybrid", 6795, 1500, 607000, { ...MB, kalla: "Hedin Automotive (Mercedes-Benz Finans)", typ: "Återförsäljare", url: HA + "47407/pc-sc-mercedes-benz-e-class" }),
+      // --- Tesla ---
+      B("Tesla", "Model 3 bakhjulsdrift", "m3", "El", 4795, 1000, 449900, { ...TESLA, url: "https://www.tesla.com/sv_SE/model3/design" }),
+      B("Tesla", "Model 3 Long Range", "m3", "El", 5495, 1000, 539900, { ...TESLA, url: "https://www.tesla.com/sv_SE/model3/design" }),
+      B("Tesla", "Model Y bakhjulsdrift", "my", "El", 4595, 1000, 499900, { ...TESLA, url: "https://www.tesla.com/sv_SE/modely/design" }),
+      B("Tesla", "Model Y Long Range", "my", "El", 5495, 1000, 612900, { ...TESLA, url: "https://www.tesla.com/sv_SE/modely/design" }),
+      B("Tesla", "Model Y Long Range AWD", "my", "El", 5995, 1000, 649900, { ...TESLA, url: "https://www.tesla.com/sv_SE/modely/design" }),
+      // --- Volvo, fler modeller ---
+      B("Volvo", "EC40 Single Motor Core SE", "ec40", "El", 5195, 1000, 529900, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ec40" }),
+      B("Volvo", "XC60 T6 Plus", "xc60", "Laddhybrid", 7995, 1000, 599900, { ...LEASABIL, url: LB + "Volvo/Volvo-XC60-Plus" }),
+      B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944" }),
+      B("Volvo", "EX60 P6 Plus", "ex60", "El", 8995, 1000, 689000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/170a712b-5743-4b66-9e23-bb33b98d7edd" }),
+      B("Volvo", "XC90 T8 Ultra Dark", "xc90", "Laddhybrid", 11995, 1000, 994000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/31b21382-095f-40b2-af94-28a9d6db1190", not: "Lagerbil" }),
+      B("Cupra", "Raval Endurance", "raval", "El", 3495, 1000, 426600, { ...LEASABIL, mer: {1500: 365, 2000: 495}, url: LB + "Cupra/Cupra-Nya-CUPRA-Raval-Endurance" }),
+      B("Cupra", "Leon Sportstourer eTSI 150 DSG", "cupraleon", "Bensin", 3595, 1000, 407900, { ...LEASABIL, mer: {1500: 490, 2000: 675}, url: LB + "Cupra/CUPRA-Leon-Sportstourer-eTSI-150hk-DSG" }),
+      B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 429900, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller lagerbilar" }),
+      B("Cupra", "Born 58 kWh", "born", "El", 4195, 1000, 466900, { typ: "Märket", kalla: "Cupra", url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_born_58_kwh", not: "3 895 kr/mån om du betalar 10 000 kr i förhöjd första hyra" }),
+      B("Seat", "Ibiza Edition 1.0 MPI 80 hk", "ibiza", "Bensin", 2695, 1000, 229900, { forhojd: 10000, kalla: "Bilia", url: "https://www.bilia.se/bilar/seat/" }),
+      B("Audi", "A3 Sportback 35 TFSI S tronic Proline", "a3", "Bensin", 2795, 1000, 359900, { service: false, kalla: "Din Bil", url: "https://dinbil.se/audi/erbjudanden/privatleasing-audi-a3-sportback", not: "Serviceavtal från 100 kr/mån och uppläggnings-/adminavgift tillkommer" }),
+      B("BMW", "120", "bmw120", "Bensin", 3690, 1000, 387700, { start: 595, adm: 55, kalla: "Hedin Automotive", url: HA + "246889/pc-nc-bmw-120-2026" }),
+      B("BMW", "iX2 xDrive30 Active Edition", "ix2", "El", 6895, 1000, 569900, { typ: "Märket", start: 595, adm: 55, kalla: "BMW", url: "https://hitta.bmw.se/leasing/58a78c30-ae30-46d2-8bc8-89887262abdd/5977fbc3-ac12-42c0-a5bd-974161bea67c?offerType=0" }),
+      B("Kia", "EV2 Standard Range", "ev2", "El", 3495, 1500, 331900, { ...HEDIN, url: HA + "226224/pc-nc-kia-ev2-2027" }),
+      B("Kia", "EV3 Long Range", "ev3", "El", 4495, 1000, 508300, { typ: "Märket", start: 592, adm: 59, mer: {1500: 262, 2000: 655}, kalla: "Kia", url: "https://www.kia.com/se/nya-bilar/ev3/upptack/" }),
+      B("Hyundai", "i20 1.0 T-GDi Essential (manuell)", "i20", "Bensin", 2395, 1000, 226500, { ...HEDIN, url: HA + "245702/pc-nc-hyundai-i20-2026" }),
+      B("Hyundai", "Bayon 1.0 T-GDi Essential (manuell)", "bayon", "Bensin", 2595, 1000, 239900, { ...HEDIN, url: HA + "246041/pc-nc-hyundai-bayon-2026" }),
+      B("Hyundai", "Kona Hybrid Essential", "kona", "Hybrid", 3395, 1000, 354900, { ...HEDIN, url: HA + "246649/pc-nc-hyundai-kona-2026" }),
+      B("Hyundai", "Tucson Hybrid 4WD Essential", "tucson", "Hybrid", 3995, 1000, 414900, { typ: "Märket", start: 995, adm: 59, kalla: "Hyundai", url: "https://lager.hyundai.se/model/TUCSON%20Hybrid/JFW5D5G1GEV1KK0BB?ext=SAW&int=NNB&customer=private" }),
+      B("Hyundai", "Tucson Plug-in Hybrid 2WD", "tucson", "Laddhybrid", 4075, 1000, 459900, { ...HEDIN, url: HA + "237738/pc-nc-hyundai-tucson-2027" }),
+      B("Toyota", "Aygo X Hybrid", "aygox", "Hybrid", 2995, 1500, 238900, TOYOTA),
+      B("Toyota", "Yaris Hybrid", "yaris", "Hybrid", 2995, 1500, 254900, TOYOTA),
+      B("Toyota", "Yaris Cross Hybrid", "yariscross", "Hybrid", 3195, 1500, 294900, TOYOTA),
+      B("Toyota", "Corolla Touring Sports Hybrid", "corollats", "Hybrid", 3395, 1500, 334900, TOYOTA),
+      B("Toyota", "C-HR Hybrid", "chr", "Hybrid", 3595, 1500, 350900, TOYOTA),
+      B("Toyota", "RAV4 Hybrid AWD-i", "rav4", "Hybrid", 6295, 1500, 459900, TOYOTA),
+      B("Toyota", "bZ4X", "bz4x", "El", 5895, 1500, 479900, TOYOTA),
+      B("Nissan", "Juke DIG-T DCT Acenta", "juke", "Bensin", 2995, 1000, 286000, { ...HEDIN, url: HA + "187699/pc-nc-nissan-juke-2025" }),
+      B("Nissan", "Micra 40 kWh Engage", "micra", "El", 3995, 1000, 369000, { ...HEDIN, url: HA + "200410/pc-nc-nissan-micra-2026" }),
+      B("Nissan", "Qashqai Acenta", "qashqai", "Bensin", 2995, 1000, 322000, { ...HEDIN, url: HA + "236359/pc-nc-nissan-qashqai-2026" }),
+      B("Renault", "5 E-Tech Evolution EV40", "r5", "El", 3490, 1000, 349900, { ...HEDIN, url: HA + "233165/pc-nc-renault-5-2026" }),
+      B("Dacia", "Sandero Essential TCe 100", "sandero", "Bensin", 1990, 1000, 199900, { ...HEDIN, adm: 60, url: HA + "44281/pc-sc-dacia-sandero" }),
+      B("Peugeot", "2008 Allure Hybrid", "p2008", "Hybrid", 2699, 1000, 349900, PEUGEOT),
+      B("Peugeot", "3008 GT Hybrid", "p3008", "Hybrid", 3199, 1000, 354900, { ...PEUGEOT, mer: {1500: 200, 2000: 400} }),
+      B("Peugeot", "5008 GT Hybrid", "p5008", "Hybrid", 3399, 1000, 394900, PEUGEOT),
+      B("Peugeot", "e-2008 GT", "pe2008", "El", 3899, 1000, 369900, PEUGEOT),
+      B("MG", "MG4 Urban", "mg4", "El", 2995, 1000, 299900, { ...HEDIN, adm: 60, url: HA + "234893/pc-nc-mg-4-ev-urban-2026", not: "15 000 kr att ladda för hos Hedin ingår" }),
+      B("BYD", "Seal 6 DM-i Touring Comfort", "seal6", "Laddhybrid", 4511, 1000, 469900, { kalla: "Hedin Automotive (Arval)", url: HA + "214169/pc-nc-byd-seal-6-dm-i-touring-2025" }),
+      B("Mazda", "6e Takumi", "mazda6e", "El", 8530, 1000, 464600, { kalla: "Nybergs Bil", url: "https://nybergsbil.se/kampanjer/mazda-6e" })
+    ];
+
+    /* ---------------------------------------------------------------
+       FOTON – alla från Wikimedia Commons. Licensen kräver att vi anger
+       fotograf, licens och att bilden är ändrad (beskuren och förminskad).
+       Det görs under varje bild. "lic" säger vilken licens fotot har.
+       ---------------------------------------------------------------- */
+    const LICENSER = {
+      "CC BY-SA 4.0":    "https://creativecommons.org/licenses/by-sa/4.0/deed.sv",
+      "CC BY-SA 3.0 de": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.sv",
+      "CC BY 3.0":       "https://creativecommons.org/licenses/by/3.0/deed.sv",
+      "CC BY 2.0":       "https://creativecommons.org/licenses/by/2.0/deed.sv",
+      "CC0":             "https://creativecommons.org/publicdomain/zero/1.0/deed.sv"
+    };
+    const C = "https://commons.wikimedia.org/wiki/File:";
+    const M = "Alexander Migl", A = "Alexander-93";
+    const FOTON = {
+      a3:         { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A3_Sportback_(8Y,_Facelift)_%E2%80%93_f_03102025.jpg" },
+      aygox:      { av: M, fil: "Toyota_Aygo_X_Hybrid_IMG_5984.jpg" },
+      bayon:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Hyundai_Bayon_1.0_T-GDI_Prime_(Facelift)_%E2%80%93_f_07072024.jpg" },
+      bmw120:     { av: A, fil: "BMW_120_(F70)_IMG_1166.jpg" },
+      born:       { av: A, fil: "Cupra_Born_1X7A6953.jpg" },
+      bz4x:       { av: M, fil: "2026_Toyota_bZ4X_IMG_8455.jpg" },
+      chr:        { av: A, fil: "Toyota_C-HR_hybrid_II_GR_Sport_IMG_8881.jpg" },
+      corollats:  { av: A, fil: "2024_Toyota_Corolla_Touring_Sports_Hybrid_(E210)_IMG_9888.jpg" },
+      cupraleon:  { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Leon_Sportstourer_VZ_2.0_TSI_4Drive_(Facelift)_%E2%80%93_f_19072025.jpg" },
+      elroq:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Skoda_Elroq_85_%E2%80%93_f_09022025.jpg" },
+      ev2:        { av: M, fil: "Kia_EV2_IMG_8443.jpg" },
+      ev3:        { av: M, fil: "Kia_EV3_DSC_9146.jpg" },
+      ex30:       { av: A, fil: "Volvo_EX30_1X7A2476.jpg" },
+      ex30cc:     { av: "Chanokchon", fil: "2025_Volvo_EX30_Cross_Country_Ultra_Twin_Motor_Performance.jpg" },
+      ex40:       { av: A, fil: "Volvo_XC40_Recharge_Facelift_IMG_8130.jpg" },
+      formentor:  { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Formentor_(Facelift)_%E2%80%93_f_01012025.jpg" },
+      i20:        { av: A, fil: "Hyundai_i20_(BC3)_Facelift_IMG_8594.jpg" },
+      ibiza:      { av: A, fil: "Seat_Ibiza_6F_Facelift_IMG_0117.jpg" },
+      id3:        { av: M, fil: "Volkswagen_ID.3_Neo_IMG_7255.jpg" },
+      id4:        { av: "Dennis Elzinga", lic: "CC BY 2.0", fil: "2020_Volkswagen_ID.4_Pro_(Netherlands)_front_view.jpg" },
+      ix2:        { av: A, fil: "BMW_U10_1X7A2456.jpg" },
+      juke:       { av: A, fil: "2024_Nissan_Juke_(F16)_IMG_2179.jpg" },
+      karoq:      { av: M, fil: "Skoda_Karoq_Facelift_1X7A0318.jpg" },
+      kodiaq:     { av: A, fil: "%C5%A0koda_Kodiaq_II_IMG_9433.jpg" },
+      kona:       { av: "Damian B Oh", fil: "Hyundai_Kona_Hybrid_SX2_HEV_Abyss_Black_Pearl_Test_Vehicle_(1).jpg" },
+      mazda6e:    { av: "Matti Blume", fil: "Mazda_6e,_Auto_2025,_Zurich_(20251029-P1073933).jpg" },
+      mg4:        { av: "Captainmorlypogi1959", fil: "Morris_Garages_MG4_Urban_EV_2026_(1).jpg" },
+      micra:      { av: M, fil: "Nissan_Micra_EV_IMG_4967.jpg" },
+      octaviac:   { av: M, fil: "%C5%A0koda_Octavia_IV_Combi_RS_Facelift_DSC_7073.jpg" },
+      p2008:      { av: A, fil: "Peugeot_2008_B_Facelift_IMG_1185.jpg" },
+      p3008:      { av: A, fil: "Peugeot_3008_C_IMG_9387.jpg" },
+      p5008:      { av: A, fil: "Peugeot_5008_C_Leonberg_2024_IMG_0827.jpg" },
+      pe2008:     { av: A, fil: "Peugeot_e-2008_Facelift_Auto_Zuerich_2023_1X7A1206.jpg" },
+      pol2:       { av: "Calreyn88", fil: "2024_Polestar_2_Plus_RWD.jpg" },
+      pol4:       { av: M, fil: "Polestar_4_DSC_8232_(cropped).jpg" },
+      qashqai:    { av: "LuvsMG481", fil: "2025_Nissan_Qashqai_ST-L_facelift_front.jpg" },
+      r5:         { av: M, fil: "Renault_5_E-Tech_Electric_DSC_7281.jpg" },
+      rav4:       { av: M, fil: "Toyota_RAV4_Core_Hybrid_IMG_7545.jpg" },
+      raval:      { av: M, fil: "Cupra_Raval_VZ_IMG_8811.jpg" },
+      sandero:    { av: M, fil: "2023_Dacia_Sandero_III_1X7A6192.jpg" },
+      seal6:      { av: A, fil: "BYD_Seal_6_DM-i_Touring_IAA_2025_DSC_2250.jpg" },
+      superb:     { av: A, fil: "%C5%A0koda_Superb_IV_Combi_Automesse_Ludwigsburg_2024_IMG_1400.jpg" },
+      tucson:     { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Hyundai_Tucson_1.6_T-GDI_PHEV_Trend_(IV,_Facelift)_%E2%80%93_f_15022025.jpg" },
+      yaris:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Toyota_Yaris_Hybrid_Teamplayer_(IV,_Facelift)_%E2%80%93_f_12042026.jpg" },
+      yariscross: { av: A, fil: "Toyota_Yaris_Cross_Hybrid_(XP210)_1X7A1846.jpg" },
+      cclass:     { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_C_300_d_AMG_Line_(W_206)_%E2%80%93_f_10032024.jpg" },
+      cla:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_4MATIC_AMG_Line_(C_178)_%E2%80%93_f_11052026.jpg" },
+      clasb:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_Shooting_Brake_AMG_Line_Plus_(X_178)_%E2%80%93_f_30082026.jpg" },
+      ec40:       { av: M, fil: "Volvo_C40_Leonberg_2022_1X7A0524.jpg" },
+      eclass:     { av: A, fil: "Mercedes-Benz_W214_1X7A1841.jpg" },
+      enyaq:      { av: "Ssu", fil: "2025_Skoda_Enyaq_sportline_(facelift)_-_front.jpg" },
+      enyaqc:     { av: M, fil: "%C5%A0koda_Enyaq_Coup%C3%A9_DSC_7070.jpg" },
+      epiq:       { av: A, fil: "%C5%A0koda_Epiq_Showcar_IAA_2025_DSC_1378.jpg" },
+      ev4:        { av: M, fil: "Kia_EV4_GT-Line_Automesse_Ludwigsburg_2025_DSC_2534.jpg" },
+      ev5:        { av: "Ethan Llamas", fil: "Kia_EV5_OV_GT-Line_Snow_White_Pearl_01.jpg" },
+      ex60:       { av: M, fil: "Volvo_EX60_IMG_8339.jpg" },
+      fabia:      { av: M, fil: "Skoda_Fabia_IV_1X7A6155.jpg" },
+      gla:        { av: "Dinkun Chen", fil: "MERCEDES-AMG_GLA_35_4MATIC_(H247)_China.jpg" },
+      glb:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_GLB_250%2B_mit_EQ-Technologie_AMG_Line_(X_244)_%E2%80%93_f1_18042026.jpg" },
+      glc:        { av: A, fil: "Mercedes-Benz_GLC_with_EQ_Technology_IAA_2025_DSC_2106.jpg" },
+      golf:       { av: A, fil: "Volkswagen_Golf_VIII_Facelift_IMG_0375.jpg" },
+      golfsc:     { av: A, fil: "Volkswagen_Golf_VIII_Variant_Facelift_IMG_0401.jpg" },
+      id7:        { av: A, fil: "Volkswagen_ID.7_IAA_2023_1X7A0375.jpg" },
+      id7t:       { av: M, fil: "Volkswagen_ID.7_Tourer_IMG_4193.jpg" },
+      idcross:    { av: M, fil: "Volkswagen_ID._Cross_IAA_2025_DSC_1380.jpg" },
+      idpolo:     { av: M, fil: "Volkswagen_ID.Polo_IMG_8403.jpg" },
+      idtiguan:   { av: "Y.Leclercq", fil: "Volkswagen_ID._Tiguan_01.jpg" },
+      k4sw:       { av: M, fil: "Kia_K4_Sportswagon_IMG_7822.jpg" },
+      kamiq:      { av: A, fil: "%C5%A0koda_Kamiq_Facelift_IMG_8638.jpg" },
+      m3:         { av: "Mliu92", fil: "Tesla_Model_3_%27Highland%27_(2024)_2.jpg" },
+      my:         { av: "Damian B Oh", fil: "Tesla_Model_Y_Dual_Motor_First_Edition_Juniper_Quicksilver_(6).jpg" },
+      passat:     { av: A, fil: "Volkswagen_Passat_Variant_B9_1X7A1960.jpg" },
+      peaq:       { av: "Ssu", fil: "2026_Skoda_Peaq_(15).jpg" },
+      picanto:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Kia_Picanto_Sport_(III,_2._Facelift)_%E2%80%93_f_02012026.jpg" },
+      polo:       { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "VW_Polo_MOVE_(VI,_Facelift)_%E2%80%93_f_18042025.jpg" },
+      seltos:     { av: M, fil: "Kia_Seltos_(SP3)_IMG_7812.jpg" },
+      sorento:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Kia_Sorento_2.2_CRDi_DCT_AWD_Platinum_(IV,_Facelift)_%E2%80%93_f_14102025.jpg" },
+      sportage:   { av: "LuvsMG481", fil: "2025_Kia_Sportage_GT-Line_facelift_front.jpg" },
+      stonic:     { av: M, fil: "Kia_Stonic_Facelift_IMG_3649.jpg" },
+      taigo:      { av: M, fil: "Volkswagen_Taigo_1X7A0350.jpg" },
+      tayron:     { av: M, fil: "Volkswagen_Tayron_II_eHybrid_DSC_7824.jpg" },
+      tiguan:     { av: A, fil: "Volkswagen_Tiguan_III_IMG_8388.jpg" },
+      troc:       { av: M, fil: "Volkswagen_T-Roc_II_IMG_5693.jpg" },
+      v60:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Volvo_V60_Cross_Country_B4_AWD_Plus_(II,_Facelift)_%E2%80%93_f_12102025.jpg" },
+      xc60:       { av: "JustAnotherCarDesigner", lic: "CC0", fil: "Volvo_XC60_II_2025_facelift_002.jpg" },
+      xc90:       { av: "Kevauto", fil: "2025_Volvo_XC90_(facelift),_front_4.11.25.jpg" }
+    };
+
+    // Hämta elementen från HTML-delen så att vi kan läsa och ändra dem.
+    const sok = document.getElementById("sok");
+    const drivmedel = document.getElementById("drivmedel");
+    const mil = document.getElementById("mil");
+    const forsakring = document.getElementById("forsakring");
+    const sortera = document.getElementById("sortera");
+    const lista = document.getElementById("lista");
+    const summary = document.getElementById("summary");
+
+    // Hjälpfunktioner: 20865 -> "20 865 kr", 0.384 -> "38 %"
+    const kr = n => n.toLocaleString("sv-SE") + " kr";
+    const pct = x => Math.round(x * 100) + " %";
+
+    // Betyget för ett erbjudande, utifrån andelen av nypriset.
+    function betyg(andel) {
+      if (andel == null) return null;
+      if (andel < 0.40) return { klass: "mb", text: "Mycket bra" };
+      if (andel < 0.45) return { klass: "b",  text: "Bra" };
+      if (andel < 0.55) return { klass: "ok", text: "OK" };
+      return { klass: "d", text: "Dyrt" };
+    }
+
+    // Räkna ut månadspriset för den körsträcka man valt.
+    // Returnerar null om tillägget inte är känt.
+    function manadFor(bil, valdMil) {
+      const ingar = bil.mil || 1000;               // okänt? anta 1 000 mil
+      let pris = null;
+      if (valdMil <= ingar) pris = bil.manad;      // ingår redan
+      else if (bil.mer && bil.mer[valdMil] != null) pris = bil.manad + bil.mer[valdMil];
+      return pris == null ? null : pris + bil.adm; // lägg på ev. admin-avgift
+    }
+
+    // Huvudfunktionen: körs varje gång man ändrar ett filter.
+    function rita() {
+      const text = sok.value.trim().toLowerCase();
+      const valdMil = Number(mil.value);
+      const forsMan = Number(forsakring.value) || 0;
+
+      // 1) Räkna fram pris och andel för varje bil
+      let rader = BILAR.map(bil => {
+        const m = manadFor(bil, valdMil);
+        const leasing = m == null ? null : m * 36 + bil.start + bil.forhojd;   // allt du betalar till leasingbolaget
+        const total = leasing == null ? null : leasing + forsMan * 36;
+        const andel = leasing != null && bil.nypris ? leasing / bil.nypris : null;
+        return { ...bil, m, total, andel };
+      });
+
+      // 2) Filtrera
+      rader = rader.filter(b =>
+        (drivmedel.value === "alla" || b.drivmedel === drivmedel.value) &&
+        (b.marke + " " + b.modell).toLowerCase().includes(text)
+      );
+
+      // 3) Sortera (bilar där något värde saknas hamnar sist)
+      const big = Number.MAX_SAFE_INTEGER;
+      const s = sortera.value;
+      if (s === "andel") rader.sort((a, b) => (a.andel ?? big) - (b.andel ?? big));
+      if (s === "total") rader.sort((a, b) => (a.total ?? big) - (b.total ?? big));
+      if (s === "manad") rader.sort((a, b) => (a.m ?? big) - (b.m ?? big));
+      if (s === "marke") rader.sort((a, b) => (a.marke + a.modell).localeCompare(b.marke + b.modell, "sv"));
+
+      // 4) Sammanfattningen överst
+      const minst = (lista, falt) => lista.filter(r => r[falt] != null).sort((a, b) => a[falt] - b[falt])[0];
+      const bast = minst(rader, "andel");
+      const billigast = minst(rader, "total");
+      const billigastEl = minst(rader.filter(r => r.drivmedel === "El"), "total");
+      const namn = b => b ? b.marke + " " + b.modell : "";
+      summary.innerHTML = `
+        <div class="stat"><small>Bästa erbjudande</small><b>${bast ? pct(bast.andel) + " av nypriset" : "–"}</b><small>${namn(bast)}</small></div>
+        <div class="stat"><small>Billigast totalt</small><b>${billigast ? kr(billigast.total) : "–"}</b><small>${namn(billigast)}</small></div>
+        <div class="stat"><small>Billigaste elbil totalt</small><b>${billigastEl ? kr(billigastEl.total) : "–"}</b><small>${namn(billigastEl)}</small></div>
+        <div class="stat"><small>Bilar i listan</small><b>${rader.length}</b></div>`;
+
+      // 5) Bygg ett kort per bil
+      lista.innerHTML = rader.map((b, i) => {
+        const bt = betyg(b.andel);
+        const visaRank = s !== "marke" && (s === "andel" ? b.andel != null : b.total != null);
+        return `
+        <article class="car">
+          <a class="piclink" href="${b.url}" target="_blank" rel="noopener"><img class="pic" src="bilder/${b.foto}.jpg" alt="${b.marke} ${b.modell}" loading="lazy"></a>
+          <div>
+            <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
+            <h3><a href="${b.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${b.modell}</a></h3>
+          </div>
+          <div class="price">
+            ${b.m != null
+              ? `<div class="month">${kr(b.m)}/mån</div><div class="total">${kr(b.total)} totalt på 36 mån</div>`
+              : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
+            <a class="cta" href="${b.url}" target="_blank" rel="noopener">Till erbjudandet →</a>
+          </div>
+          <div class="tags">
+            ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : `<span class="tag">Andel av nypris: –</span>`}
+            <span class="tag ${b.drivmedel === "El" ? "el" : ""}">${b.drivmedel}</span>
+            <span class="tag">36 mån · ${b.mil.toLocaleString("sv-SE")} mil/år ingår</span>
+            ${b.forhojd ? `<span class="tag warn">Engångsbelopp vid start: ${kr(b.forhojd)}</span>` : ""}
+            ${b.start || b.adm ? `<span class="tag warn">Avgifter: ${kr(b.start)} start${b.adm ? " + " + b.adm + " kr/mån" : ""}</span>` : ""}
+            <span class="tag">${b.service === null ? "Service: se villkor" : b.service ? "Service ingår" : "Service ingår inte"}</span>
+            <span class="tag ${b.typ === "Märket" ? "" : "warn"}">${b.typ === "Märket" ? "Märkets eget pris" : "Pris från återförsäljare"}</span>
+          </div>
+          ${b.not ? `<div class="source"><b>Obs:</b> ${b.not}</div>` : ""}
+          <div class="source">Nypris ${b.nypris ? kr(b.nypris) : "saknas"} · ${b.kalla} · villkor kontrollerade ${KONTROLL}</div>
+        </article>`;
+      }).join("") || "<p>Inga bilar matchar din sökning.</p>";
+    }
+
+    // Bildkällor: en rad per foto. Licenserna kräver att fotografen nämns,
+    // men det räcker att det görs samlat här i stället för på varje kort.
+    document.getElementById("kallor").innerHTML = Object.keys(FOTON).map(k => {
+      const f = FOTON[k], lic = f.lic || "CC BY-SA 4.0";
+      const bil = BILAR.find(b => b.foto === k);
+      return `<li>${bil ? bil.marke + " " + bil.modell : k}: <a href="${C + f.fil}" target="_blank" rel="noopener">${f.av}</a>, Wikimedia Commons, <a href="${LICENSER[lic]}" target="_blank" rel="noopener">${lic}</a>, beskuren</li>`;
+    }).join("");
+
+    // Kör rita() när något ändras, och en gång direkt när sidan laddas.
+    [sok, drivmedel, mil, forsakring, sortera].forEach(el => el.addEventListener("input", rita));
+    rita();
+  </script>
+</body>
+</html>
