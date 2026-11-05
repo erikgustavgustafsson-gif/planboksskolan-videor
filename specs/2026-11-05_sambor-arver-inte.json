@@ -1,0 +1,35 @@
+{
+  "slug": "2026-11-05_sambor-arver-inte",
+  "title": "Sambor ärver inte varandra – inte en krona",
+  "caption": "Är du sambo? Då ärver ni INTE varandra utan testamente 😳 Barn, föräldrar eller syskon ärver först. Sambolagen ger bara minst två prisbasbelopp (118 400 kr 2026) ur bostad och bohag – bil, sparkonto och fonder ingår inte.\n\nHar ni skrivit testamente? 👇\n\nInte juridisk rådgivning.\n\n#sambo #testamente #arv #sambolagen #privatekonomi #plånboksskolan",
+  "pinned_comment": "Testamentet måste vara skriftligt och bevittnas av två personer samtidigt (inte arvingar eller sambon). Har ni barn har de alltid rätt till sin laglott. Har ni skrivit ett? Ja ✍️ / Nej, nu gör vi det 👇",
+  "sources": [
+    "https://regeringen.se/regeringens-politik/familjeratt/samboforhallande/ (sambor ärver inte varandra utan testamente; efterlevande sambo får alltid två prisbasbelopp ur bodelningen i den mån egendomen räcker)",
+    "Sambolagen (2003:376) 3–6 §§ och 18 § 2 st. (samboegendom = gemensam bostad och bohag; bil, aktier, fonder, bankmedel ingår inte – riksdagen.se)",
+    "Ärvdabalken 2 kap. (bröstarvingar ärver först, sedan föräldrar och syskon)",
+    "https://www.forsakringskassan.se/privatperson/e-tjanster-blanketter-och-informationsmaterial/aktuella-belopp (prisbasbelopp 2026: 59 200 kr → 2 × = 118 400 kr)"
+  ],
+  "cover": {
+    "title": ["SAMBOR ÄRVER", "INTE VARANDRA"],
+    "pill": "Sambolagen 2026",
+    "label": "Ditt skydd utan testamente:",
+    "big": "118 400 kr",
+    "big_color": "red"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Är du sambo? Då ärver ni inte varandra. Inte en krona.",
+     "kicker": "VISSTE DU?", "big": "SAMBOR ÄRVER INTE", "sub": "varandra",
+     "punch": ["Inte en krona."]},
+    {"type": "cards", "say": "Dör din sambo utan testamente ärver barnen först, sedan föräldrar och syskon. Inte du.",
+     "title": "VEM ÄRVER?",
+     "cards": [["Barn", "ärver först"], ["Föräldrar, syskon", "om barn saknas"], ["Sambon", "ärver ingenting"]],
+     "last_red": true, "stamp": "0 kr"},
+    {"type": "number", "say": "Ditt enda skydd: vid bodelning får du minst två prisbasbelopp ur bostad och bohag. I år hundraartontusen.",
+     "top": "2 × 59 200 kr", "value": 118400, "suffix": " kr", "color": "yellow",
+     "sub": "ur bostad och bohag", "note": "Sambolagen 18 §, om egendomen räcker (2026)"},
+    {"type": "statement", "say": "Bil, sparkonto och fonder ingår inte alls.",
+     "title": "INGÅR INTE", "lines": ["bil, sparkonto,"], "highlight": "fonder, aktier", "chip": "bara bostad + bohag"},
+    {"type": "cta", "say": "Skriv ett testamente, med två vittnen. Och följ Plånboksskolan.",
+     "line1": "Skriv ett", "big": "TESTAMENTE.", "line2": "Två vittnen räcker."}
+  ]
+}
