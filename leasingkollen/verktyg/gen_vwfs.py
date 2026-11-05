@@ -31,6 +31,9 @@ for f in sorted(glob.glob(os.path.join(PROD, '*.json'))):
             pl = o.get('price') or (o['optionValues'][0].get('price') if o.get('optionValues') else None)
             desc = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html.unescape(o.get('description') or ''))).strip()
             v = {'n': o['name'].strip(), 'p': pmap(pl)}
+            det = ((o.get('content') or {}).get('detailCollection') or [])
+            if not desc and det:   # drivlina: hk, räckvidd, batteri, förbrukning
+                desc = ', '.join(f"{x['label'].replace('Motoreffekt ', '')} {x['value']}" for x in det if x.get('value') and 'kW' not in x['label'])
             if desc and desc != v['n']: v['d'] = desc[:220]
             if ptot(pl): v['t'] = ptot(pl)
             if o.get('isSelected'): v['s'] = 1

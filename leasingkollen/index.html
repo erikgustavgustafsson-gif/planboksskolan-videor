@@ -25,6 +25,7 @@
   <style>
     /* ---------- CSS-variabler: sidans färger på ett ställe ---------- */
     :root {
+      color-scheme: light;  /* sidan är alltid ljus, även när telefonen har mörkt läge */
       --navy: #0E2A47;      /* mörkblå huvudfärg */
       --mint: #E3F4F1;      /* ljus bakgrund i rutorna */
       --mint-dark: #1F7A6B;
@@ -170,7 +171,7 @@
     /* ---------- Konfiguratorn (välj tillval & beställ) ---------- */
     .cta { border: 0; cursor: pointer; font: inherit; }
     .ext { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
-    dialog#konf { width: min(760px, 100vw); box-sizing: border-box; max-height: 100vh; border: 0; border-radius: 16px; padding: 0; color: var(--text); }
+    dialog#konf { background: #fff; color-scheme: light; width: min(760px, 100vw); box-sizing: border-box; max-height: 100vh; border: 0; border-radius: 16px; padding: 0; color: var(--text); }
     dialog#konf::backdrop { background: rgba(14, 42, 71, .55); }
     .kh { position: sticky; top: 0; background: var(--navy); color: #fff; padding: 16px 20px; display: flex; gap: 12px; align-items: center; z-index: 2; }
     .kh h2 { margin: 0; font-size: 18px; flex: 1; }
@@ -188,7 +189,7 @@
     .kval .kp { font-weight: 700; white-space: nowrap; font-size: 14px; }
     .kform { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
     .kform label { font-size: 13px; color: var(--muted); display: block; }
-    .kform input, .kform textarea, .kform select { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; color: var(--text); }
+    .kform input, .kform textarea, .kform select { background: #fff; width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; color: var(--text); }
     .kform .hel { grid-column: 1 / -1; }
     .kfot { position: sticky; bottom: 0; background: #fff; border-top: 1px solid var(--line); padding: 12px 20px; display: flex; gap: 12px; align-items: center; z-index: 2; }
     .kfot .ksum { flex: 1; }
@@ -211,6 +212,13 @@
       .kh { padding: 12px 14px; } .kb { padding: 4px 14px 16px; } .steg { padding: 10px 14px 0; }
       .kform { grid-template-columns: 1fr; }
     }
+    .kutr { margin: 0 0 6px; padding-left: 18px; columns: 2; column-gap: 24px; font-size: 14px; }
+    .kutr li { break-inside: avoid; padding: 2px 0; }
+    .kgrupp small { color: var(--muted); font-size: 12px; display: block; }
+    details.utr { grid-column: 2 / -1; font-size: 13px; }
+    details.utr summary { cursor: pointer; color: var(--navy); font-weight: 600; }
+    details.utr ul { margin: 6px 0 0; padding-left: 18px; columns: 2; column-gap: 24px; }
+    @media (max-width: 640px) { .kutr, details.utr ul { columns: 1; } details.utr { grid-column: auto; } }
   </style>
 </head>
 
@@ -322,7 +330,7 @@
     const KONTROLL = "5 nov 2026"; // uppdateras vid varje daglig kontroll
     const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
     const LEASABIL = { start: 495, kalla: "Leasabil" };
-    const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", url: "https://easyprivatleasing.toyota.se/" };
+    const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", start: 695, adm: 59, url: "https://easyprivatleasing.toyota.se/", not: "Fordonsskatt tillkommer. Övermil 8 kr/mil" };
     const PEUGEOT = { typ: "Märket", kalla: "Peugeot (Ayvens)", url: "https://www.peugeot.se/kop/finansiering/privatleasing.html", forsakring: 395, not: "Försäkring via Ayvens är obligatorisk: 395 kr/mån utöver hyran (ingår i totalen). Fordonsskatt faktureras utöver hyran" };
     const VWFS_NOT = "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer";
     const VW = { typ: "Märket", kalla: "Volkswagen (VW Finans)", start: 495, not: VWFS_NOT };
@@ -349,7 +357,6 @@
       B("Volvo", "EX30 Single Motor Plus", "ex30", "El", 3795, 1000, 457000, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ex30" }),
       B("Volvo", "EX30 Cross Country P5 Long Range Plus", "ex30cc", "El", 3990, 1000, 542000, { mer: {1500: 380, 2000: 839}, kalla: "Volvo Car Kungsängen", url: "https://bilweb.se/stockholms-lan/volvo-ex30-cross-country-plus-2027-suv-445689" }),
       B("Volvo", "EX40 Extended Range Plus SE", "ex40", "El", 4790, 1000, 579900, { kalla: "Volvo-handlare via Wayke", url: "https://www.wayke.se/objekt/019cfc13-6c95-7413-b1f1-c19f8c9cfb6a", not: "Begränsat antal lagerbilar" }),
-      B("Polestar", "2 Long Range Single Motor", "pol2", "El", 5495, 1500, 599000, { kalla: "Finnvedens Bil via Blocket", url: "https://www.blocket.se/mobility/item/26097353" }),
       B("Polestar", "4 coupé Rear Motor Business edition Pilot", "pol4", "El", 7295, 1500, 619000, { kalla: "Polestar-handlare via Wayke", url: "https://www.wayke.se/objekt/01a04238-b8b8-7581-9401-3a65797cbf6f", not: "Leverans senast 31 dec 2026" }),
       // --- Škoda (märkets egna priser) ---
       // --- Kia (märkets egna priser) ---
@@ -428,15 +435,15 @@
       B("Volkswagen", "Tiguan Life Edition", "tiguan", "Bensin", 3795, 1000, 420200, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tiguan_life_edition", cfg: "volkswagen/tiguan_life_edition", mer: {1500: 350, 2000: 665} }),
       B("Volkswagen", "Tiguan R-Line SWE Edition eHybrid", "tiguan", "Laddhybrid", 4995, 1000, 595900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tiguan_r-line_swe_edition_ehybrid_", cfg: "volkswagen/tiguan_r-line_swe_edition_ehybrid_", mer: {1500: 560, 2000: 950} }),
       // --- VWFS SLUT ---
-      B("Kia", "Picanto 1.0 GDI AMT Action", "picanto", "Bensin", 3145, 1000, 206300, { ...KIA, mer: {1500: 107, 2000: 357}, url: KU("picanto") }),
+      B("Kia", "Picanto 1.0 GDI AMT Action", "picanto", "Bensin", 3145, 1000, 208500, { ...KIA, mer: {1500: 107, 2000: 357}, url: KU("picanto") }),
       B("Kia", "Stonic 1.0 T-GDi Action", "stonic", "Bensin", 3295, 1000, 266900, { ...KIA, mer: {1500: 175, 2000: 520}, url: KU("stonic") }),
-      B("Kia", "K4 Sportswagon 1.0 T-GDi Action", "k4sw", "Bensin", 3595, 1000, 312000, { ...KIA, mer: {1500: 160, 2000: 399}, url: KU("k4") }),
+      B("Kia", "K4 Sportswagon 1.0 T-GDi Action (manuell)", "k4sw", "Bensin", 3595, 1000, 312000, { ...KIA, mer: {1500: 160, 2000: 399}, url: KU("k4") }),
       B("Kia", "Seltos 1.6 T-GDi Action", "seltos", "Bensin", 3795, 1000, 332600, { ...KIA, mer: {1500: 170, 2000: 421}, url: KU("seltos") }),
       B("Kia", "Seltos Hybrid Action", "seltos", "Hybrid", 3995, 1000, 374400, { ...KIA, mer: {1500: 287, 2000: 559}, url: KU("seltos") }),
-      B("Kia", "EV4 Long Range", "ev4", "El", 6195, 1000, 541400, { ...KIA, mer: {1500: 319, 2000: 798}, url: KU("ev4") }),
-      B("Kia", "EV5 Long Range", "ev5", "El", 6495, 1000, 553900, { ...KIA, url: KU("ev5") }),
-      B("Kia", "Sorento Plug-in Hybrid AWD", "sorento", "Laddhybrid", 7845, 1000, 614900, { ...KIA, mer: {1500: 317, 2000: 801}, url: KU("sorento-plug-in-hybrid") }),
-      B("Kia", "Sportage Plug-in Hybrid AWD Advance", "sportage", "Laddhybrid", 4695, 1000, 543900, { ...HEDIN, url: HA + "228511/pc-nc-kia-sportage-2027" }),
+      B("Kia", "EV4 GT Line Long Range", "ev4", "El", 6195, 1000, 623400, { ...KIA, mer: {1500: 319, 2000: 798}, url: KU("ev4") }),
+      B("Kia", "EV5 Long Range", "ev5", "El", 6495, 1000, 553900, { ...KIA, url: KU("ev5"), mer: {1500: 284, 2000: 567} }),
+      B("Kia", "Sorento Plug-in Hybrid AWD Action", "sorento", "Laddhybrid", 7845, 1000, 619900, { ...KIA, mer: {1500: 317, 2000: 801}, url: KU("sorento-plug-in-hybrid") }),
+      B("Kia", "Sportage Plug-in Hybrid AWD Advance", "sportage", "Laddhybrid", 4695, 1000, 508900, { ...HEDIN, url: HA + "228511/pc-nc-kia-sportage-2027" }),
       // --- Mercedes-Benz (märkets egna priser, 1 500 mil/år) ---
       B("Mercedes-Benz", "GLA 250+ electric Advanced Edition", null, "El", 5495, 1500, 559000, MB),
       B("Mercedes-Benz", "CLA 250+ electric Advanced Edition", "cla", "El", 5995, 1500, 599000, MB),
@@ -446,7 +453,7 @@
       B("Mercedes-Benz", "GLC 300 4MATIC electric Advanced Edition", "glc", "El", 7995, 1500, 719000, MB),
       B("Mercedes-Benz", "GLC 400 4MATIC electric Advanced Edition", "glc", "El", 8895, 1500, 784000, MB),
       B("Mercedes-Benz", "Mercedes-AMG CLA 45 4MATIC+ electric", "cla", "El", 9595, 1500, 799000, MB),
-      B("Mercedes-Benz", "E 300 e Sedan", "eclass", "Laddhybrid", 6795, 1500, 607000, { ...MB, kalla: "Hedin Automotive (Mercedes-Benz Finans)", typ: "Återförsäljare", url: HA + "47407/pc-sc-mercedes-benz-e-class" }),
+      B("Mercedes-Benz", "E 300 e Sedan", "eclass", "Laddhybrid", 6795, 1500, 634000, { ...MB, kalla: "Hedin Automotive (Mercedes-Benz Finans)", typ: "Återförsäljare", url: HA + "47407/pc-sc-mercedes-benz-e-class" }),
       // --- Tesla ---
       B("Tesla", "Model 3 bakhjulsdrift", "m3", "El", 4795, 1000, 449900, { ...TESLA, url: "https://www.tesla.com/sv_SE/model3/design" }),
       B("Tesla", "Model 3 Long Range", "m3", "El", 5495, 1000, 539900, { ...TESLA, url: "https://www.tesla.com/sv_SE/model3/design" }),
@@ -462,35 +469,556 @@
       B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 324500, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller ett begränsat antal lagerbilar i färgen Fiord Blue. Metalliclack +300 kr/mån. Nybeställd bil 3 295 kr/mån" }),
       B("Seat", "Ibiza Edition 1.0 MPI 80 hk", "ibiza", "Bensin", 2695, 1000, 229900, { forhojd: 10000, kalla: "Bilia", url: "https://www.bilia.se/bilar/seat/" }),
       B("Audi", "A3 Sportback 35 TFSI S tronic Proline", "a3", "Bensin", 2795, 1000, 359900, { service: false, kalla: "Din Bil", url: "https://dinbil.se/audi/erbjudanden/privatleasing-audi-a3-sportback", start: 495, not: "Serviceavtal från 100 kr/mån tillkommer. Finansiering via VW Finans: aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Erbjudandet gäller t.o.m. 31 dec 2026" }),
-      B("BMW", "120", "bmw120", "Bensin", 3690, 1000, 387700, { start: 595, adm: 55, kalla: "Hedin Automotive", url: HA + "246889/pc-nc-bmw-120-2026" }),
+      B("BMW", "120", "bmw120", "Bensin", 3690, 1000, 392400, { start: 595, adm: 55, kalla: "Hedin Automotive", url: HA + "246889/pc-nc-bmw-120-2026" }),
       B("BMW", "iX2 xDrive30 Active Edition", "ix2", "El", 6895, 1000, 569900, { typ: "Märket", start: 595, adm: 55, kalla: "BMW", url: "https://hitta.bmw.se/leasing/58a78c30-ae30-46d2-8bc8-89887262abdd/5977fbc3-ac12-42c0-a5bd-974161bea67c?offerType=0" }),
-      B("Kia", "EV2 Standard Range", "ev2", "El", 3495, 1500, 331900, { ...HEDIN, url: HA + "226224/pc-nc-kia-ev2-2027" }),
+      B("Kia", "EV2 Standard Range", "ev2", "El", 3495, 1500, 324800, { ...HEDIN, url: HA + "226224/pc-nc-kia-ev2-2027" }),
       B("Kia", "EV3 Long Range", "ev3", "El", 4495, 1000, 508300, { typ: "Märket", start: 592, adm: 59, mer: {1500: 262, 2000: 655}, kalla: "Kia", url: "https://www.kia.com/se/nya-bilar/ev3/upptack/" }),
-      B("Hyundai", "i20 1.0 T-GDi Essential (manuell)", "i20", "Bensin", 2395, 1000, 226500, { ...HEDIN, url: HA + "245702/pc-nc-hyundai-i20-2026" }),
-      B("Hyundai", "Bayon 1.0 T-GDi Essential (manuell)", "bayon", "Bensin", 2595, 1000, 239900, { ...HEDIN, url: HA + "246041/pc-nc-hyundai-bayon-2026" }),
-      B("Hyundai", "Kona Hybrid Essential", "kona", "Hybrid", 3395, 1000, 354900, { ...HEDIN, url: HA + "246649/pc-nc-hyundai-kona-2026" }),
-      B("Hyundai", "Tucson Hybrid 4WD Essential", "tucson", "Hybrid", 3995, 1000, 414900, { typ: "Märket", start: 995, adm: 59, kalla: "Hyundai", url: "https://lager.hyundai.se/model/TUCSON%20Hybrid/JFW5D5G1GEV1KK0BB?ext=SAW&int=NNB&customer=private" }),
-      B("Hyundai", "Tucson Plug-in Hybrid 2WD", "tucson", "Laddhybrid", 4075, 1000, 459900, { ...HEDIN, url: HA + "237738/pc-nc-hyundai-tucson-2027" }),
-      B("Toyota", "Aygo X Hybrid", "aygox", "Hybrid", 2995, 1500, 238900, TOYOTA),
-      B("Toyota", "Yaris Hybrid", "yaris", "Hybrid", 2995, 1500, 254900, TOYOTA),
-      B("Toyota", "Yaris Cross Hybrid", "yariscross", "Hybrid", 3195, 1500, 294900, TOYOTA),
-      B("Toyota", "Corolla Touring Sports Hybrid", "corollats", "Hybrid", 3395, 1500, 334900, TOYOTA),
-      B("Toyota", "C-HR Hybrid", "chr", "Hybrid", 3595, 1500, 350900, TOYOTA),
-      B("Toyota", "RAV4 Hybrid AWD-i", "rav4", "Hybrid", 6295, 1500, 459900, TOYOTA),
-      B("Toyota", "bZ4X", "bz4x", "El", 5895, 1500, 479900, TOYOTA),
-      B("Nissan", "Juke DIG-T DCT Acenta", "juke", "Bensin", 2995, 1000, 286000, { ...HEDIN, url: HA + "187699/pc-nc-nissan-juke-2025" }),
+      B("Hyundai", "i20 1.0 T-GDi Essential (manuell)", "i20", "Bensin", 2395, 1000, 242900, { ...HEDIN, url: HA + "245702/pc-nc-hyundai-i20-2026", adm: 60 }),
+      B("Hyundai", "Bayon 1.0 T-GDi Essential (manuell)", "bayon", "Bensin", 2595, 1000, 264900, { ...HEDIN, url: HA + "246041/pc-nc-hyundai-bayon-2026", adm: 60 }),
+      B("Hyundai", "Kona Hybrid Essential", "kona", "Hybrid", 3395, 1000, 375400, { ...HEDIN, url: HA + "246649/pc-nc-hyundai-kona-2026", adm: 60 }),
+      B("Hyundai", "Tucson Hybrid 4WD Essential", "tucson", "Hybrid", 3995, 1000, 427900, { typ: "Märket", start: 995, adm: 59, kalla: "Hyundai", url: "https://lager.hyundai.se/model/TUCSON%20Hybrid/JFW5D5G1GEV1KK0BB?ext=SAW&int=NNB&customer=private" }),
+      B("Hyundai", "Tucson Plug-in Hybrid 2WD", "tucson", "Laddhybrid", 4075, 1000, 424900, { ...HEDIN, url: HA + "237738/pc-nc-hyundai-tucson-2027", adm: 60 }),
+      B("Toyota", "Aygo X Hybrid", "aygox", "Hybrid", 2995, 1500, 238900, { ...TOYOTA, cfg: "toyota/ax" }),
+      B("Toyota", "Yaris Hybrid", "yaris", "Hybrid", 2995, 1500, 254900, { ...TOYOTA, cfg: "toyota/ya" }),
+      B("Toyota", "Yaris Cross Hybrid", "yariscross", "Hybrid", 3195, 1500, 294900, { ...TOYOTA, cfg: "toyota/yb" }),
+      B("Toyota", "Corolla Touring Sports Hybrid", "corollats", "Hybrid", 3395, 1500, 334900, { ...TOYOTA, cfg: "toyota/corolla-ts" }),
+      B("Toyota", "C-HR Hybrid", "chr", "Hybrid", 3595, 1500, 350900, { ...TOYOTA, cfg: "toyota/c-hr" }),
+      B("Toyota", "RAV4 Hybrid AWD-i", "rav4", "Hybrid", 6295, 1500, 459900, { ...TOYOTA, cfg: "toyota/ra" }),
+      B("Toyota", "bZ4X", "bz4x", "El", 5895, 1500, 479900, { ...TOYOTA, cfg: "toyota/de" }),
+      B("Toyota", "C-HR+", null, "El", 5795, 1500, 519900, { ...TOYOTA, cfg: "toyota/cb" }),
+      B("Toyota", "bZ4X Touring", "bz4xt", "El", 6295, 1500, 569900, { ...TOYOTA, cfg: "toyota/bz" }),
+      B("Toyota", "Corolla Hybrid 5-dörrar", null, "Hybrid", 3995, 1500, 324900, { ...TOYOTA, cfg: "toyota/corolla-hb" }),
+      B("Toyota", "Corolla Cross Hybrid", "corollacross", "Hybrid", 4595, 1500, 361900, { ...TOYOTA, cfg: "toyota/cx" }),
+      B("Nissan", "Juke DIG-T DCT Acenta", "juke", "Bensin", 2995, 1000, 300600, { ...HEDIN, url: HA + "187699/pc-nc-nissan-juke-2025" }),
       B("Nissan", "Micra 40 kWh Engage", "micra", "El", 3995, 1000, 369000, { ...HEDIN, url: HA + "200410/pc-nc-nissan-micra-2026" }),
-      B("Nissan", "Qashqai Acenta", "qashqai", "Bensin", 2995, 1000, 322000, { ...HEDIN, url: HA + "236359/pc-nc-nissan-qashqai-2026" }),
-      B("Renault", "5 E-Tech Evolution EV40", "r5", "El", 3490, 1000, 349900, { ...HEDIN, url: HA + "233165/pc-nc-renault-5-2026" }),
+      B("Nissan", "Qashqai Acenta", "qashqai", "Bensin", 2995, 1000, 321750, { ...HEDIN, url: HA + "236359/pc-nc-nissan-qashqai-2026" }),
+      B("Renault", "5 E-Tech Evolution EV40", "r5", "El", 3490, 1000, 364900, { ...HEDIN, url: HA + "233165/pc-nc-renault-5-2026" }),
       B("Dacia", "Sandero Essential TCe 100", "sandero", "Bensin", 1990, 1000, 199900, { ...HEDIN, adm: 60, url: HA + "44281/pc-sc-dacia-sandero" }),
       B("Peugeot", "2008 Allure Hybrid", "p2008", "Hybrid", 2699, 1000, 349900, PEUGEOT),
       B("Peugeot", "3008 GT Hybrid", "p3008", "Hybrid", 3199, 1000, 354900, { ...PEUGEOT, mer: {1500: 200, 2000: 400} }),
       B("Peugeot", "5008 GT Hybrid", "p5008", "Hybrid", 3399, 1000, 394900, PEUGEOT),
       B("Peugeot", "e-2008 GT", "pe2008", "El", 3899, 1000, 369900, PEUGEOT),
-      B("MG", "MG4 Urban", "mg4", "El", 2995, 1000, 299900, { ...HEDIN, adm: 60, url: HA + "234893/pc-nc-mg-4-ev-urban-2026", not: "15 000 kr att ladda för hos Hedin ingår" }),
-      B("BYD", "Seal 6 DM-i Touring Comfort", "seal6", "Laddhybrid", 4511, 1000, 469900, { kalla: "Hedin Automotive (Arval)", url: HA + "214169/pc-nc-byd-seal-6-dm-i-touring-2025" }),
+      B("MG", "MG4 Urban", "mg4", "El", 2995, 1000, 307900, { ...HEDIN, adm: 60, url: HA + "234893/pc-nc-mg-4-ev-urban-2026", not: "15 000 kr att ladda för hos Hedin ingår" }),
+      B("BYD", "Seal 6 DM-i Touring Comfort", "seal6", "Laddhybrid", 4511, 1000, 482800, { kalla: "Hedin Automotive (Arval)", url: HA + "214169/pc-nc-byd-seal-6-dm-i-touring-2025" }),
       B("Mazda", "6e Takumi", "mazda6e", "El", 8530, 1000, 464600, { kalla: "Nybergs Bil", url: "https://nybergsbil.se/kampanjer/mazda-6e" })
     ];
+
+    // Utrustning som ingår i priset (utr), tillval med pris i kr/mån (tv) – från respektive erbjudandesida
+    const UTRUSTNING = {
+     "EX30 Cross Country P5 Long Range Plus": {
+      "utr": [
+       "Adaptiv farthållare",
+       "Apple CarPlay",
+       "Automatisk nödbromsning",
+       "Backkamera",
+       "DAB-radio",
+       "Elbaklucka",
+       "Laddkabel (typ 2)",
+       "Premiumljudsystem",
+       "Rattvärme",
+       "Regnsensor",
+       "Trådlös laddning",
+       "2-zons klimatanläggning",
+       "Uppvärmda framsäten",
+       "ISOFIX"
+      ]
+     },
+     "Picanto 1.0 GDI AMT Action": {
+      "utr": [
+       "8\" navigationssystem",
+       "Apple CarPlay & Android Auto",
+       "Bluetooth",
+       "Backkamera",
+       "Elfönsterhissar fram & bak",
+       "Parkeringssensor bak",
+       "Läderklädd ratt",
+       "Skyltavläsning",
+       "Farthållare",
+       "Nyckelfritt dörrlås",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ]
+     },
+     "Stonic 1.0 T-GDi Action": {
+      "utr": [
+       "12,3\" pekskärm med navigation, Apple CarPlay & Android Auto",
+       "16\" aluminiumfälgar",
+       "Autobroms med fotgängar- och cyklistskydd",
+       "Backkamera",
+       "Bluetooth med röststyrning",
+       "LED-varselljus",
+       "Parkeringssensorer fram och bak",
+       "Läderklädd ratt",
+       "Takreling",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ]
+     },
+     "K4 Sportswagon 1.0 T-GDi Action (manuell)": {
+      "utr": [
+       "16\" aluminiumfälgar",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ],
+      "utrnot": "Kia har inte publicerat hela utrustningslistan för K4 Action"
+     },
+     "Seltos 1.6 T-GDi Action": {
+      "utr": [
+       "12,3\" pekskärm och 12,3\" digital instrumentering",
+       "Apple CarPlay & Android Auto",
+       "16\" aluminiumfälgar",
+       "Backkamera",
+       "Dödavinkelvarning",
+       "LED-strålkastare",
+       "Nyckelfritt system med startknapp",
+       "Parkeringssensorer fram och bak",
+       "Läderklädd ratt",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ]
+     },
+     "Seltos Hybrid Action": {
+      "utr": [
+       "Samma Action-utrustning som Seltos 1.6 T-GDi Action",
+       "Hybriddrivlina med DCT-växellåda",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ]
+     },
+     "EV4 GT Line Long Range": {
+      "utr": [
+       "GT Line-design ute och inne",
+       "Head-up display",
+       "Harman Kardon ljudsystem",
+       "Digital Key",
+       "Ventilerade framstolar, Relaxation-säten",
+       "Förarstol med minne",
+       "Elmanövrerad passagerarstol",
+       "Sollucka",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)",
+       "Värmepump"
+      ]
+     },
+     "EV5 Long Range": {
+      "utr": [
+       "18\" aluminiumfälgar",
+       "2 × 12,3\" skärmar med navigation och DAB",
+       "Apple CarPlay & Android Auto",
+       "Adaptiv farthållare med stop & go",
+       "2-zons klimatanläggning",
+       "Backkamera",
+       "Dödavinkelassistans",
+       "Nyckelfritt system",
+       "Parkeringssensorer fram och bak",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)",
+       "Värmepump"
+      ]
+     },
+     "Sorento Plug-in Hybrid AWD Action": {
+      "utr": [
+       "19\" aluminiumfälgar",
+       "Adaptiv farthållare med stop & go",
+       "2-zons klimatanläggning",
+       "LED-strålkastare",
+       "12,3\" pekskärm med navigation, DAB och backkamera",
+       "Nyckelfritt system",
+       "Parkeringssensorer fram och bak",
+       "Filhållnings- och filkörningsassistans",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)"
+      ]
+     },
+     "Sportage Plug-in Hybrid AWD Advance": {
+      "utr": [
+       "Adaptiv farthållare",
+       "Apple CarPlay & Android Auto",
+       "Autobroms",
+       "Backkamera",
+       "Digital instrumentering",
+       "Dödavinkelvarning",
+       "Eluppvärmda framstolar och ytterplatser bak",
+       "Filhållnings- och filföljningsassistans",
+       "LED-strålkastare",
+       "Nyckelfritt system",
+       "Parkeringssensorer fram och bak",
+       "Navigation på pekskärm",
+       "Rattvärme",
+       "Trådlös mobilladdning",
+       "Metalliclack"
+      ]
+     },
+     "E 300 e Sedan": {
+      "utr": [
+       "14,4\" MBUX-medieskärm",
+       "Digital instrumentpanel",
+       "Trådlös mobilladdning",
+       "MULTIBEAM LED-strålkastare",
+       "Mörktonade rutor bak",
+       "Aktiv kurshållningsassistent",
+       "Aktiv bromsassistent",
+       "Dödvinkelassistent",
+       "Vägmärkesassistent"
+      ]
+     },
+     "XC60 T6 Plus": {
+      "utr": [
+       "Dragkrok",
+       "Vinterdäck",
+       "Laddhybrid 350 hk, fyrhjulsdrift, ca 80 km elräckvidd",
+       "Automatlåda"
+      ]
+     },
+     "Formentor eTSI 150 DSG": {
+      "utr": [
+       "Adaptiv farthållare",
+       "LED-strålkastare",
+       "Front Assist",
+       "Full Link (Apple CarPlay & Android Auto)",
+       "12,9\" pekskärm",
+       "Helljusassistent",
+       "Parkeringssensorer fram och bak",
+       "Rattvärme",
+       "CUPRA Care (service)"
+      ],
+      "tv": [
+       {
+        "n": "Metalliclack",
+        "p": 300
+       }
+      ]
+     },
+     "Ibiza Edition 1.0 MPI 80 hk": {
+      "utr": [
+       "Full LED-strålkastare",
+       "Uppgraderad interiör",
+       "Multifunktionsratt",
+       "SEAT Connect",
+       "Parkeringssensorer bak",
+       "Serviceavtal 3 år/3 000 mil",
+       "Fri assistans i 3 år"
+      ],
+      "tv": [
+       {
+        "n": "SEAT Full Link (Apple CarPlay & Android Auto)",
+        "p": 53
+       }
+      ]
+     },
+     "A3 Sportback 35 TFSI S tronic Proline": {
+      "utr": [
+       "3-zons automatisk klimatanläggning",
+       "Audi virtual cockpit",
+       "Audi smartphone interface",
+       "Parkeringssensorer fram och bak med parkeringsassistent",
+       "Backkamera",
+       "Vägmärkesidentifiering",
+       "Eluppvärmda och elinställbara ytterbackspeglar",
+       "Audi connect (10 år)"
+      ],
+      "tv": [
+       {
+        "n": "Audi Serviceavtal",
+        "p": 100
+       }
+      ]
+     },
+     "120": {
+      "utr": [
+       "17\" lättmetallfälgar",
+       "Automatisk luftkonditionering",
+       "Driving Assistant",
+       "Parking Assistant",
+       "Stolsvärme fram",
+       "DAB-radio",
+       "Steptronic-växellåda med dubbelkoppling",
+       "Larm",
+       "BMW Service Inclusive 5 år"
+      ]
+     },
+     "EV2 Standard Range": {
+      "utr": [
+       "16\" aluminiumfälgar",
+       "2 × 12,3\" skärmar",
+       "11 kW 3-fasladdare och laddkabel",
+       "Värmepump och batterivärmare",
+       "Adaptiv farthållare med stop & go",
+       "2-zons klimatanläggning",
+       "Apple CarPlay & Android Auto",
+       "Backkamera",
+       "Dödavinkelvarning",
+       "Eluppvärmda framstolar och ratt",
+       "Nyckelfritt system",
+       "Parkeringssensorer fram och bak",
+       "Takreling"
+      ]
+     },
+     "EV3 Long Range": {
+      "utr": [
+       "2 × 12,3\" skärmar med navigation",
+       "Trådlös Apple CarPlay & Android Auto",
+       "Digital Key",
+       "Takreling",
+       "Trådlös mobilladdare",
+       "Nyckelfritt system",
+       "Parkeringssensorer fram och bak",
+       "Rattvärme",
+       "Metallic-/pärllack",
+       "7 års nybilsgaranti",
+       "7 års Kia Connect (app)",
+       "7 års uppkopplad navigation (Kia Live)",
+       "Värmepump"
+      ]
+     },
+     "i20 1.0 T-GDi Essential (manuell)": {
+      "utr": [
+       "16\" aluminiumfälgar",
+       "Automatisk klimatanläggning",
+       "Backkamera",
+       "Eluppvärmd ratt",
+       "Farthållare",
+       "Filhållningsassistans",
+       "Skyltavläsning",
+       "Pekskärm med navigation",
+       "Parkeringssensorer bak",
+       "Regnsensor",
+       "ISOFIX",
+       "Förberedd för dragkrok"
+      ]
+     },
+     "Bayon 1.0 T-GDi Essential (manuell)": {
+      "utr": [],
+      "utrnot": "Hedin listar bara färgen (Atlas white). Essential är samma utrustningsnivå som i20 Essential"
+     },
+     "Kona Hybrid Essential": {
+      "utr": [],
+      "utrnot": "Hedin har inte publicerat utrustningslistan för just den här bilen"
+     },
+     "Tucson Hybrid 4WD Essential": {
+      "utr": [
+       "17\" aluminiumfälgar",
+       "LED-strålkastare",
+       "12,3\" pekskärm med navigation och Bluelink",
+       "12,3\" digital instrumentering",
+       "Adaptiv farthållare med stop & go",
+       "3-zons klimatanläggning",
+       "Backkamera",
+       "Parkeringssensorer fram och bak",
+       "Dödavinkelvarnare med varning för korsande trafik",
+       "Trådlös mobilladdare",
+       "Smart Key",
+       "Eluppvärmda framsäten och ratt",
+       "Delläderklädsel",
+       "Takrails",
+       "Förberedd för dragkrok"
+      ]
+     },
+     "Tucson Plug-in Hybrid 2WD": {
+      "utr": [
+       "2-zons klimatanläggning",
+       "Adaptiv farthållare",
+       "Apple CarPlay & Android Auto",
+       "Navigation",
+       "Backkamera",
+       "Parkeringssensorer fram och bak",
+       "Körfilsassistans",
+       "Skyltigenkänning",
+       "Rattvärme",
+       "Sätesvärme fram",
+       "Trådlös mobilladdare",
+       "230 V-uttag",
+       "Lättmetallfälgar"
+      ]
+     },
+     "Juke DIG-T DCT Acenta": {
+      "utr": [
+       "Apple CarPlay & Android Auto",
+       "Autobroms",
+       "Avåkningsvarnare",
+       "Backkamera",
+       "Farthållare",
+       "Elinfällbara sidospeglar",
+       "Regn- och ljussensor",
+       "Röststyrning",
+       "Sätesvärme fram",
+       "Skyltigenkänning",
+       "Lättmetallfälgar"
+      ]
+     },
+     "Micra 40 kWh Engage": {
+      "utr": [
+       "5 års nybilsgaranti",
+       "10\" mittskärm och 7\" förardisplay",
+       "Apple CarPlay & Android Auto",
+       "11 kW AC- och 80 kW DC-laddning, laddkabel",
+       "Värmepump",
+       "V2L-adapter",
+       "LED-strålkastare",
+       "Klimatanläggning",
+       "Aktiv filbytesvarnare",
+       "Helljusassistans",
+       "Parkeringssensorer bak",
+       "Regnsensor",
+       "18\" fälgar"
+      ]
+     },
+     "Qashqai Acenta": {
+      "utr": [
+       "2-zons klimatanläggning",
+       "Apple CarPlay & Android Auto",
+       "Navigation på pekskärm",
+       "Autobroms och kollisionsvarning",
+       "Backkamera",
+       "Döda vinkel-varning",
+       "Farthållare med köassistans",
+       "Helljusassistans",
+       "Nyckelfritt lås och start",
+       "LED-strålkastare",
+       "Eluppvärmd vindruta",
+       "Rattvärme och sätesvärme fram",
+       "Lättmetallfälgar",
+       "Gummimattor"
+      ]
+     },
+     "5 E-Tech Evolution EV40": {
+      "utr": [
+       "40 kWh batteri, 120 hk, 312 km räckvidd",
+       "11 kW AC- och 80 kW DC-laddning",
+       "Värmepump",
+       "V2L (bilen som powerbank)",
+       "10,1\" huvudskärm och 7\" förardisplay",
+       "Apple CarPlay & Android Auto",
+       "Autobroms",
+       "Automatisk AC",
+       "Farthållare",
+       "Parkeringssensor bak",
+       "18\" stålfälgar med hjulsida"
+      ]
+     },
+     "Sandero Essential TCe 100": {
+      "utr": [],
+      "utrnot": "Hedin har inte publicerat utrustningslistan för Essential"
+     },
+     "2008 Allure Hybrid": {
+      "utr": [
+       "10\" pekskärm",
+       "Trådlös Apple CarPlay",
+       "Adaptiv farthållare",
+       "Automatisk klimatanläggning",
+       "Backkamera",
+       "Parkeringssensorer fram och bak",
+       "Läderratt",
+       "Höjdjusterbart passagerarsäte",
+       "17\" aluminiumfälgar"
+      ],
+      "tv": [
+       {
+        "n": "Utrustningsnivå GT (Alcantara, massagestol, Full-LED, kamera fram och bak, nyckelfritt)",
+        "p": 100
+       }
+      ]
+     },
+     "3008 GT Hybrid": {
+      "utr": [
+       "21\" Panorama i-Cockpit",
+       "Motoriserad baklucka med handsfree",
+       "Pixel LED-strålkastare",
+       "Parkeringssensorer fram och bak",
+       "Adaptiv farthållare"
+      ],
+      "tv": [
+       {
+        "n": "Utrustningsnivå GT Ultimate",
+        "p": 500
+       }
+      ]
+     },
+     "5008 GT Hybrid": {
+      "utr": [
+       "21\" Panorama i-Cockpit",
+       "Motoriserad baklucka med handsfree",
+       "Pixel LED-strålkastare",
+       "Parkeringssensorer fram och bak",
+       "Adaptiv farthållare"
+      ],
+      "tv": [
+       {
+        "n": "Utrustningsnivå GT Ultimate",
+        "p": 500
+       }
+      ]
+     },
+     "e-2008 GT": {
+      "utr": [
+       "Alcantara/halvläderklädsel",
+       "Elinställbar förarstol med massage",
+       "Full-LED-strålkastare",
+       "Parkeringskamera fram och bak",
+       "Nyckelfritt lås och start"
+      ]
+     },
+     "MG4 Urban": {
+      "utr": [
+       "325 km räckvidd (WLTP)",
+       "Snabbladdning 82 kW",
+       "16\" lättmetallfälgar",
+       "8\" pekskärm och 7\" förardisplay",
+       "Trådlös Apple CarPlay & Android Auto",
+       "Adaptiv farthållare",
+       "Backkamera",
+       "Dödvinkelvarnare",
+       "Filhållningsassistans",
+       "Keyless",
+       "LED-strålkastare",
+       "Navigation",
+       "Rattvärme och uppvärmda framstolar"
+      ]
+     },
+     "Seal 6 DM-i Touring Comfort": {
+      "utr": [
+       "360° kamera",
+       "2-zons klimatanläggning",
+       "Adaptiv farthållare",
+       "Apple CarPlay & Android Auto",
+       "Navigation",
+       "Elektrisk baklucka",
+       "Elstolar fram med värme och ventilation",
+       "Helskinnsklädsel",
+       "Panoramaglastak",
+       "Parkeringssensorer fram och bak",
+       "Rattvärme",
+       "Trådlös mobilladdare",
+       "Nyckelfritt lås och start"
+      ]
+     }
+    };
+    BILAR.forEach(b => Object.assign(b, UTRUSTNING[b.modell] || {}));
+
 
     /* ---------------------------------------------------------------
        FOTON – alla från Wikimedia Commons. Licensen kräver att vi anger
@@ -540,7 +1068,6 @@
       p3008:      { av: A, fil: "Peugeot_3008_C_IMG_9387.jpg" },
       p5008:      { av: A, fil: "Peugeot_5008_C_Leonberg_2024_IMG_0827.jpg" },
       pe2008:     { av: A, fil: "Peugeot_e-2008_Facelift_Auto_Zuerich_2023_1X7A1206.jpg" },
-      pol2:       { av: "Calreyn88", fil: "2024_Polestar_2_Plus_RWD.jpg" },
       pol4:       { av: M, fil: "Polestar_4_DSC_8232_(cropped).jpg" },
       qashqai:    { av: "LuvsMG481", fil: "2025_Nissan_Qashqai_ST-L_facelift_front.jpg" },
       r5:         { av: M, fil: "Renault_5_E-Tech_Electric_DSC_7281.jpg" },
@@ -562,6 +1089,8 @@
       tavascan:   { av: A, fil: "Cupra_Tavascan_Auto_Zuerich_2023_1X7A0992.jpg" },
       terramar:   { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Terramar_1.5_eTSI_%E2%80%93_f_25012026.jpg" },
       leon:       { av: A, fil: "Cupra_Leon_Mk4_Facelift_Leonberg_2024_IMG_0888.jpg" },
+      bz4xt:      { av: "TTTNIS", lic: "CC0", fil: "Toyota_bZ4X_Touring_Z_4WD.jpg" },
+      corollacross: { av: "Ethan Llamas", fil: "Toyota_Corolla_Cross_FL_ZVG10_1.8_G_HEV_Platinum_White_Pearl_Mica.jpg" },
       ec40:       { av: "Ethan Llamas", fil: "Volvo_EC40_Crystal_White_Pearl_-_front.jpg" },
       eclass:     { av: A, fil: "Mercedes-Benz_W214_1X7A1841.jpg" },
       enyaq:      { av: "Ssu", fil: "2025_Skoda_Enyaq_sportline_(facelift)_-_front.jpg" },
@@ -703,6 +1232,7 @@
             ${b.cfg && KONFIG[b.cfg] ? `<span class="tag el">Alla tillval med pris</span>` : ""}
           </div>
           ${b.not ? `<div class="source"><b>Obs:</b> ${b.not}</div>` : ""}
+          ${b.utr && b.utr.length ? `<details class="utr"><summary>Utrustning som ingår (${b.utr.length})</summary><ul>${b.utr.map(x => `<li>${x}</li>`).join("")}</ul></details>` : ""}
           <div class="source">Nypris ${b.nypris ? kr(b.nypris) : "saknas"} · ${b.kalla} · villkor kontrollerade ${KONTROLL}</div>
         </article>`;
       }).join("") || "<p>Inga bilar matchar din sökning.</p>";
@@ -750,7 +1280,7 @@
         if (!g.m && val[gi].length > 1) val[gi] = [val[gi][0]];
         if (!g.m && !g.o && !val[gi].length) val[gi] = [0];
       });
-      K = { bil, cfg, steg: 0, mil: mv.includes(valdMil) ? valdMil : mv[0], val, onskemal: "",
+      K = { bil, cfg, steg: 0, mil: mv.includes(valdMil) ? valdMil : mv[0], val, tv: [], onskemal: "",
             kund: { namn: "", epost: "", tel: "", postnr: "", leverans: "Så snart som möjligt", samtycke: false } };
       document.getElementById("konfTitel").textContent = bil.marke + " " + bil.modell;
       ritaKonf();
@@ -764,17 +1294,18 @@
       const rader = [];
       if (cfg) {
         manad = cfg.bas[m];
-        nypris = cfg.nypris;
+        nypris = cfg.nypris ?? bil.nypris;
         cfg.G.forEach((g, gi) => (K.val[gi] || []).forEach(vi => {
           const v = g.v[vi], p = v.p[m] || 0;
           manad += p;
-          if (/drivlina/i.test(g.g)) { if (v.t) nypris = nypris - cfg.nypris + v.t; }
+          if (/drivlina/i.test(g.g)) { if (v.t && cfg.nypris) nypris = nypris - cfg.nypris + v.t; }
           else if (v.t) nypris += v.t;
           if (/förhöjd/i.test(g.g)) forhojd = /10[ .]?000/.test(v.n) ? 10000 : 0;
           rader.push({ grupp: g.g, namn: v.n, pris: p, ingar: !!v.i });
         }));
       } else {
         manad = m <= bil.mil ? bil.manad : bil.manad + (bil.mer?.[m] ?? 0);
+        (K.tv || []).forEach(i => { const t = bil.tv[i]; manad += t.p; rader.push({ grupp: "Tillval", namn: t.n, pris: t.p }); });
         if (K.onskemal.trim()) okand = true;
       }
       const adm = bil.adm || 0, fors = bil.forsakring || 0;
@@ -783,6 +1314,15 @@
       return { manad, adm, fors, forhojd, start: bil.start, total, nypris, andel: nypris ? leasing / nypris : null, rader, okand };
     }
 
+
+    // Rutan "Ingår i priset" i steg 2
+    function ingarRuta(bil) {
+      const alltid = [`Privatleasing 36 mån, ${bil.mil.toLocaleString("sv-SE")} mil/år`, bil.service === true ? "Service ingår" : null].filter(Boolean);
+      const lista = (bil.utr || []).concat(alltid);
+      const not = bil.utr && bil.utr.length ? (bil.utrnot ? `<small>${esc(bil.utrnot)}</small>` : "")
+        : `<small>${esc(bil.utrnot || (bil.cfg ? "Märket listar inte grundutrustningen här, se deras sida. Motor och utrustningsnivå väljer du nedan." : (bil.typ === "Märket" ? "Märket" : "Handlaren") + " har inte publicerat utrustningslistan för just den här bilen. Den står i avtalet, så du ser den innan du signerar."))} <a href="${bil.url}" target="_blank" rel="noopener">Se sidan ↗</a></small>`;
+      return `<div class="kgrupp"><h4>Ingår i priset</h4><ul class="kutr">${lista.map(x => `<li>${esc(x)}</li>`).join("")}</ul>${not}</div>`;
+    }
     function ritaKonf() {
       const { bil, cfg, steg } = K;
       const r = berakna();
@@ -798,6 +1338,7 @@
         h += `<div class="kinfo">Villkor: ${esc(bil.not || "se erbjudandet")}${bil.start ? `. Uppläggningsavgift ${kr(bil.start)}` : ""}${bil.adm ? `, aviavgift ${bil.adm} kr/mån` : ""}.</div>`;
       }
       if (steg === 1) {
+        h += ingarRuta(bil);
         if (cfg) {
           h += cfg.G.map((g, gi) => {
             const typ = g.m ? "checkbox" : "radio";
@@ -809,7 +1350,8 @@
           }).join("");
           h += `<div class="kgrupp"><h4>Övriga önskemål eller bortval</h4><div class="kform"><textarea class="hel" id="konsk" rows="3" placeholder="T.ex. leverans före ett visst datum eller utrustning du inte vill ha">${esc(K.onskemal)}</textarea></div></div>`;
         } else {
-          h += `<div class="kinfo">Den här ${bil.typ === "Märket" ? "tillverkaren" : "handlaren"} har inte publicerat priser för tillval. Skriv vad du vill lägga till eller ta bort (färg, vinterhjul, dragkrok, paket). Handlaren lägger in det med pris i avtalet, och du ser det innan du signerar.</div>`;
+          if (bil.tv && bil.tv.length) h += `<div class="kgrupp"><h4>Tillval</h4>` + bil.tv.map((t, i) => `<label class="kval"><input type="checkbox" name="ktv" value="${i}" ${K.tv.includes(i) ? "checked" : ""}><span>${esc(t.n)}</span><span class="kp">${plus(t.p)}</span></label>`).join("") + `</div>`;
+          h += `<div class="kinfo">${bil.tv && bil.tv.length ? "Fler tillval än ovan" : `Den här ${bil.typ === "Märket" ? "tillverkaren" : "handlaren"} har inte publicerat priser för tillval, men du`} kan önska färg, vinterhjul, dragkrok eller paket nedan. Handlaren lägger in det med pris i avtalet, och du ser det innan du signerar.</div>`;
           h += `<div class="kgrupp"><h4>Önskad utrustning, tillval och bortval</h4><div class="kform"><textarea class="hel" id="konsk" rows="5" placeholder="T.ex. metalliclack i blått, dubbade vinterhjul, dragkrok">${esc(K.onskemal)}</textarea></div></div>`;
         }
       }
@@ -846,7 +1388,7 @@
       document.getElementById("konfBak").style.visibility = steg ? "visible" : "hidden";
       document.getElementById("konfNasta").textContent = steg === 3 ? "Skicka beställningen" : "Nästa";
       document.getElementById("konfBody").scrollTop = 0;
-      konf.querySelector(".kb").scrollIntoView({ block: "start" });
+      konf.scrollTop = 0;
     }
 
     // Läs av det kunden har fyllt i på aktuellt steg
@@ -858,6 +1400,7 @@
           K.val[gi] = [...konf.querySelectorAll(`input[name="g${gi}"]`)].filter(i => i.checked && i.value !== "-1").map(i => Number(i.value));
         });
         if (q("konsk")) K.onskemal = q("konsk").value;
+        if (!K.cfg) K.tv = [...konf.querySelectorAll('input[name="ktv"]')].filter(i => i.checked).map(i => Number(i.value));
       }
       if (K.steg === 2) Object.assign(K.kund, { namn: q("kn").value.trim(), epost: q("ke").value.trim(), tel: q("kt").value.trim(), postnr: q("kpn").value.trim(), leverans: q("kl").value, samtycke: q("ks").checked });
     }
