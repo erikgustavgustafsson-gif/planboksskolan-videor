@@ -14,3 +14,4 @@
 - Julklappen som växer (ISK för barn, 300 000 kr skattefritt per person)
 - USA-aktier dolda avgifter (courtage + valutaväxling 0,25 %)
 | 2026-11-04 | Köpa eller leasa Sveriges populäraste elbil? Jag räknade | Volvo EX40 köp vs privatleasing, snitt-värdetapp 46,2 % (7 källor) – ersatte Lönekontot (utkast) | Volvo Car Retail, Tid och Pengar, omEV, nybil.nu, dinbilkostnad, minbilkoll, EFN, news55/Blocket, Börskollen |
+| 2026-11-05 | iPhone kontant eller med abonnemang? Jag räknade | iPhone 17 kontant + Tre 25 GB (20 865 kr) vs Tre-abonnemang med telefon (18 226 kr), Elgigantens priser – ersatte USA-aktier (borttagen ur kön på begäran) | Elgiganten.se 2026-11-05 |
