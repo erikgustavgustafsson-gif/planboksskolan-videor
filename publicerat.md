@@ -12,5 +12,5 @@
 
 ## Färdiga men ännu inte publicerade (från chatten 2026-11-02)
 - Julklappen som växer (ISK för barn, 300 000 kr skattefritt per person)
+- USA-aktier dolda avgifter (courtage + valutaväxling 0,25 %)
 | 2026-11-04 | Köpa eller leasa Sveriges populäraste elbil? Jag räknade | Volvo EX40 köp vs privatleasing, snitt-värdetapp 46,2 % (7 källor) – ersatte Lönekontot (utkast) | Volvo Car Retail, Tid och Pengar, omEV, nybil.nu, dinbilkostnad, minbilkoll, EFN, news55/Blocket, Börskollen |
-| 2026-11-05 | USA-aktier: den dolda avgiften | Courtage 0,25 % + valutaväxling 0,25 % vid köp och sälj ≈ 1 % (från kön, schemalagd 10:00) | isk-guiden.se/avanza-vs-nordnet (Avanza/Nordnet prislistor) |
