@@ -24,8 +24,8 @@
       "punch": ["Svaret förvånar."],
       "image": "media/2026-11-05_mobil.png",
       "cutout": true,
-      "image_width": 400,
-      "image_y": 1490
+      "image_width": 380,
+      "image_y": 1600
     },
     {
       "type": "number",
