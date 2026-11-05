@@ -27,6 +27,11 @@ Leasingkollen är en sida som jämför privatleasing av nya bilar i Sverige. Anv
 7. **Publicera** till artifact-sluggen ovan, commit och push till `main`.
 8. **Rapportera** kort på svenska bara vad som ändrats (priser, nya/borttagna bilar). Om inget ändrats: en rad.
 
+## Beställningar (när sidan är live)
+- Kunden trycker Skicka → sidan skickar beställningen via FormSubmit. Har bilen `handlarEpost` går den direkt till handlaren med kopia till `BESTALLNING_EPOST`, annars till `BESTALLNING_EPOST`.
+- Beställningar som kommit till oss utan handlaradress: skicka dem vidare till rätt handlare samma dag (handlarens e-post eller kontaktformulär). Kunden har gett oss uppdraget i samtyckesrutan.
+- Claude-artifacts kan inte skicka data, så automatisk sändning fungerar bara på den riktiga webbplatsen.
+
 ## Regler
 - Topp 5 överst (`const TOPP` i index.html) = Sveriges mest privatleasade modeller. Kontrollera statistiken (VW Finans, Carplus, Mobility Sweden) en gång i månaden och uppdatera listan om ordningen ändras.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare. Kontrollera dem via WebSearch (märkets sida i sökresultatet) och återförsäljare (Landrins, Veho, Bilia, Hedin).
