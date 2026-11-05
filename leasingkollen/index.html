@@ -66,7 +66,7 @@
       margin: -24px auto 16px;
       box-shadow: 0 6px 20px rgba(22,33,58,.08);
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px;
     }
     label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
@@ -219,6 +219,37 @@
     details.utr summary { cursor: pointer; color: var(--navy); font-weight: 600; }
     details.utr ul { margin: 6px 0 0; padding-left: 18px; columns: 2; column-gap: 24px; }
     @media (max-width: 640px) { .kutr, details.utr ul { columns: 1; } details.utr { grid-column: auto; } }
+
+    /* ---------- Topp 5 överst ---------- */
+    header { padding-bottom: 28px; }
+    .trust { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 14px 0 0; font-size: 14px; color: #E3F4F1; }
+    .trust span::before { content: "✓ "; color: var(--yellow); font-weight: 800; }
+    .topp { margin-top: 28px; }
+    .topph h2 { margin: 0; font-size: clamp(20px, 4vw, 26px); }
+    .topph p { margin: 2px 0 14px; color: #C9D2E3; }
+    .topplista { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .tkort { background: #fff; color: var(--text); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+    .tkort .tbild { position: relative; aspect-ratio: 16 / 10; background: var(--mint); }
+    .tkort .tbild img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tkort .tplats { position: absolute; top: 8px; left: 8px; background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 99px; }
+    .tkort .tinner { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .tkort .tnamn { font-weight: 800; font-size: 15px; line-height: 1.2; }
+    .tkort .tversion { font-size: 12px; color: var(--muted); line-height: 1.35; min-height: 4.1em; }
+    .tkort .tversion span { color: #8A93A6; }
+    .tkort .betyg { white-space: nowrap; font-size: 12px; }
+    .tkort .tpris { font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .tkort .tpris small { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .tkort .ttotal { font-size: 12px; color: var(--muted); }
+    .tkort .betyg { align-self: flex-start; margin: 4px 0; }
+    .tkort .cta { margin-top: auto; text-align: center; padding: 9px 10px; font-size: 14px; }
+    .toppkalla { display: block; margin-top: 10px; color: #9FB0C9; font-size: 11px; }
+    .allarubrik { font-size: 22px; margin: 28px 0 10px; }
+    .controls { margin-top: 0; }
+    @media (max-width: 900px) {
+      .topplista { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+      .tkort { scroll-snap-align: start; }
+    }
+    @media (min-width: 640px) and (max-width: 900px) { .topplista { grid-auto-columns: 40%; } }
   </style>
 </head>
 
@@ -228,10 +259,22 @@
     <div class="wrap">
       <h1>Leasing<span>kollen</span></h1>
       <p>Jämför privatleasing hos bilmärkena i Sverige. Vi räknar på <b>vad du betalar totalt på 36 månader</b>, inte bara månadspriset.</p>
+      <div class="trust" id="trust"></div>
+
+      <!-- Topp 5: bästa kampanjen på var och en av Sveriges mest leasade bilar -->
+      <section class="topp" aria-labelledby="toppRubrik">
+        <div class="topph">
+          <h2 id="toppRubrik">Bästa kampanjerna just nu</h2>
+          <p>på Sveriges 5 mest privatleasade bilar 2026</p>
+        </div>
+        <div class="topplista" id="topp"></div>
+        <small class="toppkalla">Topplistan bygger på statistik från Volkswagen Finans (jan–maj 2026), Carplus och Mobility Sweden. Bästa kampanj = lägst kostnad i förhållande till nypriset.</small>
+      </section>
     </div>
   </header>
 
   <main class="wrap" style="padding: 0 16px;">
+    <h2 class="allarubrik">Jämför alla bilar</h2>
     <!-- Filter och val. Varje element har ett id så att JavaScript kan hitta det. -->
     <section class="controls">
       <div>
@@ -1177,6 +1220,9 @@
         return { ...bil, m, total, andel, idx: BILAR.indexOf(bil) };
       });
 
+      // 1b) Topp 5 överst: bästa erbjudandet per populär modell (räknas på alla bilar, oberoende av filtren)
+      ritaTopp(rader);
+
       // 2) Filtrera
       rader = rader.filter(b =>
         (drivmedel.value === "alla" || b.drivmedel === drivmedel.value) &&
@@ -1472,6 +1518,36 @@
     konf.addEventListener("change", () => { const s = K.steg; lasKonf(); if (s <= 1) { const r = berakna(); document.getElementById("konfSum").innerHTML = `<b>${kr(r.manad + r.adm + r.fors)}/mån</b><small>${kr(r.total)} totalt på 36 mån${r.okand ? " + dina önskemål" : ""}</small>`; } });
     lista.addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
 
+
+    // Sveriges mest privatleasade bilar 2026 (VW Finans jan–maj, Carplus kv1, Mobility Sweden jan–aug)
+    const TOPP = [
+      { namn: "Volvo EX40", match: b => b.marke === "Volvo" && /^EX40/.test(b.modell) },
+      { namn: "Volvo EX30", match: b => b.marke === "Volvo" && /^EX30/.test(b.modell) },
+      { namn: "Volkswagen Tiguan", match: b => b.marke === "Volkswagen" && /^Tiguan/.test(b.modell) },
+      { namn: "Tesla Model Y", match: b => b.marke === "Tesla" && /^Model Y/.test(b.modell) },
+      { namn: "Volvo XC60", match: b => b.marke === "Volvo" && /^XC60/.test(b.modell) },
+    ];
+    function ritaTopp(rader) {
+      document.getElementById("topp").innerHTML = TOPP.map((t, i) => {
+        const alla = rader.filter(t.match).filter(r => r.andel != null);
+        const b = alla.sort((x, y) => x.andel - y.andel)[0];
+        if (!b) return "";
+        const bt = betyg(b.andel);
+        return `<article class="tkort">
+          <div class="tbild">${b.foto ? `<img src="bilder/${b.foto}.jpg" alt="${t.namn}" loading="lazy">` : ""}<span class="tplats">#${i + 1} mest leasade</span></div>
+          <div class="tinner">
+            <div class="tnamn">${t.namn}</div>
+            <div class="tversion">${b.modell.replace(/^(EX40|EX30|Tiguan|Model Y|XC60) ?/, "") || "&nbsp;"}<br><span>${/\bvia\b/.test(b.kalla) ? "" : "via "}${b.kalla.split(/ \(|,/)[0]}</span></div>
+            <div class="tpris">${kr(b.m)}<small>/mån</small></div>
+            <div class="ttotal">${kr(b.total)} totalt på 36 mån${alla.length > 1 ? ` · bäst av ${alla.length} erbjudanden` : ""}</div>
+            ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : ""}
+            <button type="button" class="cta" data-bil="${b.idx}">Välj tillval & beställ →</button>
+          </div>
+        </article>`;
+      }).join("");
+    }
+    document.getElementById("topp").addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
+    document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Beställ med tillval direkt här</span>`;
     // Kör rita() när något ändras, och en gång direkt när sidan laddas.
     [sok, drivmedel, mil, forsakring, sortera].forEach(el => el.addEventListener("input", rita));
     rita();

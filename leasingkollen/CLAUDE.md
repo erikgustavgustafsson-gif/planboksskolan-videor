@@ -28,6 +28,7 @@ Leasingkollen är en sida som jämför privatleasing av nya bilar i Sverige. Anv
 8. **Rapportera** kort på svenska bara vad som ändrats (priser, nya/borttagna bilar). Om inget ändrats: en rad.
 
 ## Regler
+- Topp 5 överst (`const TOPP` i index.html) = Sveriges mest privatleasade modeller. Kontrollera statistiken (VW Finans, Carplus, Mobility Sweden) en gång i månaden och uppdatera listan om ordningen ändras.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare. Kontrollera dem via WebSearch (märkets sida i sökresultatet) och återförsäljare (Landrins, Veho, Bilia, Hedin).
 - Peugeot via Ayvens har obligatorisk försäkring 395 kr/mån (fältet `forsakring`), räkna med den i totalen.
 - Ändra aldrig beräkningsmetoden (andel av nypris på 36 mån; betyg <40 % Mycket bra, <45 % Bra, <55 % OK, annars Dyrt) utan att användaren bett om det.
