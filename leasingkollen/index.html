@@ -250,30 +250,147 @@
       .tkort { scroll-snap-align: start; }
     }
     @media (min-width: 640px) and (max-width: 900px) { .topplista { grid-auto-columns: 40%; } }
+
+    /* ================= Ny startsida (inspirerad av Carplus) ================= */
+    html { scroll-behavior: smooth; }
+    .topnav { background: var(--navy); position: sticky; top: 0; z-index: 20; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .navrad { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap: 16px; }
+    .logo { color: #fff; font-weight: 800; font-size: 22px; text-decoration: none; letter-spacing: -.5px; }
+    .logo span { color: var(--yellow); }
+    .navlankar { display: flex; gap: 22px; }
+    .navlankar a { color: #fff; text-decoration: none; font-weight: 600; font-size: 15px; }
+    .navlankar a:hover { color: var(--yellow); }
+    header.hero { background: radial-gradient(1200px 500px at 80% 20%, #1B4B73 0%, var(--navy) 60%); color: #fff; padding: 48px 0 56px; }
+    .herorad { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; padding: 0 16px; }
+    .hero h1 { font-size: clamp(32px, 5.2vw, 56px); line-height: 1.05; margin: 0 0 12px; letter-spacing: -1px; }
+    .heroslogan { text-transform: uppercase; letter-spacing: .25em; font-size: 15px; color: var(--yellow); margin: 0 0 12px; font-weight: 600; }
+    .hero p { color: #D5DDEA; margin: 0; max-width: 520px; }
+    .hero .trust { margin-top: 18px; }
+    .heroknappar { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .knapp { display: inline-block; background: var(--yellow); color: var(--navy); font-weight: 800; padding: 12px 22px; text-decoration: none; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+    .knapp.ljus { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.5); clip-path: none; border-radius: 0; }
+    .herobild { position: relative; }
+    .herobild img { width: 100%; border-radius: 18px; display: block; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+    .herobild span { position: absolute; left: 14px; bottom: 14px; background: rgba(14,42,71,.85); color: #fff; font-size: 12px; padding: 5px 10px; border-radius: 99px; }
+
+    section.topp { background: #fff; padding: 56px 0 44px; margin: 0; }
+    section.topp .wrap { padding: 0 16px; }
+    .sektionsrubrik { text-align: center; font-size: clamp(26px, 4vw, 38px); margin: 0; letter-spacing: -.5px; }
+    .sektionsingress { text-align: center; color: var(--muted); margin: 6px 0 28px; }
+    .topplista { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+    section.topp .wrap { max-width: 1240px; }
+    .tkort { background: #fff; color: var(--text); border-radius: 0; box-shadow: none; display: flex; flex-direction: column; overflow: visible; }
+    .tkort .tbild { aspect-ratio: 16 / 10; background: #F1F4F8; border-radius: 12px; overflow: hidden; position: relative; }
+    .tkort .tplats { top: 10px; left: 10px; background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-size: 11px; }
+    .tkort .tplats::before { content: "★ "; color: #F5A524; }
+    .tkort .tinner { padding: 12px 2px 0; border-top: 0; }
+    .tkort .thuvud { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .tkort .tnamn { font-size: 16px; }
+    .tkort .tversion { min-height: 2.7em; margin-top: 2px; }
+    .tkort .tfran { white-space: nowrap; font-size: 12px; color: var(--muted); line-height: 1.1; display: flex; align-items: baseline; gap: 6px; }
+    .tkort .tpris { font-size: 21px; margin: 0; color: var(--navy); }
+    .tkort .tpris small { font-size: 12px; }
+    .tkort .tchips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .tkort .tchips span { background: #EEF1F5; color: var(--muted); font-size: 11px; padding: 3px 8px; }
+    .tkort .tfot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; flex-wrap: wrap; }
+    .tkort .cta { margin: 0; background: var(--yellow); color: var(--navy); font-weight: 800; border-radius: 0; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); padding: 8px 18px; }
+    .tkort .cta:hover { background: #25A89C; }
+    .toppkalla { color: var(--muted); text-align: center; margin-top: 22px; }
+
+    section.steg2 { background: linear-gradient(90deg, #0B2239 0 50%, #10304F 50% 100%); color: #fff; padding: 56px 0; }
+    .stegrad { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 0 16px; }
+    .steg2 h2 { font-size: clamp(24px, 3.4vw, 34px); margin: 0 0 22px; font-weight: 500; }
+    .steg2 h2 b { font-weight: 800; }
+    .steglista { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+    .steglista li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; color: #C9D2E3; font-size: 14px; }
+    .steglista li span { width: 32px; height: 32px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-weight: 800; display: grid; place-items: center; }
+    .steglista b { display: block; color: #fff; font-size: 17px; margin-bottom: 2px; }
+    .bocklista { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 18px; }
+    .bocklista li::before { content: "✓"; color: var(--yellow); font-weight: 800; margin-right: 12px; }
+
+    .allarubrik { font-size: clamp(24px, 3.4vw, 32px); margin: 44px 0 14px; letter-spacing: -.5px; }
+    .infokort { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 40px 0 8px; }
+    .infokort div { background: #fff; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(14,42,71,.06); }
+    .infokort h3 { margin: 0 0 8px; font-size: 19px; }
+    .infokort p { margin: 0; color: var(--muted); font-size: 14px; }
+    #fragor details { border-top: 1px solid var(--line); padding: 12px 0; }
+    #fragor summary { font-weight: 700; cursor: pointer; }
+    #fragor details p { margin: 8px 0 0; color: var(--muted); }
+    #fragor .liten { font-size: 12px; color: var(--muted); margin-top: 16px; }
+
+    @media (max-width: 900px) {
+      .herorad, .stegrad { grid-template-columns: 1fr; gap: 28px; }
+      section.steg2 { background: #0B2239; }
+      .topplista { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 80%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+      .infokort { grid-template-columns: 1fr 1fr; }
+      .navlankar { display: none; }
+    }
+    @media (min-width: 640px) and (max-width: 900px) { .topplista { grid-auto-columns: 42%; } }
+    @media (max-width: 600px) { .herobild { display: none; } .heroslogan { letter-spacing: .15em; } }
+    @media (max-width: 480px) { .infokort { grid-template-columns: 1fr; } header.hero { padding: 28px 0 36px; } .bocklista { font-size: 16px; } }
   </style>
 </head>
 
 <body>
   <!-- ===== HTML: det som syns på sidan ===== -->
-  <header>
-    <div class="wrap">
-      <h1>Leasing<span>kollen</span></h1>
-      <p>Jämför privatleasing hos bilmärkena i Sverige. Vi räknar på <b>vad du betalar totalt på 36 månader</b>, inte bara månadspriset.</p>
-      <div class="trust" id="trust"></div>
+  <nav class="topnav">
+    <div class="wrap navrad">
+      <a class="logo" href="#">Leasing<span>kollen</span></a>
+      <div class="navlankar"><a href="#kampanjer">Kampanjer</a><a href="#alla">Alla bilar</a><a href="#sa-funkar-det">Så funkar det</a><a href="#fragor">Frågor &amp; svar</a></div>
+    </div>
+  </nav>
 
-      <!-- Topp 5: bästa kampanjen på var och en av Sveriges mest leasade bilar -->
-      <section class="topp" aria-labelledby="toppRubrik">
-        <div class="topph">
-          <h2 id="toppRubrik">Bästa kampanjerna just nu</h2>
-          <p>på Sveriges 5 mest privatleasade bilar 2026</p>
-        </div>
-        <div class="topplista" id="topp"></div>
-        <small class="toppkalla">Topplistan bygger på statistik från Volkswagen Finans (jan–maj 2026), Carplus och Mobility Sweden. Bästa kampanj = lägst kostnad i förhållande till nypriset.</small>
-      </section>
+  <header class="hero">
+    <div class="wrap herorad">
+      <div class="herotext">
+        <h1>Hitta Sveriges bästa privatleasing</h1>
+        <p class="heroslogan">Jämför. Välj tillval. Beställ.</p>
+        <p>Vi jämför privatleasing hos alla stora bilmärken och räknar med alla avgifter, så att du ser vad bilen faktiskt kostar på 36 månader.</p>
+        <div class="trust" id="trust"></div>
+        <div class="heroknappar"><a class="knapp" href="#kampanjer">Se kampanjerna</a><a class="knapp ljus" href="#alla">Jämför alla bilar</a></div>
+      </div>
+      <div class="herobild"><img src="bilder/ex40.jpg" alt="Volvo EX40, Sveriges mest privatleasade bil 2026"><span>Volvo EX40 – Sveriges mest privatleasade bil 2026</span></div>
     </div>
   </header>
 
-  <main class="wrap" style="padding: 0 16px;">
+  <!-- Topp 5: bästa kampanjen på var och en av Sveriges mest leasade bilar -->
+  <section class="topp" id="kampanjer" aria-labelledby="toppRubrik">
+    <div class="wrap">
+      <h2 id="toppRubrik" class="sektionsrubrik">Bästa kampanjerna just nu</h2>
+      <p class="sektionsingress">på Sveriges 5 mest privatleasade bilar 2026</p>
+      <div class="topplista" id="topp"></div>
+      <small class="toppkalla">Topplistan bygger på statistik från Volkswagen Finans (jan–maj 2026), Carplus och Mobility Sweden. Bästa kampanj = lägst kostnad i förhållande till nypriset.</small>
+    </div>
+  </section>
+
+  <!-- Så funkar det + vad som räknas in -->
+  <section class="steg2" id="sa-funkar-det">
+    <div class="wrap stegrad">
+      <div>
+        <h2><b>Beställ</b> steg för steg</h2>
+        <ol class="steglista">
+          <li><span>1</span><div><b>Hitta din bil</b>Jämför alla erbjudanden på totalkostnad, månadspris eller hur mycket bil du får för pengarna.</div></li>
+          <li><span>2</span><div><b>Välj färg och tillval</b>Lägg till vinterhjul, dragkrok eller paket och se det nya priset direkt.</div></li>
+          <li><span>3</span><div><b>Skicka beställningen</b>Fyll i dina uppgifter, så skickar vi beställningen till handlaren åt dig.</div></li>
+          <li><span>4</span><div><b>Signera avtalet</b>Handlaren skickar avtalet till dig. Du godkänner det med BankID, och inget är bindande innan dess.</div></li>
+        </ol>
+      </div>
+      <div class="ingarruta">
+        <h2>Vi räknar med <b>allt</b></h2>
+        <ul class="bocklista">
+          <li>Månadskostnad <b>i 36 månader</b></li>
+          <li>Uppläggningsavgift <b>inräknad</b></li>
+          <li>Avi- och adminavgift <b>inräknad</b></li>
+          <li>Förhöjd första hyra <b>inräknad</b></li>
+          <li>Obligatorisk försäkring <b>inräknad</b></li>
+          <li>Pris för fler mil <b>när det finns</b></li>
+          <li>Villkoren <b>kontrolleras varje dag</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap" style="padding: 0 16px;" id="alla">
     <h2 class="allarubrik">Jämför alla bilar</h2>
     <!-- Filter och val. Varje element har ett id så att JavaScript kan hitta det. -->
     <section class="controls">
@@ -317,13 +434,21 @@
     <section class="summary" id="summary"></section>
     <section class="list" id="lista"></section>
 
-    <section class="info">
-      <h2>Så räknar vi</h2>
-      <p><b>Bästa erbjudande</b> = hur stor del av bilens nypris du betalar under 36 månader. Exempel: betalar du 100 000 kr i leasing för en bil som kostar 250 000 kr kontant blir det 40 %. Ju lägre andel, desto mer bil får du för pengarna. Under 40 % är mycket bra, under 45 % bra, upp till 55 % okej och över det dyrt. Nypriset (inkl. moms) kommer från <a href="https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42?tillverkningsar=2026" target="_blank" rel="noopener">Skatteverkets nybilspriser 2026</a> och gäller modellens billigaste version, så andelen är ungefärlig.</p>
-      <p><b>Totalt 36 mån</b> = (månadspris + ev. administrationsavgift) × 36 + uppläggningsavgift + ev. förhöjd första hyra + din försäkring × 36. Vi har läst villkoren hos varje säljare: avtalstid, körsträcka, avgifter och om första hyran är förhöjd. Erbjudanden vi inte kunde bekräfta har vi tagit bort. Väljer du mer än 1 000 mil per år lägger vi på tillägget när märket eller handlaren har publicerat det. Annars står det "fråga handlaren".</p>
-      <p><b>Inte med:</b> el eller bensin, fordonsskatt, vinterhjul (oftast ett tillägg på 300–600 kr/mån) och kostnader för skador eller övermil när du lämnar tillbaka bilen.</p>
-      <p><b>Bilderna</b> kommer från Wikimedia Commons och används enligt sina fria licenser (oftast CC BY-SA 4.0). Fotograf och licens för varje bild finns i listan Bildkällor längst ner. Vi har beskurit och förminskat bilderna, och de beskurna versionerna delas under samma licens. Bilden kan visa en annan version eller årsmodell än den i erbjudandet.</p>
-      <p>Priserna är "från"-priser från märkenas och återförsäljarnas sajter (många hittade via <a href="https://minbilkoll.se/leasing" target="_blank" rel="noopener">minbilkoll.se</a>). Erbjudanden för företag (exkl. moms) är inte med, och kampanjer ändras ofta. Kolla alltid det aktuella priset via länken innan du bestämmer dig. Det här är inte finansiell rådgivning.</p>
+    <section class="infokort">
+      <div><h3>Totalkostnad</h3><p>Vi räknar ihop allt du betalar under 36 månader: månadspris, avgifter, förhöjd första hyra och obligatorisk försäkring.</p></div>
+      <div><h3>Andel av nypriset</h3><p>Hur stor del av bilens nypris du betalar. Under 40 % är mycket bra, under 45 % bra, upp till 55 % okej och över det dyrt.</p></div>
+      <div><h3>Kontrollerat varje dag</h3><p>Priser, avgifter och tillval hämtas från märkenas och handlarnas egna sidor och kontrolleras dagligen.</p></div>
+      <div><h3>Oberoende</h3><p>Ordningen styrs bara av priset. Ingen handlare kan betala för en bättre placering.</p></div>
+    </section>
+
+    <section class="info" id="fragor">
+      <h2>Frågor &amp; svar</h2>
+      <details><summary>Hur räknar ni ut bästa erbjudande?</summary><p>Vi delar det du betalar till leasingbolaget under 36 månader med bilens nypris. Exempel: betalar du 100 000 kr för en bil som kostar 250 000 kr blir det 40 %. Nypriset är märkets eller handlarens ordinarie pris (inkl. moms) för samma version.</p></details>
+      <details><summary>Vad ingår i totalkostnaden?</summary><p>(Månadspris + avi/admin + ev. obligatorisk försäkring) × 36 + uppläggningsavgift + ev. förhöjd första hyra + din egen försäkring om du fyller i den. Väljer du fler mil per år lägger vi på tillägget när märket har publicerat det.</p></details>
+      <details><summary>Vad ingår inte?</summary><p>El eller bränsle, fordonsskatt (om den inte ingår i hyran), vinterhjul om du inte väljer dem som tillval, och kostnader för skador eller övermil när du lämnar tillbaka bilen.</p></details>
+      <details><summary>Är beställningen bindande?</summary><p>Nej. Vi skickar din beställning till handlaren, som skickar avtalet till dig. Först när du har godkänt avtalet med BankID är det bindande. Handlaren och leasingbolaget gör en vanlig kreditprövning.</p></details>
+      <details><summary>Var kommer bilderna ifrån?</summary><p>Från Wikimedia Commons, under fria licenser. Fotograf och licens för varje bild finns under Bildkällor längst ner. Bilden kan visa en annan färg eller årsmodell än i erbjudandet.</p></details>
+      <p class="liten">Priserna kommer från märkenas och återförsäljarnas sajter. Kampanjer ändras ofta, så kontrollera alltid priset i avtalet. Det här är inte finansiell rådgivning.</p>
     </section>
   </main>
 
@@ -1565,12 +1690,13 @@
         return `<article class="tkort">
           <div class="tbild">${b.foto ? `<img src="bilder/${b.foto}.jpg" alt="${t.namn}" loading="lazy">` : ""}<span class="tplats">#${i + 1} mest leasade</span></div>
           <div class="tinner">
-            <div class="tnamn">${t.namn}</div>
-            <div class="tversion">${b.modell.replace(/^(EX40|EX30|Tiguan|Model Y|XC60) ?/, "") || "&nbsp;"}<br><span>${/\bvia\b/.test(b.kalla) ? "" : "via "}${b.kalla.split(/ \(|,/)[0]}</span></div>
-            <div class="tpris">${kr(b.m)}<small>/mån</small></div>
-            <div class="ttotal">${kr(b.total)} totalt på 36 mån${alla.length > 1 ? ` · bäst av ${alla.length} erbjudanden` : ""}</div>
-            ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : ""}
-            <button type="button" class="cta" data-bil="${b.idx}">Välj tillval & beställ →</button>
+            <div class="thuvud">
+              <div><div class="tnamn">${t.namn}</div><div class="tversion">${b.modell.replace(/^(EX40|EX30|Tiguan|Model Y|XC60) ?/, "") || "&nbsp;"}</div></div>
+              <div class="tfran">Från<div class="tpris">${kr(b.m).replace(" kr", "")}:-<small>/mån</small></div></div>
+            </div>
+            <div class="tchips"><span>36 månader</span><span>${b.mil.toLocaleString("sv-SE")} mil/år</span>${b.forhojd ? `<span>${kr(b.forhojd)} första hyra</span>` : ""}</div>
+            <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "via "}${b.kalla.split(/ \(|,/)[0]}${alla.length > 1 ? ` · bäst av ${alla.length}` : ""}</div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : "<span></span>"}<button type="button" class="cta" data-bil="${b.idx}">Beställ</button></div>
           </div>
         </article>`;
       }).join("");
