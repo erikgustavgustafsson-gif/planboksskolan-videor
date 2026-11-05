@@ -17,7 +17,7 @@ Leasingkollen är en sida som jämför privatleasing av nya bilar i Sverige. Anv
 4. **Bilder:** nya bilar behöver en bild av bilen ny, snett framifrån, 720×450 jpg i `bilder/`. Endast Wikimedia Commons-foton med CC BY / CC BY-SA / CC0 (aldrig pressbilder). Lägg till fotograf, fil och licens i `FOTON`.
 5. **Uppdatera `const KONTROLL`** till dagens datum (t.ex. "6 nov 2026").
 6. **Testa** sidan i Playwright (desktop + mobil, inga JS-fel) och titta på en skärmbild.
-7. **Publicera** till artifact-sluggen ovan, commit och push till `main`.
+7. **Publicera** till artifact-sluggen ovan. Filerna ligger i mappen `leasingkollen/` i repot `erikgustavgustafsson-gif/planboksskolan-videor`; commit och push till `main`.
 8. **Rapportera** kort på svenska bara vad som ändrats (priser, nya/borttagna bilar). Om inget ändrats: en rad.
 
 ## Regler
