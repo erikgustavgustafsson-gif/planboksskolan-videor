@@ -1,0 +1,65 @@
+{
+  "slug": "2026-11-05_styrrantan-hojs",
+  "title": "Räntan höjdes igår – så mycket dyrare blir bolånet",
+  "caption": "Riksbanken höjde styrräntan till 2 % igår 📈 Med 2 miljoner i rörligt bolån blir det ca 5 000 kr mer om året – om banken höjer lika mycket. Och fler höjningar är sannolika enligt Riksbanken.\n\nHar du rörlig eller bunden ränta? 👇\n\n#bolån #ränta #riksbanken #styrränta #privatekonomi #budget #plånboksskolan",
+  "pinned_comment": "Har du rörlig eller bunden ränta på bolånet? 🔄 Rörlig / 🔒 Bunden / 🏠 Inget bolån 👇",
+  "sources": [
+    "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-hojs-till-2-procent/ (Riksbanken 4 nov 2026: +0,25 till 2 %, gäller från 11 nov, fler höjningar sannolika det närmaste året)",
+    "https://www.sbab.se/1/privat/tips_och_kunskap/nyheter/artiklar/2026-11-04_riksbanken_hojde_styrrantan_och_oppnar_for_fler_hojningar.html (SBAB: från 1,75 %, rörlig bolåneränta väntas följa)",
+    "https://skatteverket.se/ranteavdrag (Skattereduktion 30 % upp till 100 000 kr)",
+    "Eget räkneexempel: 2 000 000 kr × 0,25 % = 5 000 kr/år; × 0,7 / 12 ≈ 292 kr/mån"
+  ],
+  "cover": {
+    "title": [
+      "RÄNTAN HÖJDES",
+      "IGÅR"
+    ],
+    "pill": "Styrräntan: 2 %",
+    "label": "2 milj. i bolån =",
+    "big": "+5 000 kr/år",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Riksbanken höjde räntan igår, till två procent. Så här mycket dyrare kan ditt bolån bli.",
+      "kicker": "RIKSBANKEN 4 NOVEMBER",
+      "big": "RÄNTAN HÖJS",
+      "sub": "styrräntan blir",
+      "punch": [
+        "2 procent."
+      ]
+    },
+    {
+      "type": "number",
+      "say": "Två miljoner i rörligt bolån, och banken höjer lika mycket? Då blir det femtusen kronor mer om året. Efter ränteavdrag knappt trehundra i månaden.",
+      "top": "Bolån: 2 000 000 kr",
+      "prefix": "+",
+      "value": 5000,
+      "suffix": " kr/år",
+      "color": "yellow",
+      "prefix2": "≈ ",
+      "value2": 292,
+      "suffix2": " kr/mån",
+      "color2": "green",
+      "sub2": "efter ränteavdrag (30 %)"
+    },
+    {
+      "type": "statement",
+      "say": "Och Riksbanken säger att fler höjningar är sannolika det närmaste året.",
+      "title": "DET SLUTAR INTE HÄR",
+      "lines": [
+        "Fler höjningar"
+      ],
+      "highlight": "sannolika inom 1 år",
+      "chip": "Källa: Riksbanken"
+    },
+    {
+      "type": "cta",
+      "say": "Räkna in det i budgeten nu, och följ Plånboksskolan.",
+      "line1": "Räkna in det",
+      "big": "I BUDGETEN",
+      "line2": "redan nu"
+    }
+  ]
+}
