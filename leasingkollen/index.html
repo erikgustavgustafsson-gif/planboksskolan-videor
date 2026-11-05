@@ -115,6 +115,8 @@
     }
     .car .pic svg { width: 92%; height: auto; }
     .car img.pic { object-fit: cover; padding: 0; }
+    .car .pic.ingen { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; color: var(--navy, #16213A); font-size: 14px; }
+    .car .pic.ingen small { opacity: .65; font-size: 12px; }
     /* Knappen till erbjudandet */
     .cta {
       display: inline-block; margin-top: 8px; padding: 10px 16px;
@@ -163,6 +165,51 @@
       .kallor ul { columns: 1; }
       .car img.pic { height: 190px; }
       .price { text-align: left; }
+    }
+
+    /* ---------- Konfiguratorn (välj tillval & beställ) ---------- */
+    .cta { border: 0; cursor: pointer; font: inherit; }
+    .ext { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
+    dialog#konf { width: min(760px, 100vw); box-sizing: border-box; max-height: 100vh; border: 0; border-radius: 16px; padding: 0; color: var(--text); }
+    dialog#konf::backdrop { background: rgba(14, 42, 71, .55); }
+    .kh { position: sticky; top: 0; background: var(--navy); color: #fff; padding: 16px 20px; display: flex; gap: 12px; align-items: center; z-index: 2; }
+    .kh h2 { margin: 0; font-size: 18px; flex: 1; }
+    .kh button { background: transparent; color: #fff; border: 0; font-size: 26px; cursor: pointer; line-height: 1; }
+    .steg { display: flex; gap: 6px; padding: 12px 20px 0; flex-wrap: wrap; }
+    .steg span { font-size: 12px; padding: 4px 10px; border-radius: 99px; background: var(--mint); color: var(--muted); }
+    .steg span.akt { background: var(--navy); color: #fff; }
+    .kb { padding: 8px 20px 20px; }
+    .kgrupp { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 12px 0; }
+    .kgrupp h4 { margin: 0 0 8px; font-size: 15px; }
+    .kval { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); cursor: pointer; }
+    .kval:first-of-type { border-top: 0; }
+    .kval input { margin-top: 3px; }
+    .kval small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .kval .kp { font-weight: 700; white-space: nowrap; font-size: 14px; }
+    .kform { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+    .kform label { font-size: 13px; color: var(--muted); display: block; }
+    .kform input, .kform textarea, .kform select { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; color: var(--text); }
+    .kform .hel { grid-column: 1 / -1; }
+    .kfot { position: sticky; bottom: 0; background: #fff; border-top: 1px solid var(--line); padding: 12px 20px; display: flex; gap: 12px; align-items: center; z-index: 2; }
+    .kfot .ksum { flex: 1; }
+    .kfot .ksum b { font-size: 20px; display: block; }
+    .kfot .ksum small { color: var(--muted); }
+    .kfot button { padding: 11px 18px; border-radius: 10px; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+    .kfot .tillbaka { background: var(--mint); color: var(--navy); }
+    .kfot .nasta { background: var(--navy); color: #fff; }
+    .ktabell { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .ktabell td { padding: 7px 0; border-top: 1px solid var(--line); vertical-align: top; }
+    .ktabell td:last-child { text-align: right; font-weight: 600; white-space: nowrap; padding-left: 12px; }
+    .kinfo { background: var(--mint); border-radius: 10px; padding: 12px 14px; font-size: 14px; margin: 12px 0; }
+    .kfel { color: var(--red); font-size: 13px; min-height: 1em; }
+    @media (max-width: 640px) {
+      dialog#konf { border-radius: 0; width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; margin: 0; }
+      .kfot { padding: 10px 12px; gap: 8px; }
+      .kfot .ksum b { font-size: 17px; white-space: nowrap; }
+      .kfot .ksum small { font-size: 11px; }
+      .kfot button { padding: 10px 12px; font-size: 14px; }
+      .kh { padding: 12px 14px; } .kb { padding: 4px 14px 16px; } .steg { padding: 10px 14px 0; }
+      .kform { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -229,6 +276,19 @@
     </section>
   </main>
 
+  <!-- Konfiguratorn: öppnas när man klickar "Välj tillval & beställ" -->
+  <dialog id="konf" aria-labelledby="konfTitel">
+    <div class="kh"><h2 id="konfTitel">Bygg din bil</h2><button type="button" id="konfStang" aria-label="Stäng">×</button></div>
+    <div class="steg" id="konfSteg"></div>
+    <div class="kb" id="konfBody"></div>
+    <div class="kfot">
+      <div class="ksum" id="konfSum"></div>
+      <button type="button" class="tillbaka" id="konfBak">Tillbaka</button>
+      <button type="button" class="nasta" id="konfNasta">Nästa</button>
+    </div>
+  </dialog>
+
+
   <section class="wrap kallor" style="padding: 0 16px;">
     <details>
       <summary>Bildkällor</summary>
@@ -239,6 +299,7 @@
   <footer>Leasingkollen · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
   <!-- ===== JavaScript: datan och logiken ===== -->
+  <script src="konfig.js"></script>
   <script>
     /* ---------------------------------------------------------------
        BILAR – här ligger all data. En rad per bil.
@@ -262,10 +323,12 @@
     const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
     const LEASABIL = { start: 495, kalla: "Leasabil" };
     const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", url: "https://easyprivatleasing.toyota.se/" };
-    const PEUGEOT = { typ: "Märket", kalla: "Peugeot (Ayvens)", url: "https://www.peugeot.se/kop/finansiering/privatleasing.html", not: "Fordonsskatt faktureras utöver hyran" };
-    const VW = { typ: "Märket", kalla: "Volkswagen (VW Finans)", start: 495, not: "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer" };
-    const VWU = "https://privatleasing.volkswagen.se/tillval/";
-    const SKODA = { typ: "Märket", kalla: "Škoda (VW Finans)", start: 495, url: "https://privatleasing.skoda.se/valjmodell", not: "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer" };
+    const PEUGEOT = { typ: "Märket", kalla: "Peugeot (Ayvens)", url: "https://www.peugeot.se/kop/finansiering/privatleasing.html", forsakring: 395, not: "Försäkring via Ayvens är obligatorisk: 395 kr/mån utöver hyran (ingår i totalen). Fordonsskatt faktureras utöver hyran" };
+    const VWFS_NOT = "Aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Fordonsskatt tillkommer";
+    const VW = { typ: "Märket", kalla: "Volkswagen (VW Finans)", start: 495, not: VWFS_NOT };
+    const SKODA = { typ: "Märket", kalla: "Škoda (VW Finans)", start: 495, not: VWFS_NOT };
+    const CUPRA = { typ: "Märket", kalla: "Cupra (VW Finans)", start: 495, forhojd: 10000, not: "Priset förutsätter 10 000 kr i första förhöjd hyra (kan väljas bort mot +300 kr/mån). " + VWFS_NOT };
+    const AUDI = { typ: "Märket", kalla: "Audi (VW Finans)", start: 495, service: false, not: "Audi Serviceavtal kan läggas till. " + VWFS_NOT };
     const KIA = { typ: "Märket", kalla: "Kia", start: 592, adm: 59 };
     const KU = m => "https://www.kia.com/se/nya-bilar/" + m + "/upptack/";
     const MB = { typ: "Märket", kalla: "Mercedes-Benz", start: 695, adm: 65, url: "https://www.mercedes-benz.se/passengercars/finance/financing-leasing/offers-private.html", not: "Fordonsskatt tillkommer. Mercedes-Benz Finans kan begära förhöjd första avgift efter kreditprövning" };
@@ -288,38 +351,83 @@
       B("Volvo", "EX40 Extended Range Plus SE", "ex40", "El", 4790, 1000, 579900, { kalla: "Volvo-handlare via Wayke", url: "https://www.wayke.se/objekt/019cfc13-6c95-7413-b1f1-c19f8c9cfb6a", not: "Begränsat antal lagerbilar" }),
       B("Polestar", "2 Long Range Single Motor", "pol2", "El", 5495, 1500, 599000, { kalla: "Finnvedens Bil via Blocket", url: "https://www.blocket.se/mobility/item/26097353" }),
       B("Polestar", "4 coupé Rear Motor Business edition Pilot", "pol4", "El", 7295, 1500, 619000, { kalla: "Polestar-handlare via Wayke", url: "https://www.wayke.se/objekt/01a04238-b8b8-7581-9401-3a65797cbf6f", not: "Leverans senast 31 dec 2026" }),
-      // --- Volkswagen (märkets egna priser) ---
-      B("Volkswagen", "ID.Polo Life", "idpolo", "El", 3495, 1000, 373700, { ...VW, url: VWU + "nya_id_polo_life" }),
-      B("Volkswagen", "ID.Cross Trend", "idcross", "El", 2995, 1000, 356900, { ...VW, url: VWU + "id_cross_trend" }),
-      B("Volkswagen", "ID.Cross Life 52 kWh", "idcross", "El", 4195, 1000, 461900, { ...VW, url: VWU + "id_cross_life" }),
-      B("Volkswagen", "ID.3 Neo", "id3", "El", 3995, 1000, 409900, { ...VW, url: VWU + "id_3_neo_trend" }),
-      B("Volkswagen", "ID.4 GTX SWE Edition", "id4", "El", 5495, 1000, 599900, { ...VW, url: VWU + "id_4_gtx_swe_edition" }),
-      B("Volkswagen", "ID.Tiguan Life", "idtiguan", "El", 5995, 1000, 559900, { ...VW, url: VWU + "id_tiguan_life" }),
-      B("Volkswagen", "ID.7 Pro S Edition", "id7", "El", 6495, 1000, 594900, { ...VW, url: VWU + "id_7_pro_s_edition" }),
-      B("Volkswagen", "ID.7 Tourer Pro S Edition", "id7t", "El", 6495, 1000, 599900, { ...VW, url: VWU + "id_7_tourer_pro_s_edition" }),
-      B("Volkswagen", "Polo Life SWE Edition", "polo", "Bensin", 2995, 1000, 279900, { ...VW, url: VWU + "polo_life_swe_edition" }),
-      B("Volkswagen", "Taigo R-Line Edition", "taigo", "Bensin", 3295, 1000, 320900, { ...VW, url: VWU + "taigo_r-line_edition" }),
-      B("Volkswagen", "Golf Life Edition", "golf", "Bensin", 3495, 1000, 332200, { ...VW, url: VWU + "golf_life_edition" }),
-      B("Volkswagen", "Golf Sportscombi Life Edition", "golfsc", "Bensin", 3995, 1000, 344200, { ...VW, url: VWU + "golf_sportscombi_life_edition" }),
-      B("Volkswagen", "T-Roc Life", "troc", "Bensin", 3495, 1000, 389900, { ...VW, url: VWU + "nya_t-roc_life" }),
-      B("Volkswagen", "Tiguan Life Edition", "tiguan", "Bensin", 3795, 1000, 429300, { ...VW, url: VWU + "tiguan_life_edition" }),
-      B("Volkswagen", "Tayron Life Edition", "tayron", "Bensin", 3995, 1000, 449900, { ...VW, url: VWU + "tayron_life_edition" }),
-      B("Volkswagen", "Passat Sportscombi Business Limited Edition eHybrid", "passat", "Laddhybrid", 4995, 1000, 496000, { ...VW, url: VWU + "passat_business_lim_ed_ehybrid" }),
       // --- Škoda (märkets egna priser) ---
-      B("Skoda", "Epiq 35 Essence", "epiq", "El", 2795, 1000, 315900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
-      B("Skoda", "Epiq 40 Essence", "epiq", "El", 2995, 1000, 337900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
-      B("Skoda", "Epiq 55 Essence", "epiq", "El", 3295, 1000, 384900, { ...SKODA, not: SKODA.not + ". Lanseringskampanj t.o.m. 15 dec 2026" }),
-      B("Skoda", "Kamiq Selection", "kamiq", "Bensin", 2815, 1000, 327500, SKODA),
-      B("Skoda", "Octavia Combi Selection", "octaviac", "Bensin", 2945, 1000, 361500, SKODA),
-      B("Skoda", "Fabia Selection", "fabia", "Bensin", 2995, 1000, 278900, SKODA),
-      B("Skoda", "Karoq Selection", "karoq", "Bensin", 3030, 1000, 394500, SKODA),
-      B("Skoda", "Elroq 60 Explore Edition", "elroq", "El", 3995, 1000, 469900, SKODA),
-      B("Skoda", "Kodiaq Selection", "kodiaq", "Bensin", 4395, 1000, 434900, SKODA),
-      B("Skoda", "Enyaq 85 Solid Edition", "enyaq", "El", 4995, 1000, 569900, SKODA),
-      B("Skoda", "Superb Combi Selection iV", "superb", "Laddhybrid", 4995, 1000, 476000, SKODA),
-      B("Skoda", "Enyaq Coupé 85 Solid Edition", "enyaqc", "El", 5995, 1000, 594900, SKODA),
-      B("Skoda", "Peaq 90 Selection", "peaq", "El", 6945, 1000, 654900, SKODA),
       // --- Kia (märkets egna priser) ---
+      // --- VWFS START: Volkswagen, Škoda, Cupra och Audi från märkenas privatleasingsidor (genereras av verktyg/gen.py) ---
+      B("Audi", "A5 e-hybrid quattro Proline Edition", "a5", "Laddhybrid", 5695, 1000, 579000, { ...AUDI, url: "https://privatleasing.audi.se/tillval/_a5_e-hybrid_quattro_proline_edition", cfg: "audi/_a5_e-hybrid_quattro_proline_edition", mer: {1500: 620, 2000: 1030} }),
+      B("Audi", "A2 e-tron S line", null, "El", 5225, 1000, 531300, { ...AUDI, url: "https://privatleasing.audi.se/tillval/a2_e-tron_s-line", cfg: "audi/a2_e-tron_s-line", mer: {1500: 410, 2000: 570} }),
+      B("Audi", "A5 Avant e-hybrid quattro Proline Edition", "a5avant", "Laddhybrid", 5695, 1000, 579000, { ...AUDI, url: "https://privatleasing.audi.se/tillval/a5_avant_e-hybrid_quattro_proline_edition", cfg: "audi/a5_avant_e-hybrid_quattro_proline_edition", mer: {1500: 620, 2000: 1030} }),
+      B("Audi", "A5 Avant e-hybrid quattro S line Edition", "a5avant", "Laddhybrid", 6595, 1000, 609000, { ...AUDI, url: "https://privatleasing.audi.se/tillval/a5_avant_e-hybrid_quattro_s_line_edition_", cfg: "audi/a5_avant_e-hybrid_quattro_s_line_edition_", mer: {1500: 630, 2000: 1020} }),
+      B("Audi", "A2 e-tron Proline", null, "El", 4995, 1000, 511300, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_a2_e-tron", cfg: "audi/nya_a2_e-tron", mer: {1500: 420, 2000: 580} }),
+      B("Audi", "A3 Sedan Proline", "a3sedan", "Bensin", 3795, 1000, 382800, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_a3_sedan_proline", cfg: "audi/nya_a3_sedan_proline", mer: {1500: 380, 2000: 690} }),
+      B("Audi", "A3 Sportback e-hybrid Proline", "a3", "Laddhybrid", 5145, 1000, 499800, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_a3_sportback_e-hybrid_proline", cfg: "audi/nya_a3_sportback_e-hybrid_proline", mer: {1500: 480, 2000: 830} }),
+      B("Audi", "A3 Sportback Proline", "a3", "Bensin", 3695, 1000, 372100, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_a3_sportback_proline", cfg: "audi/nya_a3_sportback_proline", mer: {1500: 370, 2000: 680} }),
+      B("Audi", "Q4 e-tron performance Proline", "q4", "El", 5795, 1000, 640000, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_q4_e-tron_performance_proline", cfg: "audi/nya_q4_e-tron_performance_proline", mer: {1500: 540, 2000: 745} }),
+      B("Audi", "Q4 e-tron quattro Proline Edition", "q4", "El", 5995, 1000, 619000, { ...AUDI, url: "https://privatleasing.audi.se/tillval/nya_q4_e-tron_quattro_proline_edition", cfg: "audi/nya_q4_e-tron_quattro_proline_edition", mer: {1500: 560, 2000: 770} }),
+      B("Audi", "Q6 e-tron Proline Edition", "q6", "El", 7995, 1000, 669900, { ...AUDI, url: "https://privatleasing.audi.se/tillval/q6_e-tron_proline_edition", cfg: "audi/q6_e-tron_proline_edition", mer: {1500: 590, 2000: 810} }),
+      B("Cupra", "Formentor eTSI 150hk DSG", "formentor", "Bensin", 2995, 1000, 434900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_formentor_etsi_150hk_dsg", cfg: "cupraofficial/cupra_formentor_etsi_150hk_dsg", mer: {1500: 470, 2000: 660} }),
+      B("Cupra", "Formentor Swedish Edition e-HYBRID", "formentor", "Laddhybrid", 4945, 1000, 469900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_formentor_swe_edition_e-hybrid", cfg: "cupraofficial/cupra_formentor_swe_edition_e-hybrid", mer: {1500: 580, 2000: 795} }),
+      B("Cupra", "Leon eTSI 150hk DSG", "leon", "Bensin", 4095, 1000, 402900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_leon_etsi_150hk_dsg", cfg: "cupraofficial/cupra_leon_etsi_150hk_dsg", mer: {1500: 480, 2000: 660} }),
+      B("Cupra", "Leon Sportstourer eTSI 150hk DSG", "cupraleon", "Bensin", 3595, 1000, 413900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_leon_sportstourer_etsi_150hk_dsg", cfg: "cupraofficial/cupra_leon_sportstourer_etsi_150hk_dsg", mer: {1500: 490, 2000: 675} }),
+      B("Cupra", "Leon Sportstourer Swedish Edition e-HYBRID", "cupraleon", "Laddhybrid", 4495, 1000, 429900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_leon_sportstourer_swe_edition_e-hybrid", cfg: "cupraofficial/cupra_leon_sportstourer_swe_edition_e-hybrid", mer: {1500: 530, 2000: 730} }),
+      B("Cupra", "Tavascan Drive Swedish Edition", "tavascan", "El", 4695, 1000, 554900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_tavascan_drive_swe_ed", cfg: "cupraofficial/cupra_tavascan_drive_swe_ed", mer: {1500: 520, 2000: 715} }),
+      B("Cupra", "Tavascan VZ Swedish Edition", "tavascan", "El", 5195, 1000, 599900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_tavascan_vz", cfg: "cupraofficial/cupra_tavascan_vz", mer: {1500: 620, 2000: 850} }),
+      B("Cupra", "Terramar eTSI 150hk DSG", "terramar", "Bensin", 2995, 1000, 444900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_terramar_etsi_150hk_dsg", cfg: "cupraofficial/cupra_terramar_etsi_150hk_dsg", mer: {1500: 480, 2000: 670} }),
+      B("Cupra", "Terramar Swedish Edition e-HYBRID", "terramar", "Laddhybrid", 5495, 1000, 519900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_terramar_swe_edition_e-hybrid", cfg: "cupraofficial/cupra_terramar_swe_edition_e-hybrid", mer: {1500: 610, 2000: 840} }),
+      B("Cupra", "Terramar Swedish Edition TSI 204hk DSG 4Drive", "terramar", "Bensin", 5395, 1000, 499900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/cupra_terramar_swe_edition_tsi_204hk_dsg_4drive", cfg: "cupraofficial/cupra_terramar_swe_edition_tsi_204hk_dsg_4drive", mer: {1500: 580, 2000: 795} }),
+      B("Cupra", "Born 58 kWh", "born", "El", 4095, 1000, 466900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_born_58_kwh", cfg: "cupraofficial/nya_cupra_born_58_kwh", mer: {1500: 400, 2000: 545} }),
+      B("Cupra", "Raval Endurance", "raval", "El", 3495, 1000, 425900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_raval____", cfg: "cupraofficial/nya_cupra_raval____", mer: {1500: 365, 2000: 495} }),
+      B("Cupra", "Raval Plus", "raval", "El", 3295, 1000, 368900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_raval_plus____", cfg: "cupraofficial/nya_cupra_raval_plus____", mer: {1500: 315, 2000: 430} }),
+      B("Cupra", "Raval VZ", "raval", "El", 4395, 1000, 457900, { ...CUPRA, url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_raval_vz", cfg: "cupraofficial/nya_cupra_raval_vz", mer: {1500: 390, 2000: 535} }),
+      B("Skoda", "Fabia Monte Carlo Explore", "fabia", "Bensin", 2995, 1000, 279000, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/fabia_monte_carlo_explore", cfg: "skoda/fabia_monte_carlo_explore", mer: {1500: 265, 2000: 540} }),
+      B("Skoda", "Kamiq Selection Explore", "kamiq", "Bensin", 2815, 1000, 289000, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/kamiq_130_edition", cfg: "skoda/kamiq_130_edition", mer: {1500: 295, 2000: 580} }),
+      B("Skoda", "Karoq Selection Explore", "karoq", "Bensin", 3030, 1000, 356500, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/karoq_selection-2", cfg: "skoda/karoq_selection-2", mer: {1500: 360, 2000: 660} }),
+      B("Skoda", "Karoq Sportline Explore", "karoq", "Bensin", 3325, 1000, 388900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/karoq_sportline_", cfg: "skoda/karoq_sportline_", mer: {1500: 390, 2000: 700} }),
+      B("Skoda", "Kodiaq Sportline Explore Edition iV", "kodiaq", "Laddhybrid", 5645, 1000, 539400, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/kodiaq_sportline_iv_130_edition", cfg: "skoda/kodiaq_sportline_iv_130_edition", mer: {1500: 520, 2000: 880} }),
+      B("Skoda", "Elroq 60", "elroq", "El", 3995, 1000, 484500, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_elroq_60_", cfg: "skoda/nya_elroq_60_", mer: {1500: 430, 2000: 590} }),
+      B("Skoda", "Enyaq 85 Selection Solid Edition", "enyaq", "El", 4995, 1000, 598965, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_enyaq_85_solid_edition", cfg: "skoda/nya_enyaq_85_solid_edition", mer: {1500: 515, 2000: 710} }),
+      B("Skoda", "Enyaq Coupé RS Solid Edition", "enyaqc", "El", 5995, 1000, 705900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_enyaq_coupe_rs_solid_edition", cfg: "skoda/nya_enyaq_coupe_rs_solid_edition", mer: {1500: 605, 2000: 835} }),
+      B("Skoda", "Epiq 35 Essence", "epiq", "El", 2795, 1000, 315900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_epiq_35_essence", cfg: "skoda/nya_epiq_35_essence", mer: {1500: 285, 2000: 390} }),
+      B("Skoda", "Epiq 55 Essence", "epiq", "El", 3295, 1000, 384900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_epiq_55_essence", cfg: "skoda/nya_epiq_55_essence", mer: {1500: 340, 2000: 470} }),
+      B("Skoda", "Kodiaq Selection Explore", "kodiaq", "Bensin", 4395, 1000, 399900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_kodiaq", cfg: "skoda/nya_kodiaq", mer: {1500: 400, 2000: 715} }),
+      B("Skoda", "Kodiaq Selection Explore Edition iV", "kodiaq", "Laddhybrid", 5280, 1000, 506400, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_kodiaq_iv", cfg: "skoda/nya_kodiaq_iv", mer: {1500: 490, 2000: 840} }),
+      B("Skoda", "Kodiaq RS Explore", "kodiaq", "Bensin", 6345, 1000, 564900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_kodiaq_rs", cfg: "skoda/nya_kodiaq_rs", mer: {1500: 530, 2000: 895} }),
+      B("Skoda", "Octavia Combi Selection", "octaviac", "Bensin", 2945, 1000, 353000, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_octavia", cfg: "skoda/nya_octavia", mer: {1500: 345, 2000: 650} }),
+      B("Skoda", "Octavia Combi Sportline", "octaviac", "Bensin", 3845, 1000, 449000, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_octavia_sportline", cfg: "skoda/nya_octavia_sportline", mer: {1500: 425, 2000: 755} }),
+      B("Skoda", "Superb Combi Selection Explore", "superb", "Bensin", 5225, 1000, 462900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/nya_superb_", cfg: "skoda/nya_superb_", mer: {1500: 435, 2000: 765} }),
+      B("Skoda", "Peaq Selection Explore Edition", "peaq", "El", 6945, 1000, 654899, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/peaq_selection_explore_edition", cfg: "skoda/peaq_selection_explore_edition", mer: {1500: 595, 2000: 815} }),
+      B("Skoda", "Peaq Sportline Explore Edition", "peaq", "El", 7795, 1000, 713500, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/peaq_sportline_explore_edition", cfg: "skoda/peaq_sportline_explore_edition", mer: {1500: 640, 2000: 880} }),
+      B("Skoda", "Superb Combi L&K Explore", "superb", "Bensin", 6495, 1000, 560900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/superb_combi_l_k", cfg: "skoda/superb_combi_l_k", mer: {1500: 500, 2000: 860} }),
+      B("Skoda", "Superb Combi L&K Explore Edition iV", "superb", "Laddhybrid", 5395, 1000, 522900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/superb_combi_l_k_iv", cfg: "skoda/superb_combi_l_k_iv", mer: {1500: 535, 2000: 905} }),
+      B("Skoda", "Superb Combi Selection Explore Edition iV", "superb", "Laddhybrid", 4995, 1000, 477900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/superb_combi_selection_iv", cfg: "skoda/superb_combi_selection_iv", mer: {1500: 495, 2000: 850} }),
+      B("Skoda", "Superb Combi Sportline Explore Edition iV", "superb", "Laddhybrid", 5200, 1000, 507900, { ...SKODA, url: "https://privatleasing.skoda.se/tillval/superb_combi_sportline_130_edition_iv", cfg: "skoda/superb_combi_sportline_130_edition_iv", mer: {1500: 535, 2000: 900} }),
+      B("Volkswagen", "Golf Life Edition", "golf", "Bensin", 3495, 1000, 337200, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/golf_life_edition", cfg: "volkswagen/golf_life_edition", mer: {1500: 305, 2000: 585} }),
+      B("Volkswagen", "Golf Sportscombi Life Edition", "golfsc", "Bensin", 3995, 1000, 370200, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/golf_sportscombi_life_edition", cfg: "volkswagen/golf_sportscombi_life_edition", mer: {1500: 335, 2000: 625} }),
+      B("Volkswagen", "ID.3 Neo Life", "id3", "El", 4195, 1000, 481900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_3_neo_life", cfg: "volkswagen/id_3_neo_life", mer: {1500: 410, 2000: 560} }),
+      B("Volkswagen", "ID.3 Neo Trend", "id3", "El", 3995, 1000, 409900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_3_neo_trend", cfg: "volkswagen/id_3_neo_trend", mer: {1500: 345, 2000: 475} }),
+      B("Volkswagen", "ID.4 GTX SWE Edition", "id4", "El", 5495, 1000, 620900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_4_gtx_swe_edition", cfg: "volkswagen/id_4_gtx_swe_edition", mer: {1500: 580, 2000: 800} }),
+      B("Volkswagen", "ID.7 GTX Edition", "id7", "El", 7995, 1000, 674900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_7_gtx_edition", cfg: "volkswagen/id_7_gtx_edition", mer: {1500: 615, 2000: 840} }),
+      B("Volkswagen", "ID.7 Pro S SWE Edition", "id7", "El", 6495, 1000, 595900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_7_pro_s_edition", cfg: "volkswagen/id_7_pro_s_edition", mer: {1500: 580, 2000: 800} }),
+      B("Volkswagen", "ID.7 Tourer GTX Edition", "id7t", "El", 7995, 1000, 679900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_7_tourer_gtx_edition", cfg: "volkswagen/id_7_tourer_gtx_edition", mer: {1500: 615, 2000: 845} }),
+      B("Volkswagen", "ID.7 Tourer Pro S SWE Edition", "id7t", "El", 6495, 1000, 605900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_7_tourer_pro_s_edition", cfg: "volkswagen/id_7_tourer_pro_s_edition", mer: {1500: 585, 2000: 805} }),
+      B("Volkswagen", "ID.Cross Life", "idcross", "El", 3695, 1000, 411900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_cross_life", cfg: "volkswagen/id_cross_life", mer: {1500: 385, 2000: 680} }),
+      B("Volkswagen", "ID.Cross Trend", "idcross", "El", 2995, 1000, 356900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_cross_trend", cfg: "volkswagen/id_cross_trend", mer: {1500: 340, 2000: 615} }),
+      B("Volkswagen", "ID.Polo GTI", "idpolo", "El", 5195, 1000, 484900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_polo_gti_", cfg: "volkswagen/id_polo_gti_", mer: {1500: 445, 2000: 765} }),
+      B("Volkswagen", "ID.Tiguan Life 58 kWh", "idtiguan", "El", 5995, 1000, 564800, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_tiguan_life", cfg: "volkswagen/id_tiguan_life", mer: {1500: 475, 2000: 655} }),
+      B("Volkswagen", "ID.Tiguan Life 77 kWh", "idtiguan", "El", 6295, 1000, 593800, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_tiguan_life_77", cfg: "volkswagen/id_tiguan_life_77", mer: {1500: 500, 2000: 685} }),
+      B("Volkswagen", "ID.Tiguan Style 77 kWh", "idtiguan", "El", 6795, 1000, 611800, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/id_tiguan_style", cfg: "volkswagen/id_tiguan_style", mer: {1500: 515, 2000: 710} }),
+      B("Volkswagen", "ID.Polo Life", "idpolo", "El", 3495, 1000, 373900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/nya_id_polo_life", cfg: "volkswagen/nya_id_polo_life", mer: {1500: 355, 2000: 640} }),
+      B("Volkswagen", "ID.Polo Style", "idpolo", "El", 4295, 1000, 387900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/nya_id_polo_style", cfg: "volkswagen/nya_id_polo_style", mer: {1500: 385, 2000: 680} }),
+      B("Volkswagen", "T-roc Life", "troc", "Bensin", 3495, 1000, 395900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/nya_t-roc_life", cfg: "volkswagen/nya_t-roc_life", mer: {1500: 360, 2000: 660} }),
+      B("Volkswagen", "Passat Business Limited Edition eHybrid", "passat", "Laddhybrid", 4995, 1000, 505900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/passat_business_lim_ed_ehybrid", cfg: "volkswagen/passat_business_lim_ed_ehybrid", mer: {1500: 515, 2000: 875} }),
+      B("Volkswagen", "Passat R-Line SWE Edition eHybrid", "passat", "Laddhybrid", 5295, 1000, 552900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/passat_r-line_swe_edition_ehybrid", cfg: "volkswagen/passat_r-line_swe_edition_ehybrid", mer: {1500: 555, 2000: 925} }),
+      B("Volkswagen", "Polo Life SWE Edition", "polo", "Bensin", 2995, 1000, 306900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/polo_life_swe_edition", cfg: "volkswagen/polo_life_swe_edition", mer: {1500: 290, 2000: 570} }),
+      B("Volkswagen", "Taigo R-Line Edition", "taigo", "Bensin", 3295, 1000, 325900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/taigo_r-line_edition", cfg: "volkswagen/taigo_r-line_edition", mer: {1500: 285, 2000: 565} }),
+      B("Volkswagen", "Tayron Life Edition", "tayron", "Bensin", 3995, 1000, 457900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tayron_life_edition", cfg: "volkswagen/tayron_life_edition", mer: {1500: 380, 2000: 705} }),
+      B("Volkswagen", "Tayron R-line SWE Edition", "tayron", "Bensin", 5295, 1000, 623400, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tayron_r-line_swe_edition", cfg: "volkswagen/tayron_r-line_swe_edition", mer: {1500: 570, 2000: 965} }),
+      B("Volkswagen", "Tiguan Life Edition", "tiguan", "Bensin", 3795, 1000, 420200, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tiguan_life_edition", cfg: "volkswagen/tiguan_life_edition", mer: {1500: 350, 2000: 665} }),
+      B("Volkswagen", "Tiguan R-Line SWE Edition eHybrid", "tiguan", "Laddhybrid", 4995, 1000, 595900, { ...VW, url: "https://privatleasing.volkswagen.se/tillval/tiguan_r-line_swe_edition_ehybrid_", cfg: "volkswagen/tiguan_r-line_swe_edition_ehybrid_", mer: {1500: 560, 2000: 950} }),
+      // --- VWFS SLUT ---
       B("Kia", "Picanto 1.0 GDI AMT Action", "picanto", "Bensin", 3145, 1000, 206300, { ...KIA, mer: {1500: 107, 2000: 357}, url: KU("picanto") }),
       B("Kia", "Stonic 1.0 T-GDi Action", "stonic", "Bensin", 3295, 1000, 266900, { ...KIA, mer: {1500: 175, 2000: 520}, url: KU("stonic") }),
       B("Kia", "K4 Sportswagon 1.0 T-GDi Action", "k4sw", "Bensin", 3595, 1000, 312000, { ...KIA, mer: {1500: 160, 2000: 399}, url: KU("k4") }),
@@ -330,12 +438,13 @@
       B("Kia", "Sorento Plug-in Hybrid AWD", "sorento", "Laddhybrid", 7845, 1000, 614900, { ...KIA, mer: {1500: 317, 2000: 801}, url: KU("sorento-plug-in-hybrid") }),
       B("Kia", "Sportage Plug-in Hybrid AWD Advance", "sportage", "Laddhybrid", 4695, 1000, 543900, { ...HEDIN, url: HA + "228511/pc-nc-kia-sportage-2027" }),
       // --- Mercedes-Benz (märkets egna priser, 1 500 mil/år) ---
-      B("Mercedes-Benz", "GLA 250+ electric Advanced Edition", "gla", "El", 5495, 1500, 559000, MB),
+      B("Mercedes-Benz", "GLA 250+ electric Advanced Edition", null, "El", 5495, 1500, 559000, MB),
       B("Mercedes-Benz", "CLA 250+ electric Advanced Edition", "cla", "El", 5995, 1500, 599000, MB),
       B("Mercedes-Benz", "CLA 250+ Shooting Brake electric", "clasb", "El", 6295, 1500, 615000, MB),
       B("Mercedes-Benz", "GLB 250+ electric Advanced Edition", "glb", "El", 6495, 1500, 619000, MB),
-      B("Mercedes-Benz", "C 300 4MATIC electric Advanced Edition", "cclass", "El", 6995, 1500, 649000, MB),
+      B("Mercedes-Benz", "C 300 4MATIC electric Advanced Edition", null, "El", 6995, 1500, 649000, MB),
       B("Mercedes-Benz", "GLC 300 4MATIC electric Advanced Edition", "glc", "El", 7995, 1500, 719000, MB),
+      B("Mercedes-Benz", "GLC 400 4MATIC electric Advanced Edition", "glc", "El", 8895, 1500, 784000, MB),
       B("Mercedes-Benz", "Mercedes-AMG CLA 45 4MATIC+ electric", "cla", "El", 9595, 1500, 799000, MB),
       B("Mercedes-Benz", "E 300 e Sedan", "eclass", "Laddhybrid", 6795, 1500, 607000, { ...MB, kalla: "Hedin Automotive (Mercedes-Benz Finans)", typ: "Återförsäljare", url: HA + "47407/pc-sc-mercedes-benz-e-class" }),
       // --- Tesla ---
@@ -350,12 +459,9 @@
       B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944" }),
       B("Volvo", "EX60 P6 Plus", "ex60", "El", 8995, 1000, 689000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/170a712b-5743-4b66-9e23-bb33b98d7edd" }),
       B("Volvo", "XC90 T8 Ultra Dark", "xc90", "Laddhybrid", 11995, 1000, 994000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/31b21382-095f-40b2-af94-28a9d6db1190", not: "Lagerbil" }),
-      B("Cupra", "Raval Endurance", "raval", "El", 3495, 1000, 426600, { ...LEASABIL, mer: {1500: 365, 2000: 495}, url: LB + "Cupra/Cupra-Nya-CUPRA-Raval-Endurance" }),
-      B("Cupra", "Leon Sportstourer eTSI 150 DSG", "cupraleon", "Bensin", 3595, 1000, 407900, { ...LEASABIL, mer: {1500: 490, 2000: 675}, url: LB + "Cupra/CUPRA-Leon-Sportstourer-eTSI-150hk-DSG" }),
-      B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 429900, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller lagerbilar" }),
-      B("Cupra", "Born 58 kWh", "born", "El", 4195, 1000, 466900, { typ: "Märket", kalla: "Cupra", url: "https://privatleasing.cupraofficial.se/tillval/nya_cupra_born_58_kwh", not: "3 895 kr/mån om du betalar 10 000 kr i förhöjd första hyra" }),
+      B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 324500, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller ett begränsat antal lagerbilar i färgen Fiord Blue. Metalliclack +300 kr/mån. Nybeställd bil 3 295 kr/mån" }),
       B("Seat", "Ibiza Edition 1.0 MPI 80 hk", "ibiza", "Bensin", 2695, 1000, 229900, { forhojd: 10000, kalla: "Bilia", url: "https://www.bilia.se/bilar/seat/" }),
-      B("Audi", "A3 Sportback 35 TFSI S tronic Proline", "a3", "Bensin", 2795, 1000, 359900, { service: false, kalla: "Din Bil", url: "https://dinbil.se/audi/erbjudanden/privatleasing-audi-a3-sportback", not: "Serviceavtal från 100 kr/mån och uppläggnings-/adminavgift tillkommer" }),
+      B("Audi", "A3 Sportback 35 TFSI S tronic Proline", "a3", "Bensin", 2795, 1000, 359900, { service: false, kalla: "Din Bil", url: "https://dinbil.se/audi/erbjudanden/privatleasing-audi-a3-sportback", start: 495, not: "Serviceavtal från 100 kr/mån tillkommer. Finansiering via VW Finans: aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Erbjudandet gäller t.o.m. 31 dec 2026" }),
       B("BMW", "120", "bmw120", "Bensin", 3690, 1000, 387700, { start: 595, adm: 55, kalla: "Hedin Automotive", url: HA + "246889/pc-nc-bmw-120-2026" }),
       B("BMW", "iX2 xDrive30 Active Edition", "ix2", "El", 6895, 1000, 569900, { typ: "Märket", start: 595, adm: 55, kalla: "BMW", url: "https://hitta.bmw.se/leasing/58a78c30-ae30-46d2-8bc8-89887262abdd/5977fbc3-ac12-42c0-a5bd-974161bea67c?offerType=0" }),
       B("Kia", "EV2 Standard Range", "ev2", "El", 3495, 1500, 331900, { ...HEDIN, url: HA + "226224/pc-nc-kia-ev2-2027" }),
@@ -446,10 +552,17 @@
       tucson:     { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Hyundai_Tucson_1.6_T-GDI_PHEV_Trend_(IV,_Facelift)_%E2%80%93_f_15022025.jpg" },
       yaris:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Toyota_Yaris_Hybrid_Teamplayer_(IV,_Facelift)_%E2%80%93_f_12042026.jpg" },
       yariscross: { av: A, fil: "Toyota_Yaris_Cross_Hybrid_(XP210)_1X7A1846.jpg" },
-      cclass:     { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_C_300_d_AMG_Line_(W_206)_%E2%80%93_f_10032024.jpg" },
       cla:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_4MATIC_AMG_Line_(C_178)_%E2%80%93_f_11052026.jpg" },
       clasb:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_Shooting_Brake_AMG_Line_Plus_(X_178)_%E2%80%93_f_30082026.jpg" },
-      ec40:       { av: M, fil: "Volvo_C40_Leonberg_2022_1X7A0524.jpg" },
+      a3sedan:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A3_Limousine_S_line_(8Y)_%E2%80%93_f_08072024.jpg" },
+      a5:         { av: "Alexander Migl", fil: "Audi_A5_B10_DSC_3752.jpg" },
+      a5avant:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A5_Avant_Advanced_(B10)_%E2%80%93_f_18042026.jpg" },
+      q4:         { av: "Calreyn88", fil: "2024_Audi_Q4_e-tron_Vorsprung_45.jpg" },
+      q6:         { av: M, fil: "Audi_Q6_e-tron_DSC_2908.jpg" },
+      tavascan:   { av: A, fil: "Cupra_Tavascan_Auto_Zuerich_2023_1X7A0992.jpg" },
+      terramar:   { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Terramar_1.5_eTSI_%E2%80%93_f_25012026.jpg" },
+      leon:       { av: A, fil: "Cupra_Leon_Mk4_Facelift_Leonberg_2024_IMG_0888.jpg" },
+      ec40:       { av: "Ethan Llamas", fil: "Volvo_EC40_Crystal_White_Pearl_-_front.jpg" },
       eclass:     { av: A, fil: "Mercedes-Benz_W214_1X7A1841.jpg" },
       enyaq:      { av: "Ssu", fil: "2025_Skoda_Enyaq_sportline_(facelift)_-_front.jpg" },
       enyaqc:     { av: M, fil: "%C5%A0koda_Enyaq_Coup%C3%A9_DSC_7070.jpg" },
@@ -458,7 +571,6 @@
       ev5:        { av: "Ethan Llamas", fil: "Kia_EV5_OV_GT-Line_Snow_White_Pearl_01.jpg" },
       ex60:       { av: M, fil: "Volvo_EX60_IMG_8339.jpg" },
       fabia:      { av: M, fil: "Skoda_Fabia_IV_1X7A6155.jpg" },
-      gla:        { av: "Dinkun Chen", fil: "MERCEDES-AMG_GLA_35_4MATIC_(H247)_China.jpg" },
       glb:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_GLB_250%2B_mit_EQ-Technologie_AMG_Line_(X_244)_%E2%80%93_f1_18042026.jpg" },
       glc:        { av: A, fil: "Mercedes-Benz_GLC_with_EQ_Technology_IAA_2025_DSC_2106.jpg" },
       golf:       { av: A, fil: "Volkswagen_Golf_VIII_Facelift_IMG_0375.jpg" },
@@ -531,9 +643,9 @@
       let rader = BILAR.map(bil => {
         const m = manadFor(bil, valdMil);
         const leasing = m == null ? null : m * 36 + bil.start + bil.forhojd;   // allt du betalar till leasingbolaget
-        const total = leasing == null ? null : leasing + forsMan * 36;
+        const total = leasing == null ? null : leasing + (bil.forsakring ?? forsMan) * 36;   // vissa märken har obligatorisk försäkring
         const andel = leasing != null && bil.nypris ? leasing / bil.nypris : null;
-        return { ...bil, m, total, andel };
+        return { ...bil, m, total, andel, idx: BILAR.indexOf(bil) };
       });
 
       // 2) Filtrera
@@ -568,7 +680,7 @@
         const visaRank = s !== "marke" && (s === "andel" ? b.andel != null : b.total != null);
         return `
         <article class="car">
-          <a class="piclink" href="${b.url}" target="_blank" rel="noopener"><img class="pic" src="bilder/${b.foto}.jpg" alt="${b.marke} ${b.modell}" loading="lazy"></a>
+          <a class="piclink" href="${b.url}" target="_blank" rel="noopener">${b.foto ? `<img class="pic" src="bilder/${b.foto}.jpg" alt="${b.marke} ${b.modell}" loading="lazy">` : `<div class="pic ingen"><b>Helt ny modell</b><small>Fri bild finns ännu inte</small></div>`}</a>
           <div>
             <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
             <h3><a href="${b.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${b.modell}</a></h3>
@@ -577,7 +689,8 @@
             ${b.m != null
               ? `<div class="month">${kr(b.m)}/mån</div><div class="total">${kr(b.total)} totalt på 36 mån</div>`
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
-            <a class="cta" href="${b.url}" target="_blank" rel="noopener">Till erbjudandet →</a>
+            <button type="button" class="cta" data-bil="${b.idx}">Välj tillval & beställ →</button>
+            <a class="ext" href="${b.url}" target="_blank" rel="noopener">Se erbjudandet hos ${b.typ === "Märket" ? "märket" : "handlaren"} ↗</a>
           </div>
           <div class="tags">
             ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : `<span class="tag">Andel av nypris: –</span>`}
@@ -587,6 +700,7 @@
             ${b.start || b.adm ? `<span class="tag warn">Avgifter: ${kr(b.start)} start${b.adm ? " + " + b.adm + " kr/mån" : ""}</span>` : ""}
             <span class="tag">${b.service === null ? "Service: se villkor" : b.service ? "Service ingår" : "Service ingår inte"}</span>
             <span class="tag ${b.typ === "Märket" ? "" : "warn"}">${b.typ === "Märket" ? "Märkets eget pris" : "Pris från återförsäljare"}</span>
+            ${b.cfg && KONFIG[b.cfg] ? `<span class="tag el">Alla tillval med pris</span>` : ""}
           </div>
           ${b.not ? `<div class="source"><b>Obs:</b> ${b.not}</div>` : ""}
           <div class="source">Nypris ${b.nypris ? kr(b.nypris) : "saknas"} · ${b.kalla} · villkor kontrollerade ${KONTROLL}</div>
@@ -601,6 +715,219 @@
       const bil = BILAR.find(b => b.foto === k);
       return `<li>${bil ? bil.marke + " " + bil.modell : k}: <a href="${C + f.fil}" target="_blank" rel="noopener">${f.av}</a>, Wikimedia Commons, <a href="${LICENSER[lic]}" target="_blank" rel="noopener">${lic}</a>, beskuren</li>`;
     }).join("");
+
+    /* ================================================================
+       KONFIGURATORN – kunden väljer avtal, tillval och skickar beställningen.
+       Steg: 1 Avtal → 2 Utrustning → 3 Dina uppgifter → 4 Sammanfattning
+       För bilar som finns i KONFIG (konfig.js) har vi märkets alla tillval
+       med exakta priser. För övriga bilar skriver kunden sina önskemål och
+       handlaren lämnar pris i avtalet.
+       ================================================================ */
+    const BESTALLNING_EPOST = "";   // adressen dit beställningarna skickas (fylls i när sidan har en egen adress)
+    const konf = document.getElementById("konf");
+    const STEG = ["Avtal", "Utrustning", "Dina uppgifter", "Sammanfattning"];
+    let K = null;   // { bil, cfg, steg, mil, val: {gruppIndex: [valIndex, ...]}, onskemal, kund: {...} }
+
+    const esc = t => String(t ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const plus = n => (n > 0 ? "+" : "") + kr(n) + "/mån";
+
+    // Vilka körsträckor kan väljas för bilen?
+    function milVal(bil, cfg) {
+      if (cfg) return Object.keys(cfg.bas).map(Number).sort((a, b) => a - b);
+      const lista = [bil.mil];
+      if (bil.mer) Object.keys(bil.mer).map(Number).forEach(m => { if (m > bil.mil) lista.push(m); });
+      return lista.sort((a, b) => a - b);
+    }
+
+    function oppnaKonf(bil) {
+      const cfg = bil.cfg ? KONFIG[bil.cfg] : null;
+      const valdMil = Number(mil.value);
+      const mv = milVal(bil, cfg);
+      const val = {};
+      if (cfg) cfg.G.forEach((g, gi) => {
+        // förvalda val: det märket har förvalt (s) eller som ingår (i)
+        val[gi] = g.v.map((v, vi) => (v.s || v.i) ? vi : -1).filter(vi => vi >= 0);
+        if (!g.m && val[gi].length > 1) val[gi] = [val[gi][0]];
+        if (!g.m && !g.o && !val[gi].length) val[gi] = [0];
+      });
+      K = { bil, cfg, steg: 0, mil: mv.includes(valdMil) ? valdMil : mv[0], val, onskemal: "",
+            kund: { namn: "", epost: "", tel: "", postnr: "", leverans: "Så snart som möjligt", samtycke: false } };
+      document.getElementById("konfTitel").textContent = bil.marke + " " + bil.modell;
+      ritaKonf();
+      konf.showModal();
+    }
+
+    // Räkna fram priset för det kunden har valt just nu
+    function berakna() {
+      const { bil, cfg, mil: m } = K;
+      let manad, nypris = bil.nypris, forhojd = bil.forhojd, okand = false;
+      const rader = [];
+      if (cfg) {
+        manad = cfg.bas[m];
+        nypris = cfg.nypris;
+        cfg.G.forEach((g, gi) => (K.val[gi] || []).forEach(vi => {
+          const v = g.v[vi], p = v.p[m] || 0;
+          manad += p;
+          if (/drivlina/i.test(g.g)) { if (v.t) nypris = nypris - cfg.nypris + v.t; }
+          else if (v.t) nypris += v.t;
+          if (/förhöjd/i.test(g.g)) forhojd = /10[ .]?000/.test(v.n) ? 10000 : 0;
+          rader.push({ grupp: g.g, namn: v.n, pris: p, ingar: !!v.i });
+        }));
+      } else {
+        manad = m <= bil.mil ? bil.manad : bil.manad + (bil.mer?.[m] ?? 0);
+        if (K.onskemal.trim()) okand = true;
+      }
+      const adm = bil.adm || 0, fors = bil.forsakring || 0;
+      const total = (manad + adm + fors) * 36 + bil.start + forhojd;
+      const leasing = (manad + adm) * 36 + bil.start + forhojd;
+      return { manad, adm, fors, forhojd, start: bil.start, total, nypris, andel: nypris ? leasing / nypris : null, rader, okand };
+    }
+
+    function ritaKonf() {
+      const { bil, cfg, steg } = K;
+      const r = berakna();
+      document.getElementById("konfSteg").innerHTML = STEG.map((t, i) => `<span class="${i === steg ? "akt" : ""}">${i + 1}. ${t}</span>`).join("");
+      let h = "";
+      if (steg === 0) {
+        const mv = milVal(bil, cfg);
+        h += `<div class="kgrupp"><h4>Avtalstid</h4><label class="kval"><input type="radio" checked disabled><span>36 månader</span><span class="kp">ingår</span></label></div>`;
+        h += `<div class="kgrupp"><h4>Körsträcka per år</h4>` + mv.map(m => {
+          const diff = cfg ? cfg.bas[m] - cfg.bas[mv[0]] : (m <= bil.mil ? 0 : bil.mer[m]);
+          return `<label class="kval"><input type="radio" name="kmil" value="${m}" ${m === K.mil ? "checked" : ""}><span>${m.toLocaleString("sv-SE")} mil/år</span><span class="kp">${diff ? plus(diff) : "ingår"}</span></label>`;
+        }).join("") + (mv.length === 1 ? `<small>Fler mil går ofta att välja mot en högre månadskostnad. Skriv det under önskemål i nästa steg, så räknar handlaren på det.</small>` : "") + `</div>`;
+        h += `<div class="kinfo">Villkor: ${esc(bil.not || "se erbjudandet")}${bil.start ? `. Uppläggningsavgift ${kr(bil.start)}` : ""}${bil.adm ? `, aviavgift ${bil.adm} kr/mån` : ""}.</div>`;
+      }
+      if (steg === 1) {
+        if (cfg) {
+          h += cfg.G.map((g, gi) => {
+            const typ = g.m ? "checkbox" : "radio";
+            const ingen = (!g.m && g.o) ? `<label class="kval"><input type="radio" name="g${gi}" value="-1" ${!(K.val[gi] || []).length ? "checked" : ""}><span>Inget ${esc(g.g.toLowerCase())}</span><span class="kp"></span></label>` : "";
+            return `<div class="kgrupp"><h4>${esc(g.g)}</h4>${ingen}` + g.v.map((v, vi) => {
+              const p = v.p[K.mil] || 0, vald = (K.val[gi] || []).includes(vi);
+              return `<label class="kval"><input type="${typ}" name="g${gi}" value="${vi}" ${vald ? "checked" : ""} ${v.i ? "disabled" : ""}><span>${esc(v.n)}${v.d ? `<small>${esc(v.d)}</small>` : ""}</span><span class="kp">${v.i ? "ingår" : p ? plus(p) : "0 kr"}</span></label>`;
+            }).join("") + `</div>`;
+          }).join("");
+          h += `<div class="kgrupp"><h4>Övriga önskemål eller bortval</h4><div class="kform"><textarea class="hel" id="konsk" rows="3" placeholder="T.ex. leverans före ett visst datum eller utrustning du inte vill ha">${esc(K.onskemal)}</textarea></div></div>`;
+        } else {
+          h += `<div class="kinfo">Den här ${bil.typ === "Märket" ? "tillverkaren" : "handlaren"} har inte publicerat priser för tillval. Skriv vad du vill lägga till eller ta bort (färg, vinterhjul, dragkrok, paket). Handlaren lägger in det med pris i avtalet, och du ser det innan du signerar.</div>`;
+          h += `<div class="kgrupp"><h4>Önskad utrustning, tillval och bortval</h4><div class="kform"><textarea class="hel" id="konsk" rows="5" placeholder="T.ex. metalliclack i blått, dubbade vinterhjul, dragkrok">${esc(K.onskemal)}</textarea></div></div>`;
+        }
+      }
+      if (steg === 2) {
+        const k = K.kund;
+        h += `<div class="kform" style="margin-top:12px">
+          <div><label for="kn">Namn</label><input id="kn" autocomplete="name" value="${esc(k.namn)}"></div>
+          <div><label for="ke">E-post</label><input id="ke" type="email" autocomplete="email" value="${esc(k.epost)}"></div>
+          <div><label for="kt">Telefon</label><input id="kt" type="tel" autocomplete="tel" value="${esc(k.tel)}"></div>
+          <div><label for="kpn">Postnummer (för närmaste handlare)</label><input id="kpn" inputmode="numeric" autocomplete="postal-code" value="${esc(k.postnr)}"></div>
+          <div class="hel"><label for="kl">När vill du ha bilen?</label><select id="kl">${["Så snart som möjligt", "Inom 3 månader", "Inom 6 månader", "Jag är flexibel"].map(o => `<option ${o === k.leverans ? "selected" : ""}>${o}</option>`).join("")}</select></div>
+          <label class="hel" style="display:flex;gap:8px;align-items:flex-start;color:var(--text)"><input type="checkbox" id="ks" style="width:auto;margin-top:3px" ${k.samtycke ? "checked" : ""}> Jag godkänner att mina uppgifter skickas till handlaren så att de kan ta fram mitt leasingavtal. De används inte till något annat.</label>
+        </div><div class="kinfo">Du behöver inte lämna personnummer här. Kreditprövning och signering görs med BankID hos leasingbolaget.</div>`;
+      }
+      if (steg === 3) {
+        h += `<table class="ktabell">
+          <tr><td>Grundpris, ${K.mil.toLocaleString("sv-SE")} mil/år, 36 mån</td><td>${kr(cfg ? cfg.bas[K.mil] : r.manad)}/mån</td></tr>
+          ${r.rader.filter(x => x.pris || x.ingar || !/drivlina|färg/i.test(x.grupp)).map(x => `<tr><td>${esc(x.grupp)}: ${esc(x.namn)}</td><td>${x.ingar ? "ingår" : plus(x.pris)}</td></tr>`).join("")}
+          ${r.rader.filter(x => /drivlina|färg/i.test(x.grupp) && !x.pris).map(x => `<tr><td>${esc(x.grupp)}: ${esc(x.namn)}</td><td>0 kr</td></tr>`).join("")}
+          ${K.onskemal.trim() ? `<tr><td>Önskemål: ${esc(K.onskemal)}</td><td>${cfg ? "" : "pris från handlaren"}</td></tr>` : ""}
+          ${r.adm ? `<tr><td>Aviavgift</td><td>${r.adm} kr/mån</td></tr>` : ""}
+          ${r.fors ? `<tr><td>Obligatorisk försäkring</td><td>${r.fors} kr/mån</td></tr>` : ""}
+          <tr><td><b>Att betala per månad</b></td><td><b>${kr(r.manad + r.adm + r.fors)}/mån</b></td></tr>
+          ${r.forhojd ? `<tr><td>Första förhöjd hyra</td><td>${kr(r.forhojd)}</td></tr>` : ""}
+          ${r.start ? `<tr><td>Uppläggningsavgift</td><td>${kr(r.start)}</td></tr>` : ""}
+          <tr><td><b>Totalt på 36 månader</b></td><td><b>${kr(r.total)}</b></td></tr>
+          ${r.nypris ? `<tr><td>Bilens nypris med dina val</td><td>${kr(r.nypris)} (du betalar ${pct(r.andel)})</td></tr>` : ""}
+        </table>
+        <div class="kinfo"><b>Så går det till:</b> du skickar beställningen, handlaren kontrollerar att bilen finns och skickar avtalet till dig. Du signerar med BankID. Inget är bindande förrän du har signerat.${r.okand ? " Priset för dina önskemål står i avtalet." : ""}</div>
+        <div id="kskicka"></div>`;
+      }
+      document.getElementById("konfBody").innerHTML = h;
+      document.getElementById("konfSum").innerHTML = `<b>${kr(r.manad + r.adm + r.fors)}/mån</b><small>${kr(r.total)} totalt på 36 mån${r.okand ? " + dina önskemål" : ""}</small>`;
+      document.getElementById("konfBak").style.visibility = steg ? "visible" : "hidden";
+      document.getElementById("konfNasta").textContent = steg === 3 ? "Skicka beställningen" : "Nästa";
+      document.getElementById("konfBody").scrollTop = 0;
+      konf.querySelector(".kb").scrollIntoView({ block: "start" });
+    }
+
+    // Läs av det kunden har fyllt i på aktuellt steg
+    function lasKonf() {
+      const q = id => document.getElementById(id);
+      if (K.steg === 0) { const v = konf.querySelector('input[name="kmil"]:checked'); if (v) K.mil = Number(v.value); }
+      if (K.steg === 1) {
+        if (K.cfg) K.cfg.G.forEach((g, gi) => {
+          K.val[gi] = [...konf.querySelectorAll(`input[name="g${gi}"]`)].filter(i => i.checked && i.value !== "-1").map(i => Number(i.value));
+        });
+        if (q("konsk")) K.onskemal = q("konsk").value;
+      }
+      if (K.steg === 2) Object.assign(K.kund, { namn: q("kn").value.trim(), epost: q("ke").value.trim(), tel: q("kt").value.trim(), postnr: q("kpn").value.trim(), leverans: q("kl").value, samtycke: q("ks").checked });
+    }
+
+    function bestallningText() {
+      const { bil, kund } = K, r = berakna();
+      return [
+        "BESTÄLLNING AV PRIVATLEASING – via Leasingkollen",
+        "",
+        `Bil: ${bil.marke} ${bil.modell}`,
+        `Erbjudande: ${bil.kalla} – ${bil.url}`,
+        `Avtal: privatleasing 36 månader, ${K.mil.toLocaleString("sv-SE")} mil/år`,
+        ...r.rader.map(x => `${x.grupp}: ${x.namn}${x.ingar ? " (ingår)" : x.pris ? ` (+${x.pris} kr/mån)` : ""}`),
+        K.onskemal.trim() ? `Önskemål/bortval: ${K.onskemal.trim()}` : null,
+        "",
+        `Pris enligt erbjudandet (kontrollerat ${KONTROLL}): ${kr(r.manad)}/mån${r.adm ? ` + aviavgift ${r.adm} kr/mån` : ""}${r.fors ? ` + försäkring ${r.fors} kr/mån` : ""}`,
+        r.forhojd ? `Första förhöjd hyra: ${kr(r.forhojd)}` : null,
+        r.start ? `Uppläggningsavgift: ${kr(r.start)}` : null,
+        `Totalt 36 mån: ${kr(r.total)}`,
+        "",
+        `Kund: ${kund.namn}`, `E-post: ${kund.epost}`, `Telefon: ${kund.tel}`, `Postnummer: ${kund.postnr}`, `Önskad leverans: ${kund.leverans}`,
+        "",
+        "Kunden vill få leasingavtalet skickat för signering med BankID.",
+      ].filter(rad => rad !== null).join("\n");
+    }
+
+    function skicka() {
+      const text = bestallningText();
+      const amne = `Beställning: ${K.bil.marke} ${K.bil.modell} (privatleasing)`;
+      const ruta = document.getElementById("kskicka");
+      if (BESTALLNING_EPOST) {
+        location.href = `mailto:${BESTALLNING_EPOST}?subject=${encodeURIComponent(amne)}&body=${encodeURIComponent(text)}`;
+        ruta.innerHTML = `<div class="kinfo">Ditt e-postprogram öppnas med beställningen ifylld. Tryck <b>Skicka</b> där. Vi skickar den vidare till handlaren, som återkommer med avtalet.</div>`;
+      } else {
+        ruta.innerHTML = `<div class="kinfo"><b>Beställningen är klar.</b> Kopiera den och skicka den till handlaren via länken, så får du avtalet att signera.<br><br>
+          <button type="button" class="cta" id="kkopiera">Kopiera beställningen</button>
+          <a class="ext" href="${K.bil.url}" target="_blank" rel="noopener">Öppna ${K.bil.typ === "Märket" ? "märkets" : "handlarens"} sida ↗</a></div>
+          <textarea readonly rows="8" style="width:100%;box-sizing:border-box;margin-top:8px;font:13px/1.4 monospace;border:1px solid var(--line);border-radius:8px;padding:8px">${esc(text)}</textarea>`;
+        document.getElementById("kkopiera").onclick = async e => {
+          try { await navigator.clipboard.writeText(text); e.target.textContent = "Kopierat ✓"; }
+          catch (err) { ruta.querySelector("textarea").select(); e.target.textContent = "Markerad – kopiera med Ctrl/Cmd+C"; }
+        };
+      }
+    }
+
+    document.getElementById("konfNasta").onclick = () => {
+      lasKonf();
+      if (K.steg === 2) {
+        const k = K.kund, fel = [];
+        if (!k.namn) fel.push("namn");
+        if (!/^\S+@\S+\.\S+$/.test(k.epost)) fel.push("en giltig e-post");
+        if (k.tel.replace(/\D/g, "").length < 7) fel.push("telefon");
+        if (!/^\d{3}\s?\d{2}$/.test(k.postnr)) fel.push("postnummer (5 siffror)");
+        if (!k.samtycke) fel.push("ditt godkännande");
+        if (fel.length) { alertRuta("Fyll i " + fel.join(", ") + "."); return; }
+      }
+      if (K.steg === 3) { skicka(); return; }
+      K.steg++; ritaKonf();
+    };
+    function alertRuta(t) {
+      let f = konf.querySelector(".kfel");
+      if (!f) { f = document.createElement("div"); f.className = "kfel"; document.getElementById("konfBody").appendChild(f); }
+      f.textContent = t; f.scrollIntoView({ block: "nearest" });
+    }
+    document.getElementById("konfBak").onclick = () => { lasKonf(); K.steg--; ritaKonf(); };
+    document.getElementById("konfStang").onclick = () => konf.close();
+    konf.addEventListener("click", e => { if (e.target === konf) konf.close(); });
+    // Uppdatera priset direkt när kunden klickar i ett val
+    konf.addEventListener("change", () => { const s = K.steg; lasKonf(); if (s <= 1) { const r = berakna(); document.getElementById("konfSum").innerHTML = `<b>${kr(r.manad + r.adm + r.fors)}/mån</b><small>${kr(r.total)} totalt på 36 mån${r.okand ? " + dina önskemål" : ""}</small>`; } });
+    lista.addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
 
     // Kör rita() när något ändras, och en gång direkt när sidan laddas.
     [sok, drivmedel, mil, forsakring, sortera].forEach(el => el.addEventListener("input", rita));
