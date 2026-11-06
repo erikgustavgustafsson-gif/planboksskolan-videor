@@ -1,6 +1,6 @@
-# Jämför Privatleasing (mappen leasingkollen) – daglig kontroll (instruktioner för Claude)
+# Leasingkollen (leasingkollen.se) – daglig kontroll (instruktioner för Claude)
 
-Jämför Privatleasing (tidigare arbetsnamn Leasingkollen) är en sida som jämför privatleasing av nya bilar i Sverige. Användaren vill att **all info är korrekt och alltid uppdaterad**. Den här filen beskriver den dagliga kontrollen.
+Leasingkollen (leasingkollen.se) är en sida som jämför privatleasing av nya bilar i Sverige. Användaren vill att **all info är korrekt och alltid uppdaterad**. Den här filen beskriver den dagliga kontrollen.
 
 ## Fasta uppgifter
 - **Artifact-slug:** `2fa9c5ce-98e8-4c58-a44e-b49d99f229e2` (https://claude.ai/artifact/6tNLLDz4meh5Gxs1gaHP9B)
