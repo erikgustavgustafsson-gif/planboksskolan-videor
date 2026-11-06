@@ -520,7 +520,7 @@
   <script>
     /* ---------------------------------------------------------------
        BILAR – här ligger all data. En rad per bil.
-       Varje erbjudande är kontrollerat mot säljarens egen sida (5 nov 2026):
+       Varje erbjudande är kontrollerat mot säljarens egen sida (6 nov 2026):
        pris, avtalstid, mil/år, avgifter och om första hyran är förhöjd.
 
        Hjälpfunktionen B() tar värdena i en bestämd ordning:
@@ -536,7 +536,7 @@
          not     = något viktigt i villkoren som inte syns i siffrorna
          kalla   = vem som erbjuder avtalet, url = länk dit
        ---------------------------------------------------------------- */
-    const KONTROLL = "5 nov 2026"; // uppdateras vid varje daglig kontroll
+    const KONTROLL = "6 nov 2026"; // uppdateras vid varje daglig kontroll
     const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
     const LEASABIL = { start: 495, kalla: "Leasabil" };
     const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", start: 695, adm: 59, url: "https://easyprivatleasing.toyota.se/", not: "Fordonsskatt tillkommer. Övermil 8 kr/mil" };
@@ -565,7 +565,7 @@
     const BILAR = [
       B("Volvo", "EX30 Single Motor Plus", "ex30", "El", 3795, 1000, 457000, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ex30" }),
       B("Volvo", "EX30 Cross Country P5 Long Range Plus", "ex30cc", "El", 3990, 1000, 542000, { mer: {1500: 380, 2000: 839}, kalla: "Volvo Car Kungsängen", url: "https://bilweb.se/stockholms-lan/volvo-ex30-cross-country-plus-2027-suv-445689" }),
-      B("Volvo", "EX40 Extended Range Plus SE", "ex40", "El", 4790, 1000, 579900, { kalla: "Volvo-handlare via Wayke", url: "https://www.wayke.se/objekt/019cfc13-6c95-7413-b1f1-c19f8c9cfb6a", not: "Begränsat antal lagerbilar" }),
+      B("Volvo", "EX40 Plus Special Edition", "ex40", "El", 4595, 1000, 559900, { kalla: "Rejmes (Volvofinans)", url: "https://rejmes.se/kampanjer/volvo-ex40/", not: "Modellår 2027. Gäller ett begränsat antal bilar", utr: ["Parkeringssensorer", "Backkamera", "Pilot Assist", "Elmanövrerad förarstol med minnesfunktion", "Klimatpaket", "Serviceavtal och Volvo Assistans (36 mån)"] }),
       B("Polestar", "4 coupé Rear Motor Business edition Pilot", "pol4", "El", 7295, 1500, 619000, { kalla: "Polestar-handlare via Wayke", url: "https://www.wayke.se/objekt/01a04238-b8b8-7581-9401-3a65797cbf6f", not: "Leverans senast 31 dec 2026" }),
       // --- Škoda (märkets egna priser) ---
       // --- Kia (märkets egna priser) ---
@@ -672,7 +672,7 @@
       // --- Volvo, fler modeller ---
       B("Volvo", "EC40 Single Motor Core SE", "ec40", "El", 5195, 1000, 529900, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ec40" }),
       B("Volvo", "XC60 T6 Plus", "xc60", "Laddhybrid", 7995, 1000, 599900, { ...LEASABIL, url: LB + "Volvo/Volvo-XC60-Plus" }),
-      B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944" }),
+      B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944", not: "Lagerbil som körts 2 739 mil (demobil)" }),
       B("Volvo", "EX60 P6 Plus", "ex60", "El", 8995, 1000, 689000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/170a712b-5743-4b66-9e23-bb33b98d7edd" }),
       B("Volvo", "XC90 T8 Ultra Dark", "xc90", "Laddhybrid", 11995, 1000, 994000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/31b21382-095f-40b2-af94-28a9d6db1190", not: "Lagerbil" }),
       B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 324500, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller ett begränsat antal lagerbilar i färgen Fiord Blue. Metalliclack +300 kr/mån. Nybeställd bil 3 295 kr/mån" }),
