@@ -756,9 +756,9 @@
       corollats:  { av: A, fil: "2024_Toyota_Corolla_Touring_Sports_Hybrid_(E210)_IMG_9888.jpg" },
       cupraleon:  { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Leon_Sportstourer_VZ_2.0_TSI_4Drive_(Facelift)_%E2%80%93_f_19072025.jpg" },
       elroq:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Skoda_Elroq_85_%E2%80%93_f_09022025.jpg" },
-      ev2:        { av: M, fil: "Kia_EV2_IMG_8443.jpg" },
+      ev2:        { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "Kia_EV2_Ditzingen_Mobil_2026_IMG_5552.jpg" },
       ev3:        { av: M, fil: "Kia_EV3_DSC_9146.jpg" },
-      ex30:       { av: A, fil: "Volvo_EX30_1X7A2476.jpg" },
+      ex30:       { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Volvo_EX30_1X7A2476.jpg" },
       ex30cc:     { av: "Chanokchon", fil: "2025_Volvo_EX30_Cross_Country_Ultra_Twin_Motor_Performance.jpg" },
       ex40:       { av: A, fil: "Volvo_XC40_Recharge_Facelift_IMG_8130.jpg" },
       formentor:  { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Cupra_Formentor_(Facelift)_%E2%80%93_f_01012025.jpg" },
@@ -792,8 +792,8 @@
       yariscross: { av: A, fil: "Toyota_Yaris_Cross_Hybrid_(XP210)_1X7A1846.jpg" },
       cla:        { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_4MATIC_AMG_Line_(C_178)_%E2%80%93_f_11052026.jpg" },
       clasb:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Mercedes-Benz_CLA_220_Shooting_Brake_AMG_Line_Plus_(X_178)_%E2%80%93_f_30082026.jpg" },
-      a3sedan:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A3_Limousine_S_line_(8Y)_%E2%80%93_f_08072024.jpg" },
-      a5:         { av: "Alexander Migl", fil: "Audi_A5_B10_DSC_3752.jpg" },
+      a3sedan:    { av: "Charles from Port Chester, New York", lic: "CC BY 2.0", fil: "Audi_A3_Limousine_35_TFSI_(2021)_(53334772786).jpg" },
+      a5:         { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "Audi_A5_B10_DSC_7306.jpg" },
       a5avant:    { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A5_Avant_Advanced_(B10)_%E2%80%93_f_18042026.jpg" },
       q4:         { av: "Calreyn88", fil: "2024_Audi_Q4_e-tron_Vorsprung_45.jpg" },
       q6:         { av: M, fil: "Audi_Q6_e-tron_DSC_2908.jpg" },
@@ -1059,7 +1059,7 @@
     // Bildkällor: en rad per foto. Licenserna kräver att fotografen nämns,
     // men det räcker att det görs samlat här i stället för på varje kort.
     // Foton som frilagts och lagts på studiobakgrund (bearbetade enligt licensen)
-    const FRILAGDA = new Set(["a3", "a5avant", "aygox", "bayon", "bmw120", "bz4x", "chr", "cla", "clasb", "corollats", "cupraleon", "elroq", "ev3", "ex40", "i20", "ibiza", "id3", "id4", "juke", "karoq", "kodiaq", "kona", "mazda6e", "mg4", "micra", "octaviac", "p2008", "p3008", "p5008", "pol4", "qashqai", "r5", "rav4", "raval", "sandero", "seal6", "superb", "yaris", "yariscross"]);
+    const FRILAGDA = new Set(["a3", "a3sedan", "a5", "a5avant", "aygox", "bayon", "bmw120", "bz4x", "chr", "cla", "clasb", "corollacross", "corollats", "cupraleon", "ec40", "eclass", "elroq", "enyaq", "enyaqc", "epiq", "ev2", "ev3", "ev4", "ex30", "ex40", "ex60", "fabia", "glb", "glc", "golfsc", "i20", "ibiza", "id3", "id4", "id7", "id7t", "juke", "karoq", "kodiaq", "kona", "leon", "mazda6e", "mg4", "micra", "octaviac", "p2008", "p3008", "p5008", "pol4", "q6", "qashqai", "r5", "rav4", "raval", "sandero", "seal6", "superb", "tavascan", "terramar", "yaris", "yariscross"]);
     if (document.getElementById("kallor")) document.getElementById("kallor").innerHTML = Object.keys(FOTON).map(k => {
       const f = FOTON[k], lic = f.lic || "CC BY-SA 4.0";
       const bil = BILAR.find(b => b.foto === k);
