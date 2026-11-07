@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- Jämföra Privatleasing – byggs av kalla/build.py. Stil: stil.css, logik: app.js, bilar och priser: i app.js (BILAR) och konfig.js. -->
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jämför privatleasing 2026 – alla bilar, kampanjer och totalpris | Jämföra Privatleasing</title>
+  <meta name="description" content="Jämför privatleasing på 140 nya bilar från 20 märken. Vi räknar med alla avgifter, visar bästa kampanjerna och låter dig välja tillval och beställa direkt.">
+  <link rel="canonical" href="https://jamforprivatleasing.se/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0E2A47">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:site_name" content="Jämföra Privatleasing">
+  <meta property="og:title" content="Jämför privatleasing – hitta bästa leasingkampanjen 2026">
+  <meta property="og:description" content="Jämför privatleasing på 140 nya bilar från 20 märken. Vi räknar med alla avgifter, visar bästa kampanjerna och låter dig välja tillval och beställa direkt.">
+  <meta property="og:url" content="https://jamforprivatleasing.se/">
+  <meta property="og:image" content="https://jamforprivatleasing.se/bilder/delning.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="bilder/app-ikon.png">
+  <link rel="stylesheet" href="stil.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "name": "Jämföra Privatleasing", "url": "https://jamforprivatleasing.se/", "inLanguage": "sv-SE", "description": "Jämför privatleasing på nya bilar i Sverige med alla avgifter inräknade."}, {"@type": "Organization", "name": "Jämföra Privatleasing", "url": "https://jamforprivatleasing.se/"}]}</script>
+</head>
+<body data-sida="start">
+  <nav class="topnav">
+    <div class="wrap navrad">
+      <a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a>
+      <button type="button" class="menyknapp" id="menyKnapp" aria-label="Meny" aria-expanded="false">☰</button>
+      <div class="navlankar"><a href="index.html" class="aktiv" aria-current="page">Start</a><a href="kampanjer.html">Kampanjer</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a></div>
+    </div>
+  </nav>
+
+  <header class="hero foto">
+    <div class="wrap herotext">
+      <h1>Jämför privatleasing och hitta bästa kampanjen</h1>
+      <p class="heroslogan">Alla märken. Alla avgifter. Ett pris.</p>
+      <p class="heroingress">Vi jämför privatleasing på nya bilar hos alla stora märken – med alla avgifter inräknade och priser som kontrolleras varje dag.</p>
+      <div class="heroknappar"><a class="knapp" href="kampanjer.html">Se kampanjerna</a><a class="knapp ljus" href="alla-bilar.html">Jämför alla bilar</a></div>
+      <div class="trust" id="trust"></div>
+    </div>
+  </header>
+  <section class="topp" id="kampanjer" aria-labelledby="toppRubrik">
+    <div class="wrap">
+      <h2 id="toppRubrik" class="sektionsrubrik">Bästa kampanjerna just nu</h2>
+      <p class="sektionsingress">på Sveriges 5 mest privatleasade bilar 2026</p>
+      <div class="topplista" id="topp"></div><p class="sveptips">Svep för att se alla fem →</p>
+      <small class="toppkalla">Topplistan bygger på statistik från Volkswagen Finans (jan–maj 2026), Carplus och Mobility Sweden. Bästa kampanj = lägst kostnad i förhållande till nypriset.</small><p style="text-align:center;margin:18px 0 0"><a class="knapp" href="kampanjer.html">Se alla kampanjer →</a></p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <h2>Hitta rätt bil snabbare</h2>
+      <div class="genvagar">
+        <a href="alla-bilar.html"><b>Alla bilar →</b><span>Filtrera på pris, märke och drivmedel.</span></a>
+        <a href="kampanjer.html"><b>Kampanjer →</b><span>Bara erbjudanden med bra eller mycket bra pris.</span></a>
+        <a href="guide.html"><b>Guide →</b><span>Så funkar privatleasing och vad som ingår.</span></a>
+        <a href="fragor.html"><b>Frågor &amp; svar →</b><span>Övermil, ränta, försäkring och mer.</span></a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="block ljus" id="marken">
+    <div class="wrap">
+      <h2>Privatleasing per märke</h2>
+      <div class="markegrid" id="markelankar"></div>
+    </div>
+  </section>
+  <section class="steg2" id="sa-funkar-det">
+    <div class="wrap stegrad">
+      <div>
+        <h2><b>Beställ</b> steg för steg</h2>
+        <ol class="steglista">
+          <li><span>1</span><div><b>Hitta din bil</b>Jämför alla erbjudanden på totalkostnad, månadspris eller hur mycket bil du får för pengarna.</div></li>
+          <li><span>2</span><div><b>Välj färg och tillval</b>Lägg till vinterhjul, dragkrok eller paket och se det nya priset direkt.</div></li>
+          <li><span>3</span><div><b>Skicka beställningen</b>Fyll i dina uppgifter, så skickar vi beställningen till handlaren åt dig.</div></li>
+          <li><span>4</span><div><b>Signera avtalet</b>Handlaren skickar avtalet till dig. Du godkänner det med BankID, och inget är bindande innan dess.</div></li>
+        </ol>
+      </div>
+      <div class="ingarruta">
+        <h2>Vi räknar med <b>allt</b></h2>
+        <ul class="bocklista">
+          <li>Månadskostnad <b>i 36 månader</b></li>
+          <li>Uppläggningsavgift <b>inräknad</b></li>
+          <li>Avi- och adminavgift <b>inräknad</b></li>
+          <li>Förhöjd första hyra <b>inräknad</b></li>
+          <li>Obligatorisk försäkring <b>inräknad</b></li>
+          <li>Pris för fler mil <b>när det finns</b></li>
+          <li>Villkoren <b>kontrolleras varje dag</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <div class="wrap" style="padding:0 16px"><p class="villkor" id="villkor"><sup>1</sup> <b>Så läser du priserna:</b> Privatleasing i 36 månader utan kontantinsats, med den körsträcka som står i erbjudandet. Månadspriset inkluderar avi- och adminavgift och eventuell obligatorisk försäkring. Totalkostnaden inkluderar dessutom uppläggningsavgift och eventuell förhöjd första hyra. Fordonsskatt, din egen försäkring, övermil och onormalt slitage tillkommer. Många erbjudanden har rörlig ränta, så månadskostnaden kan ändras under avtalstiden. Erbjudandena gäller ofta ett begränsat antal bilar. Priserna kontrolleras varje dag mot märkenas och handlarnas egna sidor, men det är alltid handlarens avtal som gäller. Bilderna är vägledande.</p></div>
+  <dialog id="konf" aria-labelledby="konfTitel">
+    <div class="kh"><span class="klogo"><b>JÄMFÖRA</b><br>PRIVATLEASING</span><h2 id="konfTitel">Bygg din bil</h2><button type="button" id="konfStang" aria-label="Stäng">×</button></div>
+    <nav class="kprog" id="konfSteg" aria-label="Steg"></nav>
+    <div class="kgrid">
+      <aside class="kvisual" id="konfBild"></aside>
+      <div class="kpanel" id="konfPanel"><div class="kb" id="konfBody"></div></div>
+    </div>
+    <div class="kfot">
+      <div class="ksum" id="konfSum"></div>
+      <button type="button" class="tillbaka" id="konfBak">Tillbaka</button>
+      <button type="button" class="nasta" id="konfNasta">Fortsätt</button>
+    </div>
+  </dialog>
+
+  <footer class="sidfot">
+    <div class="wrap fotrad">
+      <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
+      <div><b>Information</b><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div><b>Företag</b><span id="fotforetag"></span></div>
+    </div>
+  </footer>
+  <section class="wrap kallor" style="padding: 0 16px;">
+    <details>
+      <summary>Bildkällor</summary>
+      <ul id="kallor"></ul>
+    </details>
+  </section>
+  <footer>Jämföra Privatleasing · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+
+  <script src="foretag.js"></script>
+  <script src="konfig.js"></script>
+  <script src="affiliate.js"></script>
+  <script src="bildkalla.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
