@@ -1,0 +1,82 @@
+{
+  "slug": "2026-11-07_nya-regler-faktura",
+  "title": "20 november: nya regler för köp nu, betala senare",
+  "caption": "Den 20 november börjar en ny konsumentkreditlag gälla 🧾 Då måste företagen kreditpröva dig även vid små lån och fakturaköp – och kreditvalet får inte vara förvalt i kassan. En vecka senare är det Black Friday.\n\nHandlar du på faktura eller delbetalning? 👇\n\n#privatekonomi #faktura #köpnubetalasenare #blackfriday #konsumentkrediter #plånboksskolan",
+  "pinned_comment": "Hur betalar du oftast när du handlar på nätet? 💳 Kort / 🧾 Faktura / 📆 Delbetalning 👇",
+  "sources": [
+    "https://www.konsumentverket.se/nyhet/striktare-regler-for-laneforetag/ (Konsumentverket 2 nov 2026: ny konsumentkreditlag gäller från 20 november, noggrann kreditprövning även vid små lån och fakturatjänster, kreditalternativ får inte vara förvalda)",
+    "https://regeringen.se/pressmeddelanden/2026/03/regeringen-foreslar-ny-konsumentkreditlag-for-starkt-skydd-for-konsumenter/ (prop. 2025/26:223, ikraftträdande 20 november 2026)",
+    "https://www.dagensps.se/privatekonomi/om-18-dagar-skarps-reglerna-sma-fakturakop-provas-mot-lonen/ (prövning utifrån inkomster, utgifter och skulder; Black Friday 27 nov)",
+    "Eget räkneexempel: 4 × 250 kr = 1 000 kr"
+  ],
+  "cover": {
+    "title": [
+      "NYA REGLER",
+      "FÖR FAKTURA"
+    ],
+    "pill": "Från 20 november",
+    "label": "Köp nu, betala senare =",
+    "big": "kreditprövning",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Tjugonde november skärps reglerna för köp nu, betala senare.",
+      "kicker": "NY LAG 20 NOVEMBER",
+      "big": "KÖP NU,",
+      "sub": "betala senare",
+      "punch": [
+        "Nu skärps reglerna."
+      ]
+    },
+    {
+      "type": "cards",
+      "say": "Då måste företagen kreditpröva dig även vid små fakturaköp och delbetalningar.",
+      "title": "SÅ BLIR DET",
+      "cards": [
+        [
+          "Små fakturaköp",
+          "kreditprövas"
+        ],
+        [
+          "Delbetalning",
+          "kreditprövas"
+        ],
+        [
+          "Kreditval i kassan",
+          "får inte vara förvalt"
+        ]
+      ],
+      "last_red": false
+    },
+    {
+      "type": "statement",
+      "say": "Räkna med frågor om inkomst, utgifter och skulder. Och krediten får inte vara förvald.",
+      "title": "RÄKNA MED FRÅGOR",
+      "lines": [
+        "Inkomst",
+        "Utgifter",
+        "Skulder"
+      ],
+      "highlight": "innan du får kredit",
+      "chip": "Källa: Konsumentverket"
+    },
+    {
+      "type": "number",
+      "say": "En vecka senare är det Black Friday. Fyra gånger tvåhundrafemtio är fortfarande tusen.",
+      "top": "4 × 250 kr =",
+      "value": 1000,
+      "suffix": " kr",
+      "color": "yellow",
+      "sub": "samma pris, bara utspritt"
+    },
+    {
+      "type": "cta",
+      "say": "Handla för pengar du har, och följ Plånboksskolan.",
+      "line1": "Handla för pengar",
+      "big": "DU HAR",
+      "line2": "inte pengar du lånar"
+    }
+  ]
+}
