@@ -1075,10 +1075,13 @@
        ================================================================ */
     // NÄR SIDAN GÅR LIVE: Jämföra Privatleasing skickar beställningen åt kunden.
     // BESTALLNING_EPOST = Jämföra Privatleasings egen adress (får en kopia av varje beställning).
-    // Har en bil fältet handlarEpost går beställningen direkt till handlaren, med kopia till oss.
-    // Saknas handlarEpost går den till oss, och vi skickar den vidare till handlaren.
+    // Beställningen går till bestall.php, som skickar den till BESTALLNING_EPOST (eller direkt till handlaren om bilen har fältet handlare
+    // och handlaren finns i listan HANDLARE i bestall.php – mottagare bestäms bara på servern).
     // Tom adress = sidan är inte live än, kunden kopierar beställningen själv.
-    const BESTALLNING_EPOST = "";
+    const BESTALLNING_EPOST = "bestallning@jamforprivatleasing.se";
+    // Beställningar skickas av bestall.php på Strato – bara på den riktiga sidan (inte i förhandsvisningen)
+    const LIVE = /(^|\.)jamforprivatleasing\.se$/.test(location.hostname);
+    const SIDAN_OPPNAD = Date.now();
     const konf = document.getElementById("konf");
     // Stegen byggs per bil: Översikt → (Version) → (Färg) → (Hjul) → Tillval → Dina uppgifter → Sammanfattning
     function byggSteg(bil, cfg) {
@@ -1181,7 +1184,7 @@
       const valdMil = mil ? Number(mil.value) : 1000;
       const mv = milVal(bil, cfg);
       const val = standardVal(cfg);
-      K = { bil, cfg, S: byggSteg(bil, cfg), steg: 0, mil: mv.includes(valdMil) ? valdMil : mv[0], val, tv: [], onskemal: "",
+      K = { bil, cfg, S: byggSteg(bil, cfg), steg: 0, oppnad: Date.now(), mil: mv.includes(valdMil) ? valdMil : mv[0], val, tv: [], onskemal: "",
             kund: { namn: "", epost: "", tel: "", postnr: (MINPLATS && MINPLATS.postnr) || "", leverans: "Så snart som möjligt", samtycke: false, lokalok: false } };
       document.getElementById("konfTitel").textContent = bil.marke + " " + bil.modell;
       ritaKonf();
@@ -1404,22 +1407,14 @@
       if (K.skickad) return;
       const text = bestallningText(), r = berakna(), { bil, kund } = K;
       const ruta = document.getElementById("kskicka"), knapp = document.getElementById("konfNasta");
-      if (!BESTALLNING_EPOST) { visaKopiera(ruta, text, "Beställningen är klar."); return; }
+      if (!LIVE) { visaKopiera(ruta, text, "Beställningen är klar."); return; }
       knapp.disabled = true; knapp.textContent = "Skickar…";
       try {
-        const till = bil.handlarEpost || BESTALLNING_EPOST;
-        const svar = await fetch("https://formsubmit.co/ajax/" + till, {
+        const svar = await fetch("bestall.php", {
           method: "POST",
           headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({
-            _subject: `Ny beställning: ${bil.marke} ${bil.modell} – ${kund.namn}`,
-            _template: "box", _captcha: "false", _replyto: kund.epost,
-            ...(bil.handlarEpost ? { _cc: BESTALLNING_EPOST } : {}),
-            _autoresponse: `Tack ${kund.namn}! Jämföra Privatleasing har skickat din beställning av ${bil.marke} ${bil.modell} (${kr(r.manad + r.adm + r.fors)}/mån) till ${bil.kalla.split(/ \(|,/)[0]}. Handlaren skickar avtalet till dig, och du godkänner det med BankID. Inget är bindande förrän du har signerat.\n\n${text}`,
-            Bil: `${bil.marke} ${bil.modell}`, Manadspris: `${kr(r.manad + r.adm + r.fors)}/mån`, Totalt_36_man: kr(r.total),
-            Namn: kund.namn, Epost: kund.epost, Telefon: kund.tel, Postnummer: kund.postnr, Leverans: kund.leverans,
-            Erbjudande: bil.url, Bestallning: text,
-          }),
+          body: JSON.stringify({ typ: "bestallning", bil: `${bil.marke} ${bil.modell}`, namn: kund.namn, epost: kund.epost, tel: kund.tel,
+            samtycke: kund.samtycke, text, handlare: bil.handlare || "", oppnad: K.oppnad, webbplats: "" }),
         });
         const data = await svar.json().catch(() => ({}));
         if (!svar.ok || String(data.success) === "false") throw new Error(data.message || svar.status);
@@ -1594,12 +1589,11 @@
       if (!d.ok) fel.push("ditt godkännande");
       if (fel.length) { svar.textContent = "Fyll i " + fel.join(", ") + "."; return; }
       const text = `INTRESSEFÖRFRÅGAN via Jämföra Privatleasing\nBil: ${d.bil}\nBudget: ${d.budget || "–"}\nMil/år: ${d.mil || "–"}\nNamn: ${d.namn}\nE-post: ${d.epost}\nTelefon: ${d.tel || "–"}`;
-      if (!BESTALLNING_EPOST) { svar.innerHTML = "<b>Tack!</b> Formuläret kopplas på när sidan är live."; return; }
+      if (!LIVE) { svar.innerHTML = "<b>Tack!</b> Formuläret skickas på den riktiga sidan, jamforprivatleasing.se."; return; }
       const knapp = f.querySelector("button"); knapp.disabled = true; knapp.textContent = "Skickar…";
       try {
-        const r = await fetch("https://formsubmit.co/ajax/" + BESTALLNING_EPOST, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({ _subject: `Intresseförfrågan: ${d.bil} – ${d.namn}`, _template: "box", _captcha: "false", _replyto: d.epost,
-            Bil: d.bil, Budget: d.budget, Mil: d.mil, Namn: d.namn, Epost: d.epost, Telefon: d.tel, Text: text }) });
+        const r = await fetch("bestall.php", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ typ: "intresse", bil: d.bil, namn: d.namn, epost: d.epost, tel: d.tel, samtycke: !!d.ok, text, oppnad: SIDAN_OPPNAD, webbplats: "" }) });
         const j = await r.json().catch(() => ({}));
         if (!r.ok || String(j.success) === "false") throw 0;
         f.reset(); svar.innerHTML = "<b>Tack!</b> Vi hör av oss när vi hittar ett bra erbjudande.";
