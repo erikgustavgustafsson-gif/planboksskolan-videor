@@ -38,7 +38,7 @@
          not     = något viktigt i villkoren som inte syns i siffrorna
          kalla   = vem som erbjuder avtalet, url = länk dit
        ---------------------------------------------------------------- */
-    const KONTROLL = "7 nov 2026"; // uppdateras vid varje daglig kontroll
+    const KONTROLL = "8 nov 2026"; // uppdateras vid varje daglig kontroll
     const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
     const LEASABIL = { start: 495, kalla: "Leasabil" };
     const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", start: 695, adm: 59, url: "https://easyprivatleasing.toyota.se/", not: "Fordonsskatt tillkommer. Övermil 8 kr/mil" };
@@ -176,7 +176,7 @@
       B("Volvo", "XC60 T6 Plus", "xc60", "Laddhybrid", 7995, 1000, 599900, { ...LEASABIL, url: LB + "Volvo/Volvo-XC60-Plus" }),
       B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944", not: "Lagerbil som körts 2 739 mil (demobil)" }),
       B("Volvo", "EX60 P6 Plus", "ex60", "El", 8995, 1000, 689000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/170a712b-5743-4b66-9e23-bb33b98d7edd" }),
-      B("Volvo", "XC90 T8 Ultra Dark", "xc90", "Laddhybrid", 11995, 1000, 994000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/31b21382-095f-40b2-af94-28a9d6db1190", not: "Lagerbil" }),
+      B("Volvo", "XC90 T8 AWD Ultra Dark", "xc90", "Laddhybrid", 10900, 1000, 1050200, { kalla: "Volvo Car Hisings Backa (Volvofinans)", url: "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/xc90/recharge-t8-awd-01a0aaa83f127b4a9ea8344ce2d7b075", not: "Modellår 2027. Lagerbil, begränsat antal. Annonsen anger 1 000 mil/år men handlarens kampanjtext 1 500 mil/år och vinterhjul – fråga handlaren. Försäkring tillkommer" }),
       B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 324500, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller ett begränsat antal lagerbilar i färgen Fiord Blue. Metalliclack +300 kr/mån. Nybeställd bil 3 295 kr/mån" }),
       B("Seat", "Ibiza Edition 1.0 MPI 80 hk", "ibiza", "Bensin", 2695, 1000, 229900, { forhojd: 10000, kalla: "Bilia", url: "https://www.bilia.se/bilar/seat/" }),
       B("Audi", "A3 Sportback 35 TFSI S tronic Proline", "a3", "Bensin", 2795, 1000, 359900, { service: false, kalla: "Din Bil", url: "https://dinbil.se/audi/erbjudanden/privatleasing-audi-a3-sportback", start: 495, not: "Serviceavtal från 100 kr/mån tillkommer. Finansiering via VW Finans: aviavgift 59 kr/mån vid pappersfaktura, e-faktura gratis. Erbjudandet gäller t.o.m. 31 dec 2026" }),
@@ -853,7 +853,7 @@
        ================================================================ */
     const ORT = {
       "Stockholm": [59.33, 18.07], "Hammarby Sjöstad": [59.30, 18.10], "Kungsängen": [59.48, 17.75], "Kista": [59.40, 17.94],
-      "Danderyd": [59.40, 18.04], "Segeltorp": [59.28, 17.94], "Mölndal": [57.66, 12.01], "Göteborg": [57.71, 11.97],
+      "Danderyd": [59.40, 18.04], "Segeltorp": [59.28, 17.94], "Mölndal": [57.66, 12.01], "Göteborg": [57.71, 11.97], "Hisings Backa": [57.75, 11.93],
       "Malmö": [55.60, 13.00], "Helsingborg": [56.05, 12.69], "Ystad": [55.43, 13.82],
       "Gävle": [60.67, 17.14], "Borlänge": [60.48, 15.43], "Falun": [60.61, 15.63],
       "Karlstad": [59.38, 13.50], "Arvika": [59.65, 12.59],
@@ -864,6 +864,7 @@
       { om: b => /Kungsängen/.test(b.kalla), orter: ["Kungsängen"] },
       { om: b => /Kista/.test(b.kalla), orter: ["Kista"] },
       { om: b => /Hammarby Sjöstad/.test(b.kalla), orter: ["Hammarby Sjöstad"] },
+      { om: b => /Hisings Backa/.test(b.kalla), orter: ["Hisings Backa"] },
       { om: b => /Ystad/.test(b.kalla), orter: ["Ystad"] },
       { om: b => /^Rejmes/.test(b.kalla), orter: ["Linköping", "Norrköping", "Mjölby", "Åtvidaberg"], text: "Rejmes i Östergötland, Närke, Västmanland, Södermanland och Småland" },
       { om: b => /^Lecab/.test(b.kalla), orter: ["Karlstad", "Arvika"] },
