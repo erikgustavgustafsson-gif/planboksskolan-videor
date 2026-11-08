@@ -17,3 +17,4 @@
 | 2026-11-05 | iPhone kontant eller med abonnemang? Jag räknade | iPhone 17 kontant + Tre 25 GB (20 865 kr) vs Tre-abonnemang med telefon (18 226 kr), Elgigantens priser – ersatte USA-aktier (borttagen ur kön på begäran) | Elgiganten.se 2026-11-05 |
 | 2026-11-06 | Julklappen som växer i 18 år | ISK för barn som julklapp, 300 000 kr skattefritt per person (från kön) | Skatteverket (ISK skattefri nivå 2026) |
 | 2026-11-07 | 20 november: nya regler för köp nu, betala senare | Ny konsumentkreditlag 20 nov 2026: kreditprövning även vid små fakturaköp/delbetalning, ej förvald kredit; 4 × 250 = 1 000 kr inför Black Friday | Konsumentverket (2026-11-02), Regeringen prop. 2025/26:223, Dagens PS |
+| 2026-11-08 | ISK-skatten ser ut att höjas 2027 – avgörs 30 november | ISK-skatt 2027: statslåneräntan 30 nov (+1 p.e. × 30 %), 2,96 % i dag → ca 1,19 % vs 1,07 % 2026; 1 milj. ≈ +861 kr/år | Skatteverket, Riksgälden (2026-11-05), Handelsbanken |

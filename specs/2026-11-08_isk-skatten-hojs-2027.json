@@ -1,0 +1,33 @@
+{
+  "slug": "2026-11-08_isk-skatten-hojs-2027",
+  "title": "ISK-skatten ser ut att höjas 2027 – avgörs 30 november",
+  "caption": "ISK-skatten för 2027 bestäms av statslåneräntan den 30 november 📅 Med dagens ränta (2,96 %) blir skatten ca 1,19 % mot 1,07 % i år. Med 1 miljon på ISK: ca 860 kr mer om året. Räntan kan fortfarande ändras!\n\nHur mycket har du på ISK? 👇\n\n#isk #skatt #sparande #privatekonomi #investeringssparkonto #plånboksskolan",
+  "pinned_comment": "Sparar du på ISK? 📈 Ja / 🏦 Bara sparkonto / 🤷 Vet inte vad ISK är 👇",
+  "sources": [
+    "https://www.skatteverket.se/investeringssparkonto (statslåneräntan 30 nov året före + 1 procentenhet, skatt 30 %; 2026: 2,55 % → 3,55 %, skattefri nivå 300 000 kr)",
+    "https://www.riksgalden.se/press-och-publicerat/pressmeddelanden-och-nyheter/nyheter/statslanerantan/2026/riksgalden-har-idag-faststallt-statslanerantan-till-296 (statslåneräntan 2,96 % 6–12 nov 2026)",
+    "https://www.handelsbanken.se/sv/ekonomi-i-livet/privatekonomi/spara-klokt/basta-spartipsen/hogre-isk-skatt-2027 (skattefri nivå 300 000 kr även 2027)",
+    "Eget räkneexempel: 700 000 kr × 3,96 % × 30 % = 8 316 kr vs 700 000 × 3,55 % × 30 % = 7 455 kr → +861 kr"
+  ],
+  "cover": {
+    "title": ["ISK-SKATTEN", "KAN HÖJAS 2027"],
+    "pill": "Avgörs 30 november",
+    "label": "1 miljon på ISK =",
+    "big": "+860 kr/år",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {"type": "hook", "say": "ISK-skatten ser ut att höjas igen. Det avgörs trettionde november.",
+     "kicker": "AVGÖRS 30 NOVEMBER", "big": "ISK-SKATTEN", "sub": "ser ut att", "punch": ["höjas igen."]},
+    {"type": "statement", "say": "Då sätts statslåneräntan som styr skatten.",
+     "title": "30 NOVEMBER", "lines": ["Räntan + 1 procentenhet", "× 30 % skatt"], "highlight": "= din ISK-skatt", "chip": "Källa: Skatteverket"},
+    {"type": "cards", "say": "I år: en komma noll sju procent. Med dagens ränta: en komma nitton nästa år.",
+     "title": "SKATT PÅ ISK", "cards": [["2026: ca 1,07 %", "på belopp över 300 000 kr"], ["2027: ca 1,19 %", "med dagens ränta 2,96 %"]],
+     "last_red": true},
+    {"type": "number", "say": "En miljon på ISK? Då blir det cirka åttahundrasextio kronor mer i skatt.",
+     "top": "ISK: 1 000 000 kr", "prefix": "+", "value": 861, "suffix": " kr/år", "color": "yellow",
+     "sub": "mer i skatt 2027", "note": "De första 300 000 kr är skattefria"},
+    {"type": "cta", "say": "Räntan kan ändras till dess, så följ Plånboksskolan.",
+     "line1": "Räntan kan ändras", "big": "FÖLJ MED", "line2": "fram till 30 november"}
+  ]
+}
