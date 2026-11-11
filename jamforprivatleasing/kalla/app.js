@@ -64,6 +64,20 @@
       };
     }
 
+    // --- BWORT START (genereras av verktyg/gen_bilweb2.py) ---
+    const BWORT = {};
+    // --- BWORT SLUT ---
+    // En handlarannons från Bilweb. Kort form för att hålla filen liten:
+    // BW(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år (0 = står inte i annonsen), säljare, ort, sökväg hos Bilweb, annonsens datum, insats, karosstyp)
+    function BW(marke, mnamn, modell, foto, drivmedel, manad, mil, saljare, ort, vag, dat, forhojd, kaross) {
+      const o = BWORT[ort] || [];
+      const noter = [`Annons hos ${saljare}, uppdaterad ${dat}`];
+      if (!mil) noter.push("Körsträckan framgår inte av annonsen – fråga handlaren");
+      if (forhojd) noter.push(`Priset förutsätter ${forhojd.toLocaleString("sv-SE")} kr i insats/förhöjd första hyra`);
+      return B(marke, modell, foto, drivmedel, manad, mil || 1000, null, { mnamn, kaross: kaross || "", kalla: saljare + " (via Bilweb)", url: "https://bilweb.se/" + vag,
+        ort, ortpos: o[0] || null, ortlan: o[1] || "", service: null, not: noter.join(". "), tillval: "inga", bilweb: true, annonsdatum: dat, forhojd: forhojd || 0, milokand: !mil });
+    }
+
     const BILAR = [
       // --- BILWEB START: handlarnas egna annonser från Bilweb (genereras av verktyg/gen_bilweb.py – ändra inte för hand) ---
       B("Audi", "A3 Sedan 35", "a3sedan", "Bensin", 2895, 1000, null, {"kalla": "Din Bil / Audi Helsingborg (via Bilweb)", "url": "https://bilweb.se/skane-lan/audi-a3-sedan-35-tfsi-s-tronic-proline-privatleasing-2027-halvkombi-435298", "ort": "Helsingborg", "ortpos": [56.05, 12.69], "ortlan": "Skåne", "service": null, "not": "Annons hos Din Bil / Audi Helsingborg, uppdaterad 20 okt", "tillval": "inga", "bilweb": true}),
@@ -1123,9 +1137,9 @@
       "Jönköping": "Jönköping", "Nässjö": "Jönköping", "Habo": "Jönköping", "Linköping": "Östergötland", "Norrköping": "Östergötland", "Mjölby": "Östergötland", "Åtvidaberg": "Östergötland" };
     const MODELLER = {};
     BILAR.forEach(b => {
-      b.mnamn = MODELLNAMN[b.foto] || b.modell.split(" ")[0];
+      b.mnamn = MODELLNAMN[b.foto] || b.mnamn || b.modell.split(" ")[0];
       b.mkey = slug(b.marke + " " + b.mnamn);
-      b.kaross = KAROSS[b.foto] || "";
+      b.kaross = KAROSS[b.foto] || b.kaross || "";
       b.msida = "privatleasing-" + b.mkey + ".html";
       b.lan = !b.lokal ? ["Hela Sverige"] : b.orter ? [...new Set(b.orter.map(o => LAN[o] || LANEXTRA[o] || o))] : ["Okänd ort"];
       (MODELLER[b.mkey] = MODELLER[b.mkey] || []).push(b);
@@ -1164,7 +1178,8 @@
     function sparaPlats(p) { MINPLATS = p; try { p ? localStorage.setItem("jp_plats", JSON.stringify(p)) : localStorage.removeItem("jp_plats"); } catch (e) {} }
     function avstand(b) {
       if (!MINPLATS || !b.orter) return null;
-      return Math.min(...b.orter.map(o => km(MINPLATS.pos, ORT[o])));
+      const kanda = b.orter.filter(o => ORT[o]);
+      return kanda.length ? Math.min(...kanda.map(o => km(MINPLATS.pos, ORT[o]))) : null;
     }
     const tillMil = k => Math.max(1, Math.round(k / 10));
     function platstagg(b) {
@@ -1332,7 +1347,7 @@
         const huvudlank = flera ? b.msida : ut(b.url), ny = flera ? "" : ` target="_blank" rel="${rel(b.url)}"`;
         return `
         <article class="car">
-          <a class="piclink" href="${huvudlank}"${ny}>${b.andel != null && b.andel < .45 ? `<span class="kortbadge">🔥 Kampanjpris</span>` : ""}${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.mnamn}" loading="lazy">` : `<div class="pic ingen"><b>Helt ny modell</b><small>Fri bild finns ännu inte</small></div>`}</a>
+          <a class="piclink" href="${huvudlank}"${ny}>${b.andel != null && b.andel < .45 ? `<span class="kortbadge">🔥 Kampanjpris</span>` : ""}${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.mnamn}" loading="lazy">` : `<div class="pic ingen"><b>${esc(b.marke)} ${esc(b.mnamn)}</b><small>Bild kommer</small></div>`}</a>
           <div>
             <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
             <h3><a href="${b.msida}" style="color:inherit;text-decoration:none">${esc(b.marke)} ${esc(b.mnamn)}</a></h3>
