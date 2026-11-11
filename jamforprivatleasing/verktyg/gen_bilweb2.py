@@ -169,6 +169,17 @@ for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app
     foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
 kanon = {norm(k): k for k in foto}
+def modellfamilj(marke, m):
+    """Bilweb anger ibland motorvarianten som modell (CLA250, 120). Slå ihop till modellen."""
+    if marke == "Mercedes-Benz":
+        x = re.match(r"^(AMG )?(CLA|CLE|GLA|GLB|GLC|GLE|GLS|EQA|EQB|EQE|EQS)\s?\d{2,3}\+?", m, re.I)
+        if x: return x.group(2).upper()
+        x = re.match(r"^([ABCES])\s?\d{3}", m)
+        if x: return x.group(1) + "-Klass"
+    if marke == "BMW":
+        x = re.match(r"^M?([1-8])\d{2}[a-z]{0,2}$", m, re.I)
+        if x: return x.group(1) + "-serie"
+    return m
 SLUGMAP["kia/k4"] = "Kia|K4"
 data = json.load(open(BW))["annonser"]
 modeller, stat = {}, {"ok": 0, "borta": 0, "gammal": 0, "begagnad": 0, "avtal": 0, "pris": 0, "driv": 0, "dubblett": 0, "ej_personbil": 0, "ingen_modell": 0}
@@ -180,6 +191,7 @@ for a in data.values():
     k = SLUGMAP.get(a["ms"] + "/" + a["mods"])
     if not k:
         mnamn = re.sub(rf"^{re.escape(a['marke'])}\s+", "", a["modell"], flags=re.I).strip() or a["modell"]
+        mnamn = modellfamilj(marke, mnamn)
         k = marke + "|" + mnamn
         k = kanon.get(norm(k), k)
     if k in VARIANT:
@@ -191,7 +203,7 @@ for mal, annonser in sorted(modeller.items()):
     marke, mnamn = mal.split("|", 1)
     bra = []
     for a in annonser:
-        d = datum(a.get("datum", ""))
+        d = datum(a.get("datum", "") or next((h for h in a.get("huvud", []) if re.match(r"(idag|igår|\d{1,2} [a-zå]{3})", h.lower())), ""))
         if not d or (IDAG - d).days > 180: stat["gammal"] += 1; continue
         ar, km = tal(a.get("ar")), tal(a.get("matare"))
         if not ar or ar < IDAG.year - 1 or (km or 0) > 100: stat["begagnad"] += 1; continue
