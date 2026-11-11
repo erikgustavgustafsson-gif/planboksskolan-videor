@@ -9,6 +9,7 @@ Regler (gissa aldrig):
   - avtalstid 36 mån (annonser som bara nämner annan avtalstid hoppas över)
   - pris vid 0 kr insats om annonsen har flera nivåer; annars läggs insats/förhöjd hyra i 'forhojd'
   - oklara insatsnivåer eller saknat pris -> hoppas över
+  - priset måste stå i annonsens rubrik/adress eller text (Bilwebs eget "kr/mån" kan vara en lånekalkyl) -> annars hoppas annonsen över
   - samma säljare, variant och pris räknas som ett erbjudande (inga dubbletter)
 """
 import json, re, sys, datetime, unicodedata, html
@@ -168,6 +169,22 @@ for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app
     nyckel = m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0])
     foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
+def verifierat_pris(a):
+    """Bilwebs "kr/mån" är ibland Bilwebs egen lånekalkyl, inte leasingpriset. Priset måste därför stå i rubriken/adressen
+    eller i annonstexten. Returnerar priset, eller None om det inte går att belägga (gissa aldrig)."""
+    slug = re.sub(r"-\d{4}-[a-z-]+-\d{5,}$", "", a["url"].rsplit("/", 1)[-1])
+    sn = {int(x) for x in re.findall(r"(?<!\d)(\d{4,5})(?=-?kr|-?man|-?manad|-?sek)", slug)}
+    sn |= {int(x) for x in re.findall(r"(?:fr|fran|pl|privatleasing|leasing|manad|man)-(\d{4,5})(?!\d)", slug)}
+    sn = {x for x in sn if 1500 <= x <= 25000}
+    t = re.sub(r"(\d)[ .\u00a0](\d{3})(?!\d)", r"\1\2", html.unescape(a.get("besk") or ""))
+    dn = {int(x) for x in re.findall(r"(?<!\d)(\d{4,5})\s?(?:kr|:-|sek)?\s?(?:/|per|i)\s?(?:mån|månad|månaden)\b", t, re.I)}
+    dn = {x for x in dn if 1500 <= x <= 25000}
+    m = a.get("manad")
+    if m in sn or m in dn: return m
+    if sn: return min(sn)
+    if len(dn) == 1: return next(iter(dn))
+    return None
+
 kanon = {norm(k): k for k in foto}
 def modellfamilj(marke, m):
     """Bilweb anger ibland motorvarianten som modell (CLA250, 120). Slå ihop till modellen."""
@@ -182,7 +199,7 @@ def modellfamilj(marke, m):
     return m
 SLUGMAP["kia/k4"] = "Kia|K4"
 data = json.load(open(BW))["annonser"]
-modeller, stat = {}, {"ok": 0, "borta": 0, "gammal": 0, "begagnad": 0, "avtal": 0, "pris": 0, "driv": 0, "dubblett": 0, "ej_personbil": 0, "ingen_modell": 0}
+modeller, stat = {}, {"ok": 0, "borta": 0, "gammal": 0, "begagnad": 0, "avtal": 0, "pris": 0, "driv": 0, "dubblett": 0, "ej_personbil": 0, "ingen_modell": 0, "obelagt_pris": 0}
 for a in data.values():
     if a.get("borta"): stat["borta"] += 1; continue
     marke = MARKESNAMN.get(a.get("marke", ""), a.get("marke", "")).strip()
@@ -211,6 +228,9 @@ for mal, annonser in sorted(modeller.items()):
         if man(a) != 36 or ej_privatleasing(a): stat["avtal"] += 1; continue
         if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag|operationell|exkl\.? moms|ex\.? moms", a["titel"] + " " + a["url"], re.I): stat["pris"] += 1; continue
         if re.search(r"exkl\.? moms|ex\.? moms|företagsleasing", a["besk"][:400], re.I) and not re.search(r"privatleasing", a["titel"] + a["url"], re.I): stat["pris"] += 1; continue
+        vp = verifierat_pris(a)
+        if not vp: stat["obelagt_pris"] += 1; continue
+        a = {**a, "manad": vp}
         pi = pris_och_insats(a)
         if not pi or not pi[0] or pi[0] < 1500 or pi[0] > 25000 or pi[1] > 50000: stat["pris"] += 1; continue
         dm = driv(a)
