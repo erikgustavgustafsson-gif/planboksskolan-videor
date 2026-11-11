@@ -1,0 +1,87 @@
+{
+  "slug": "2026-11-11_elen-dyrare-i-vinter",
+  "title": "Elen kan bli 12 600 kr dyrare i vinter – så skyddar du dig",
+  "caption": "E.ON:s nya prognos (9 nov): en villa i elområde 4 med 20 000 kWh/år kan få betala ca 12 600 kr mer för elen okt–mars än förra vintern ⚡ Det är +73 %. En prognos, inte facit – men kolla ditt elavtal och flytta förbrukning till billigare timmar.\n\nVilket elområde bor du i? 👇\n\n#elpris #elräkning #privatekonomi #sparatips #elavtal #plånboksskolan",
+  "pinned_comment": "Vilket elavtal har du? ⚡ Rörligt / 🔒 Fast pris / 🤷 Vet inte 👇",
+  "sources": [
+    "https://www.nordiskaprojekt.se/2026/11/09/e-ons-uppdaterade-vinterprognos-elhandelskostnaden-i-vinter-kan-oka-mer-an-tidigare-forvantat/ (E.ON 9 nov 2026: villa 20 000 kWh, SE4, okt–mars ca +12 600 kr, +73 %, ca 20 % över krisvintern)",
+    "https://www.tv4.se/artikel/tt-261109-elprismarknad1-2bc93d62/elpriserna-fortsatter-upp-nytt-arshogsta (TT: samma E.ON-prognos, årshögsta elpriser i södra Sverige)",
+    "https://www.smp.se/nyheter/eons-chockprognos-12-600-kronor-mer-for-elen",
+    "https://svt.se/nyheter/inrikes/hoga-elpriser-vantar-chatta-om-den-mojliga-prischocken (SVT 9 nov 2026: stängda kärnkraftverk, dåligt väder, rekordhöga gaspriser)"
+  ],
+  "cover": {
+    "title": [
+      "ELEN KAN BLI",
+      "DYRARE I VINTER"
+    ],
+    "pill": "E.ON:s prognos, elområde 4",
+    "label": "Villa, okt–mars:",
+    "big": "+12 600 kr",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Tolvtusen sexhundra kronor dyrare el i vinter. För en villa i södra Sverige.",
+      "kicker": "ELCHOCKEN I VINTER",
+      "big": "+12 600 KR",
+      "sub": "dyrare el",
+      "punch": [
+        "för en villa i",
+        "södra Sverige."
+      ]
+    },
+    {
+      "type": "number",
+      "say": "Det är Eons nya prognos för elområde fyra. Sjuttiotre procent mer än förra vintern.",
+      "top": "Villa, 20 000 kWh/år",
+      "prefix": "+",
+      "value": 12600,
+      "suffix": " kr",
+      "color": "yellow",
+      "sub": "okt–mars, elområde 4",
+      "prefix2": "+",
+      "value2": 73,
+      "suffix2": " %",
+      "color2": "red",
+      "sub2": "mot förra vintern",
+      "note": "Källa: E.ON, 9 november 2026"
+    },
+    {
+      "type": "cards",
+      "say": "Kärnkraftverk står still, vädret är dåligt och gasen rekorddyr.",
+      "title": "VARFÖR?",
+      "cards": [
+        [
+          "Kärnkraft",
+          "flera reaktorer står still"
+        ],
+        [
+          "Vädret",
+          "dåligt för elproduktion"
+        ],
+        [
+          "Gaspriset",
+          "rekordhögt"
+        ]
+      ]
+    },
+    {
+      "type": "statement",
+      "say": "Kolla ditt elavtal. Flytta tvätt, disk och laddning till billigare timmar.",
+      "title": "GÖR DET HÄR",
+      "lines": [
+        "Kolla ditt elavtal"
+      ],
+      "highlight": "Flytta till billiga timmar",
+      "chip": "tvätt • disk • laddning"
+    },
+    {
+      "type": "cta",
+      "say": "En prognos, inte facit. Följ Plånboksskolan.",
+      "line1": "En prognos,",
+      "big": "INTE FACIT",
+      "line2": "Följ Plånboksskolan"
+    }
+  ]
+}
