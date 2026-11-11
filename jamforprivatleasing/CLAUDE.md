@@ -19,6 +19,12 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 1c. **Kia:** kia.com/se/nya-bilar/<modell>/upptack/ hämtar `kia.live.afonso.se/api/model/<kod>` med rek. pris, privatleasingpris per körsträcka (`manadshyra36<totala mil>`) och utrustning (`features`).
 1d. **Hedin:** bilens sida har `#__NEXT_DATA__` med `car.car_equipment`, `car_retail_price` (nypris) och `car_private_leasing_option` (pris, start_fee, invoice_fee).
 1e. **Utrustning:** varje bil ska ha `utr` och vid behov `tv` (tillval med kr/mån). Saknar källan en lista: skriv `utrnot` med varför, gissa aldrig.
+0. **Handlarnas annonser från Bilweb (VARJE natt – annonser löper ut):** allt mellan `// --- BILWEB START` och `// --- BILWEB SLUT ---` i kalla/app.js genereras och ska bytas ut helt varje natt. Ändra aldrig de raderna för hand.
+   a. Pusha först eventuella ändringar i kalla/app.js. I Higgsfield-sandlådan (`mcp__Higgsfield__sandbox_exec`), hämta filerna via commit-SHA (rå-länkar mot `main` cachas i flera minuter): `SHA=$(curl -s https://api.github.com/repos/erikgustavgustafsson-gif/planboksskolan-videor/commits/main | grep -m1 '"sha"' | cut -d'"' -f4)`, sedan `curl -sf https://raw.githubusercontent.com/erikgustavgustafsson-gif/planboksskolan-videor/$SHA/jamforprivatleasing/<sökväg>` för `verktyg/skord_bilweb.py`, `verktyg/gen_bilweb.py` och `kalla/app.js`. Skicka aldrig filer som base64 i kommandot (sandlådan nekar det).
+   b. Gör modellistan: `python3 -c` som läser `const MODELLNAMN` och alla `B(...)`-rader utan `"bilweb": true` ur app.js → `[{"marke","mnamn"}]` (unika). Kör `rm -f bw.json; python3 skord_bilweb.py modeller.json bw.json` med `background:true` (ca 20 min, max 15 min per körning – kör igen, den fortsätter där den slutade). Polla med `sleep 55` (längre väntan ger Bad Gateway).
+   c. `python3 gen_bilweb.py bw.json app.js <dagens datum ÅÅÅÅ-MM-DD>`. Regler i skriptet: bara nya bilar, annons uppdaterad senast 45 dagar sedan, 36 mån, pris vid 0 kr insats annars insatsen som `forhojd`, inga premie-/företagspriser, max 2 per säljare och modell, max 8 per modell.
+   d. För tillbaka blocket: `sed -n '/BILWEB START/,/BILWEB SLUT/p' app.js | gzip -9 > block.gz`, lägg bytes i en gråskale-PNG (4 byte längd big-endian + data, bredd 512, PIL `Image.frombytes('L', …)`) och returnera den med `image_paths`. Bilden sparas lokalt under `/tmp/claude-tool-results/…png` (sökvägen står i svaret) – läs den med PIL, packa upp och ersätt blocket i kalla/app.js.
+   e. Rimlighetskolla: inga priser under 1 500 eller över 20 000 kr/mån utan anledning, inga dubbletter av samma säljare och pris. Rapportera antal modeller med 1, 2–4 och 5+ erbjudanden.
 1. **Kontrollera varje övrigt erbjudande** i `BILAR` (kalla/app.js) via dess `url`. Använd WebFetch, WebSearch eller Higgsfield-sandlådan (`mcp__Higgsfield__sandbox_exec`, Playwright via `NODE_PATH=$(npm root -g)`). Starta en ny webbläsare per URL.
    - Stämmer månadspris, 36 mån, mil/år, förhöjd första hyra, uppläggnings- och aviavgift?
    - Har kampanjen gått ut? Leta upp det nya priset; finns det inget, ta bort bilen.
@@ -31,6 +37,10 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 6. **Bygg och testa:** `python3 kalla/build.py`, `node --check site/app.js`, öppna `site/index.html`, `site/alla-bilar.html` och en märkessida i Playwright (desktop + mobil, inga JS-fel, öppna konfiguratorn för en bil) och titta på en skärmbild.
 7. **Publicera** ändrade filer från `site/` till artifact-sluggen ovan, commit och push till `main`.
 8. **Rapportera** kort på svenska bara vad som ändrats. Om priser ändrats: skriv att en ny zip till Strato behövs. Om inget ändrats: en rad.
+
+## Ren jämförelsesajt (från 11 nov 2026)
+- Sidan tar inte emot beställningar. Alla knappar leder till handlarens eller märkets erbjudande. Konfiguratorn och bestall.php finns kvar men används inte – koppla inte in dem igen utan att användaren ber om det.
+- Listorna visar ett kort per modell med billigaste faktiska pris (insats utslagen på 36 mån). Modellsidan listar alla erbjudanden, billigast överst.
 
 ## Jämför handlare (modellsidor)
 - Varje modell har en egen sida `privatleasing-<märke>-<modell>.html` som listar alla erbjudanden på modellen, billigast först. Bilar hör till samma modell när de har samma `foto`-nyckel; modellens namn står i `MODELLNAMN` i kalla/app.js.

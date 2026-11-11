@@ -820,3 +820,4 @@
     .kortpiller .antalerb { background: #E2F5EC; color: #11734B; }
     .car .ext { display: inline-block; margin-top: 8px; }
     .jmfknappar .annons, .car .annons { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .jmfpris .jmfins { color: #8A5A00 !important; font-weight: 700; font-size: 13px; }
