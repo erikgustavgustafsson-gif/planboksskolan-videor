@@ -162,6 +162,7 @@ for mal, annonser in sorted(modeller.items()):
         if not ar or ar < IDAG.year - 1 or (km or 0) > 100: stat["begagnad"] += 1; continue
         if not a.get("saljare") or not a.get("manad"): stat["pris"] += 1; continue
         if man(a) != 36: stat["avtal"] += 1; continue
+        if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag", a["titel"], re.I): stat["pris"] += 1; continue   # villkorade priser
         pi = pris_och_insats(a)
         if not pi or not pi[0] or pi[0] < 1000 or pi[1] > 50000: stat["pris"] += 1; continue
         dm = driv(a)
@@ -172,7 +173,7 @@ for mal, annonser in sorted(modeller.items()):
     # en per säljare och variant, billigast (inkl. insats utslagen på 36 mån)
     bast = {}
     for a in sorted(bra, key=lambda x: x["pris"] + x["forhojd"] / 36):
-        nyckel = (a["saljare"], rensa_modell(a["titel"], marke).lower())
+        nyckel = (a["saljare"], a["pris"], a["drivm"])
         if nyckel in bast: stat["dubblett"] += 1; continue
         bast[nyckel] = a
     for a in list(bast.values())[:8]:
@@ -181,8 +182,8 @@ for mal, annonser in sorted(modeller.items()):
         pos = STAD.get(ort) or lan_pos
         saljare = a["saljare"].replace(" - nya bilar", "").replace(" - Nya bilar", "").replace(" - Nya personbilar", "").strip()
         noter = [f"Annons hos {saljare}, uppdaterad {a['d'].day} {list(MAN)[a['d'].month - 1]}"]
-        if not a["mil"]: noter.append("körsträckan framgår inte av annonsen – 1 000 mil/år antas, kontrollera hos handlaren")
-        if a["forhojd"]: noter.append(f"priset förutsätter {a['forhojd']:,} kr i insats/förhöjd första hyra".replace(",", " "))
+        if not a["mil"]: noter.append("Körsträckan framgår inte av annonsen – 1 000 mil/år antas, kontrollera hos handlaren")
+        if a["forhojd"]: noter.append(f"Priset förutsätter {a['forhojd']:,} kr i insats/förhöjd första hyra".replace(",", " "))
         extra = {"kalla": f"{saljare} (via Bilweb)", "url": a["url"], "ort": ort, "ortpos": pos, "ortlan": lan_namn,
                  "service": None, "not": ". ".join(noter), "tillval": "inga", "bilweb": True}
         if a["forhojd"]: extra["forhojd"] = a["forhojd"]
