@@ -43,10 +43,10 @@ for m in modeller:
         def falt(n):
             x = re.search(rf"\n{n}\n([^\n]+)", t); return x.group(1).strip() if x else ""
         i = t.find("Beskrivning\n"); j = t.find("Kostnadsfritt via Bilweb", i)
-        besk = t[i + 12:j].strip()[:2500] if i >= 0 else ""
+        besk = t[i + 12:j].strip()[:12000] if i >= 0 else ""
         annonser.append({"url": "https://bilweb.se" + l, "titel": h1, "saljare": sel.group(1).strip() if sel else "", "ort": sel.group(2).strip() if sel else "",
             "datum": sel.group(3).strip() if sel else "", "manad": int(re.sub(r"\D", "", (sel or pris).group(4 if sel else 1))) if (sel or pris) else None,
-            "ar": falt("Årsmodell"), "driv": falt("Drivmedel"), "matare": falt("Mätarställning"), "lan": l.split("/")[1], "besk": besk})
+            "ar": falt("Årsmodell"), "driv": falt("Drivmedel"), "matare": falt("Mätarställning"), "lan": l.split("/")[1], "besk": besk, "hel": True})
         time.sleep(0.4)
     res[k] = {"slug": kand[0], "foralder": norm(kand[0]) != want, "antal_lankar": len(lankar), "annonser": annonser}
     json.dump(res, open(ut, "w"), ensure_ascii=False)

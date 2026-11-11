@@ -100,16 +100,38 @@ def pris_och_insats(a):
     if len(belopp) > 1: return None
     return a["manad"], (belopp.pop() if belopp else 0)
 
+GILTIG = (1000, 1250, 1500, 2000, 2500, 3000)
 def bas_mil(a):
-    t = (a["titel"] + " " + html.unescape(a["besk"])).replace(" ", " ")
-    t = re.sub(r"(\d) (\d{3})", r"\1\2", t)
-    for m in re.finditer(r"(\d{3,4})\s?mil(?:/år| per år| om året|/ år|/år)", t):
-        before = t[max(0, m.start() - 12):m.start()]
-        if "+" in before or re.search(r"\+\s*\d", t[m.end():m.end() + 6]): continue
-        v = int(m.group(1))
-        if v in (1000, 1500, 2000, 2500, 3000): return v
-    # "1500 mil/år: +247 kr/mån" betyder att 1 000 mil ingår
-    if re.search(r"1500\s?mil[^\n]{0,12}\+\s?\d", t): return 1000
+    """Körsträcka per år som ingår i priset. None = framgår inte (gissa aldrig)."""
+    t = (a["titel"] + " \n " + html.unescape(a["besk"])).replace(" ", " ")
+    t = re.sub(r"(\d)[ .](\d{3})(?!\d)", r"\1\2", t)
+    t = re.sub(r"(körsträcka[^\n]{0,15}?)(\d{3,4})\s*,\s*\d{3,4}(?:\s*(?:,|eller|och)\s*\d{3,4})*\s*mil", r"\1\2 mil per år", t, flags=re.I)
+    hittat = []
+    for m in re.finditer(r"(\d{3,5})\s?(mil|km)\b", t, re.I):
+        v, enh = int(m.group(1)), m.group(2).lower()
+        fore, efter = t[max(0, m.start() - 30):m.start()], t[m.end():m.end() + 30]
+        if re.search(r"\+\s*$|tillägg[^\n]{0,15}$|max\w*\s*$|upp till\s*$|räckvidd[^\n]{0,20}$|mätar\w*[^\n]{0,10}$", fore, re.I): continue
+        if re.match(r"\s*(?:/\s*år|per år)?\s*[:=]?\s*\+\s*\d", efter, re.I): continue   # "1500 mil/år: +247 kr" = tillägg
+        if re.match(r"\s*(/\s*h|per timme|/100)", efter, re.I): continue
+        if enh == "km":
+            if not re.match(r"\s*(/\s*år|per år|om året|årlig)", efter, re.I): continue
+            v //= 10
+        per_ar = re.match(r"\s*(/\s*år|/år|per\s*/?\s*år|om året|i året|årlig)", efter, re.I) or re.search(r"(årlig körsträcka|körsträcka per år)[^\n]{0,15}$", fore, re.I)
+        avtal = re.match(r"\s*(/|på|under|i)?\s*36\s*(mån|månader)", efter, re.I) or re.search(r"36\s*(mån|månader)\s*(/|,|och|med)?\s*$", fore, re.I)
+        ingar = re.search(r"(inkl\.?|ink\.?|inklusive|ingår|med)\s*$", fore, re.I) or re.search(r"(service|serviceavtal)\w*\s+och\s*$", fore, re.I)
+        if avtal and not per_ar and v in (3000, 3750, 4500, 6000, 7500, 9000):
+            hittat.append(v // 3)                                                   # total över 36 mån
+        elif (per_ar or ingar) and v in GILTIG:
+            hittat.append(v)
+    if hittat: return min(hittat)
+    if re.search(r"1500\s?mil[^\n]{0,8}\+\s?\d", t): return 1000          # bara tilläggspriser för 1500/2000 mil -> 1000 ingår
+    return None
+
+def ej_privatleasing(a):
+    t = (a["titel"] + " " + a["besk"][:600]).lower()
+    if re.search(r"billån|choice lån|choice billån|gäller endast vid finansiering via \w+ billån", t): return "billån"
+    m = re.search(r"\b(\d{1,2})\s?(?:månaders|mån\.?)\s*privatleasing", t)
+    if m and int(m.group(1)) != 36: return "avtalstid " + m.group(1)
     return None
 
 def man(a):
@@ -163,7 +185,7 @@ for mal, annonser in sorted(modeller.items()):
         ar, km = tal(a.get("ar")), tal(a.get("matare"))
         if not ar or ar < IDAG.year - 1 or (km or 0) > 100: stat["begagnad"] += 1; continue
         if not a.get("saljare") or not a.get("manad"): stat["pris"] += 1; continue
-        if man(a) != 36: stat["avtal"] += 1; continue
+        if man(a) != 36 or ej_privatleasing(a): stat["avtal"] += 1; continue
         if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag", a["titel"] + " " + a["url"], re.I): stat["pris"] += 1; continue   # villkorade priser
         pi = pris_och_insats(a)
         if not pi or not pi[0] or pi[0] < 1000 or pi[1] > 50000: stat["pris"] += 1; continue
@@ -190,11 +212,12 @@ for mal, annonser in sorted(modeller.items()):
         pos = STAD.get(ort) or lan_pos
         saljare = a["saljare"].replace(" - nya bilar", "").replace(" - Nya bilar", "").replace(" - Nya personbilar", "").strip()
         noter = [f"Annons hos {saljare}, uppdaterad {a['d'].day} {list(MAN)[a['d'].month - 1]}"]
-        if not a["mil"]: noter.append("Körsträckan framgår inte av annonsen – 1 000 mil/år antas, kontrollera hos handlaren")
+        if not a["mil"]: noter.append("Körsträckan framgår inte av annonsen – fråga handlaren")
         if a["forhojd"]: noter.append(f"Priset förutsätter {a['forhojd']:,} kr i insats/förhöjd första hyra".replace(",", " "))
         extra = {"kalla": f"{saljare} (via Bilweb)", "url": a["url"], "ort": ort, "ortpos": pos, "ortlan": lan_namn,
                  "service": None, "not": ". ".join(noter), "tillval": "inga", "bilweb": True}
         if a["forhojd"]: extra["forhojd"] = a["forhojd"]
+        if not a["mil"]: extra["milokand"] = True
         namn = rensa_modell(a["titel"], marke) or mal.split("|")[1]
         rader.append(f'      B({json.dumps(marke, ensure_ascii=False)}, {json.dumps(namn, ensure_ascii=False)}, "{foto[mal]}", "{a["drivm"]}", {a["pris"]}, {a["mil"] or 1000}, null, {json.dumps(extra, ensure_ascii=False)}),')
         stat["ok"] += 1
