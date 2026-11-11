@@ -78,7 +78,16 @@
         ort, ortpos: o[0] || null, ortlan: o[1] || "", service: null, not: noter.join(". "), tillval: "inga", bilweb: true, annonsdatum: dat, forhojd: forhojd || 0, milokand: !mil });
     }
 
+    // En lagerbil hos Hedin Automotive med Hedins egna privatleasinguppgifter (pris, avgifter, körsträcka):
+    // HD(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år, uppläggning, avi/mån, ort, [lat, lon], id/slug, service ingår (1/0), karosstyp)
+    function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross) {
+      return B(marke, modell, foto, drivmedel, manad, mil, null, { mnamn, kaross: kaross || "", kalla: "Hedin Automotive " + ort, url: "https://hedinautomotive.se/bilar/kop-bil/" + vag,
+        start, adm, ort, ortpos: pos || null, ortlan: "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer", tillval: "inga", hedin: true });
+    }
+
     const BILAR = [
+      // --- HEDIN START ---
+      // --- HEDIN SLUT ---
       // --- BILWEB START: handlarnas egna annonser från Bilweb (genereras av verktyg/gen_bilweb.py – ändra inte för hand) ---
       B("Audi", "A3 Sedan 35", "a3sedan", "Bensin", 2895, 1000, null, {"kalla": "Din Bil / Audi Helsingborg (via Bilweb)", "url": "https://bilweb.se/skane-lan/audi-a3-sedan-35-tfsi-s-tronic-proline-privatleasing-2027-halvkombi-435298", "ort": "Helsingborg", "ortpos": [56.05, 12.69], "ortlan": "Skåne", "service": null, "not": "Annons hos Din Bil / Audi Helsingborg, uppdaterad 20 okt", "tillval": "inga", "bilweb": true}),
       B("Audi", "A3 Sportback 35", "a3", "Bensin", 2795, 1000, null, {"kalla": "Börjessons Bil i Ängelholm AB (via Bilweb)", "url": "https://bilweb.se/skane-lan/audi-a3-sportback-35-tfsi-150-hk-s-tronic-privatleasing-2027-halvkombi-454393", "ort": "Ängelholm", "ortpos": [55.8, 13.4], "ortlan": "Skåne", "service": null, "not": "Annons hos Börjessons Bil i Ängelholm AB, uppdaterad 4 nov", "tillval": "inga", "bilweb": true}),
@@ -1135,6 +1144,11 @@
       "Mölndal": "Västra Götaland", "Göteborg": "Västra Götaland", "Hisings Backa": "Västra Götaland", "Malmö": "Skåne", "Helsingborg": "Skåne", "Ystad": "Skåne",
       "Gävle": "Gävleborg", "Borlänge": "Dalarna", "Falun": "Dalarna", "Karlstad": "Värmland", "Arvika": "Värmland",
       "Jönköping": "Jönköping", "Nässjö": "Jönköping", "Habo": "Jönköping", "Linköping": "Östergötland", "Norrköping": "Östergötland", "Mjölby": "Östergötland", "Åtvidaberg": "Östergötland" };
+    // Samma bil från två källor: finns Hedins egen uppgift tas Hedins Bilweb-annons med samma modell och pris bort
+    {
+      const hd = new Set(BILAR.filter(b => b.hedin).map(b => slug(b.marke + " " + (b.mnamn || "")) + "|" + b.manad));
+      for (let i = BILAR.length - 1; i >= 0; i--) { const b = BILAR[i]; if (b.bilweb && /^Hedin/i.test(b.kalla) && hd.has(slug(b.marke + " " + (MODELLNAMN[b.foto] || b.mnamn || "")) + "|" + b.manad)) BILAR.splice(i, 1); }
+    }
     const MODELLER = {};
     BILAR.forEach(b => {
       b.mnamn = MODELLNAMN[b.foto] || b.mnamn || b.modell.split(" ")[0];
