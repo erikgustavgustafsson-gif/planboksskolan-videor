@@ -80,9 +80,9 @@
 
     // En lagerbil hos Hedin Automotive med Hedins egna privatleasinguppgifter (pris, avgifter, körsträcka):
     // HD(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år, uppläggning, avi/mån, ort, [lat, lon], id/slug, service ingår (1/0), karosstyp)
-    function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross) {
+    function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross, premie) {
       return B(marke, modell, foto, drivmedel, manad, mil, null, { mnamn, kaross: kaross || "", kalla: "Hedin Automotive " + ort, url: "https://hedinautomotive.se/bilar/kop-bil/" + vag,
-        start, adm, ort, ortpos: pos || null, ortlan: "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer", tillval: "inga", hedin: true });
+        start, adm, ort, ortpos: pos || null, ortlan: "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer" + (premie ? ". Bilen kan ge rätt till elbilspremie – fråga Hedin om den påverkar priset" : ""), tillval: "inga", hedin: true });
     }
 
     const BILAR = [
