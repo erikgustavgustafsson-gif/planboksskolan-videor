@@ -48,6 +48,14 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - Ny modell: lägg till `"<foto>": "<Modellnamn>"` i `MODELLNAMN`. Ny ort: lägg till den i `ORT`, `ORTREGLER` och `LAN` (län).
 - build.py skapar modellsidorna och sitemap automatiskt. Publicera nya/ändrade modellsidor till artefakten.
 
+## Nya delar (12 nov 2026) – rör inte logiken, bara datan
+- `kalla/build.py` läser all data ur app.js via `kalla/dump.js` (Node). `kalla/marken.json` och `site/prishistorik.js` skapas automatiskt – ändra dem aldrig för hand.
+- `kalla/prishistorik.json` fylls på vid varje bygge med lägsta faktiska månadskostnad per modell för datumet i `const KONTROLL`. **Uppdatera därför alltid KONTROLL före bygget, och committa prishistorik.json.** Radera aldrig filen.
+- Nya sidor byggs automatiskt: kategorisidor (`privatleasing-elbil/-laddhybrid/-hybrid/-bensin/-suv/-kombi/-smabil/-under-3000/-under-4000.html`, `billigaste-privatleasing.html`), `jamfor-bilar.html`, `rakna.html`, `sa-jamfor-vi.html`. Sidtitlarna får aktuell månad automatiskt.
+- Ny modell: lägg också till bildnyckeln i rätt rad i `KAROSS` (SUV, Kombi, Småbil, Halvkombi/sedan) i kalla/app.js.
+- "Faktisk månadskostnad" = (hyra + avgifter + obligatorisk försäkring) × 36 + uppläggning + insats, delat på 36. Det är den som rangordnar. Ändra inte det.
+- Efter bygget: publicera alla ändrade filer i `site/` (även nya html-sidor och `prishistorik.js`) och pusha zip till `strato-paket`.
+
 ## Regler
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.

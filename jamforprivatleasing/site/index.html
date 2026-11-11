@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jämför privatleasing 2026 – alla bilar, kampanjer och totalpris | Jämföra Privatleasing</title>
-  <meta name="description" content="Jämför privatleasing på 140 nya bilar från 20 märken. Vi räknar med alla avgifter, visar alla erbjudanden på varje modell med billigast överst och länkar direkt till erbjudandet.">
+  <title>Jämför privatleasing – 97 bilmodeller, billigast först (november 2026) | Jämföra Privatleasing</title>
+  <meta name="description" content="Jämför 359 privatleasingerbjudanden från märken och handlare på 97 nya bilmodeller. Insats och avgifter inräknade, billigast överst, kontrollerat varje dag.">
   <link rel="canonical" href="https://jamforprivatleasing.se/">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0E2A47">
@@ -13,7 +13,7 @@
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Jämföra Privatleasing">
   <meta property="og:title" content="Jämför privatleasing – hitta bästa leasingkampanjen 2026">
-  <meta property="og:description" content="Jämför privatleasing på 140 nya bilar från 20 märken. Vi räknar med alla avgifter, visar alla erbjudanden på varje modell med billigast överst och länkar direkt till erbjudandet.">
+  <meta property="og:description" content="Jämför 359 privatleasingerbjudanden från märken och handlare på 97 nya bilmodeller. Insats och avgifter inräknade, billigast överst, kontrollerat varje dag.">
   <meta property="og:url" content="https://jamforprivatleasing.se/">
   <meta property="og:image" content="https://jamforprivatleasing.se/bilder/delning.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -27,7 +27,7 @@
     <div class="wrap navrad">
       <a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a>
       <button type="button" class="menyknapp" id="menyKnapp" aria-label="Meny" aria-expanded="false">☰</button>
-      <div class="navlankar"><a href="index.html" class="aktiv" aria-current="page">Start</a><a href="kampanjer.html">Kampanjer</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div class="navlankar"><a href="index.html" class="aktiv" aria-current="page">Start</a><a href="kampanjer.html">Kampanjer</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="jamfor-bilar.html">Jämför bilar</a><a href="rakna.html">Räkna</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a></div>
     </div>
   </nav>
 
@@ -35,7 +35,8 @@
     <div class="wrap herotext">
       <h1>Jämför privatleasing och hitta bästa kampanjen</h1>
       <p class="heroslogan">Alla märken. Alla avgifter. Ett pris.</p>
-      <p class="heroingress">Vi jämför privatleasing på nya bilar hos alla stora märken – med alla avgifter inräknade och priser som kontrolleras varje dag.</p>
+      <p class="heroingress">Vi jämför märkenas och handlarnas privatleasing på nya bilar – med insats och avgifter inräknade, billigast överst och kontrollerat varje dag.</p>
+      <form class="startsok" id="startsok" role="search"><input name="q" type="search" list="modellforslag" placeholder="Sök bil, t.ex. Volvo EX30" aria-label="Sök bil"><datalist id="modellforslag"></datalist><button type="submit">Jämför</button></form>
       <div class="heroknappar"><a class="knapp" href="kampanjer.html">Se kampanjerna</a><a class="knapp ljus" href="alla-bilar.html">Jämför alla bilar</a></div>
       <div class="trust" id="trust"></div>
     </div>
@@ -50,12 +51,37 @@
   </section>
   <section class="block">
     <div class="wrap">
-      <h2>Hitta rätt bil snabbare</h2>
+      <h2>Vad letar du efter?</h2>
+      <div class="genvagar katkort">
+        <a href="privatleasing-elbil.html"><b>⚡ Elbil →</b><span>Alla elbilar, billigast först.</span></a>
+        <a href="privatleasing-suv.html"><b>SUV →</b><span>Hög sittställning och gott om plats.</span></a>
+        <a href="privatleasing-kombi.html"><b>Kombi →</b><span>Familjebilar med stort bagage.</span></a>
+        <a href="privatleasing-smabil.html"><b>Småbil →</b><span>Billigast att leasa.</span></a>
+        <a href="privatleasing-under-3000.html"><b>Under 3 000 kr/mån →</b><span>Faktisk kostnad, inte bara annonspris.</span></a>
+        <a href="billigaste-privatleasing.html"><b>Billigast just nu →</b><span>Alla bilar efter verklig kostnad.</span></a>
+      </div>
+    </div>
+  </section>
+  <section class="block ljus">
+    <div class="wrap">
+      <h2>Därför kan du lita på jämförelsen</h2>
+      <div class="darfor">
+        <div><b>Hela kostnaden</b><p>Insats, uppläggningsavgift och aviavgift räknas in. Ett lågt annonspris kan inte gömma en dyr start.</p></div>
+        <div><b>Bara riktig privatleasing</b><p>Inga billån, ingen företagsleasing och inga begagnade bilar blandas in.</p></div>
+        <div><b>Vi gissar aldrig</b><p>Saknas en uppgift hos säljaren står det "fråga handlaren" – inte ett påhittat värde.</p></div>
+        <div><b>Ingen köper sig en plats</b><p>Ordningen bestäms bara av priset. Annonslänkar är alltid märkta.</p></div>
+      </div>
+      <p style="margin:16px 0 0"><a href="sa-jamfor-vi.html">Så jämför vi →</a></p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <h2>Verktyg som hjälper dig välja</h2>
       <div class="genvagar">
-        <a href="alla-bilar.html"><b>Alla bilar →</b><span>Filtrera på pris, märke och drivmedel.</span></a>
-        <a href="kampanjer.html"><b>Kampanjer →</b><span>Bara erbjudanden med bra eller mycket bra pris.</span></a>
-        <a href="guide.html"><b>Guide →</b><span>Så funkar privatleasing och vad som ingår.</span></a>
-        <a href="fragor.html"><b>Frågor &amp; svar →</b><span>Övermil, ränta, försäkring och mer.</span></a>
+        <a href="jamfor-bilar.html"><b>Jämför sida vid sida →</b><span>Ställ två till fyra bilar bredvid varandra.</span></a>
+        <a href="rakna.html"><b>Räkna på hela kostnaden →</b><span>Med försäkring, vinterhjul och övermil.</span></a>
+        <a href="rakna.html#kopa"><b>Leasa eller köpa? →</b><span>Se vad som blir billigast för dig.</span></a>
+        <a href="guide.html#checklista"><b>Checklista →</b><span>Det här ska du kolla innan du skriver på.</span></a>
       </div>
     </div>
   </section>
@@ -109,7 +135,8 @@
   <footer class="sidfot">
     <div class="wrap fotrad">
       <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
-      <div><b>Information</b><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
       <div><b>Företag</b><span id="fotforetag"></span></div>
     </div>
   </footer>
@@ -119,12 +146,13 @@
       <ul id="kallor"></ul>
     </details>
   </section>
-  <footer>Jämföra Privatleasing · priser insamlade november 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+  <footer>Jämföra Privatleasing · priser kontrollerade 11 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
   <script src="foretag.js"></script>
   <script src="konfig.js"></script>
   <script src="affiliate.js"></script>
   <script src="bildkalla.js"></script>
+  <script src="prishistorik.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

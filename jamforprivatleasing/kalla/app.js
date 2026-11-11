@@ -1109,6 +1109,13 @@
     // ---------- Modeller: samma bil hos olika handlare jämförs på en egen sida ----------
     // Nyckel = bildnamnet (foto). Namnet är modellens namn utan utrustningsnivå. build.py läser raden nedan.
     const MODELLNAMN = {"a3":"A3 Sportback","a3sedan":"A3 Sedan","a5":"A5","a5avant":"A5 Avant","aygox":"Aygo X","bayon":"Bayon","bmw120":"1-serie","born":"Born","bz4x":"bZ4X","bz4xt":"bZ4X Touring","chr":"C-HR","cla":"CLA","clasb":"CLA Shooting Brake","corollacross":"Corolla Cross","corollats":"Corolla Touring Sports","cupraleon":"Leon Sportstourer","ec40":"EC40","eclass":"E-Klass","elroq":"Elroq","enyaq":"Enyaq","enyaqc":"Enyaq Coupé","epiq":"Epiq","ev2":"EV2","ev3":"EV3","ev4":"EV4","ev5":"EV5","ex30":"EX30","ex30cc":"EX30 Cross Country","ex40":"EX40","ex60":"EX60","fabia":"Fabia","formentor":"Formentor","glb":"GLB","glc":"GLC","golf":"Golf","golfsc":"Golf Sportscombi","i20":"i20","ibiza":"Ibiza","id3":"ID.3","id4":"ID.4","id7":"ID.7","id7t":"ID.7 Tourer","idcross":"ID.Cross","idpolo":"ID.Polo","idtiguan":"ID.Tiguan","ix2":"iX2","juke":"Juke","k4sw":"K4 Sportswagon","kamiq":"Kamiq","karoq":"Karoq","kodiaq":"Kodiaq","kona":"Kona","leon":"Leon","m3":"Model 3","mazda6e":"6e","mg4":"MG4","micra":"Micra","my":"Model Y","octaviac":"Octavia Combi","p2008":"2008","p3008":"3008","p5008":"5008","passat":"Passat","pe2008":"e-2008","peaq":"Peaq","picanto":"Picanto","pol4":"4","polo":"Polo","q4":"Q4 e-tron","q6":"Q6 e-tron","qashqai":"Qashqai","r5":"5 E-Tech","rav4":"RAV4","raval":"Raval","sandero":"Sandero","seal6":"Seal 6","seltos":"Seltos","sorento":"Sorento","sportage":"Sportage","stonic":"Stonic","superb":"Superb Combi","taigo":"Taigo","tavascan":"Tavascan","tayron":"Tayron","terramar":"Terramar","tiguan":"Tiguan","troc":"T-Roc","tucson":"Tucson","v60":"V60","xc60":"XC60","xc90":"XC90","yaris":"Yaris","yariscross":"Yaris Cross"};
+    // Karosstyp per modell (nyckel = bildnamnet). Används av kategorisidorna (SUV, kombi, småbil).
+    const KAROSS = {};
+    const _kar = (typ, lista) => lista.split(" ").forEach(k => KAROSS[k] = typ);
+    _kar("SUV", "bayon bz4x bz4xt chr corollacross ec40 elroq enyaq enyaqc epiq ev2 ev3 ev5 ex30 ex30cc ex40 ex60 formentor glb glc id4 idcross idtiguan ix2 juke kamiq karoq kodiaq kona my p2008 p3008 p5008 pe2008 peaq pol4 q4 q6 qashqai rav4 seltos sorento sportage stonic taigo tavascan tayron terramar tiguan troc tucson xc60 xc90 yariscross");
+    _kar("Kombi", "a5avant clasb corollats cupraleon golfsc id7t k4sw octaviac passat superb v60");
+    _kar("Småbil", "aygox fabia i20 ibiza idpolo micra picanto polo r5 raval sandero yaris");
+    _kar("Halvkombi/sedan", "a3 a3sedan a5 bmw120 born cla eclass ev4 golf id3 id7 leon m3 mazda6e mg4 seal6");
     // Län per ort, för regionknapparna i jämförelsen
     const LAN = { "Stockholm": "Stockholm", "Hammarby Sjöstad": "Stockholm", "Kungsängen": "Stockholm", "Kista": "Stockholm", "Danderyd": "Stockholm", "Segeltorp": "Stockholm",
       "Mölndal": "Västra Götaland", "Göteborg": "Västra Götaland", "Hisings Backa": "Västra Götaland", "Malmö": "Skåne", "Helsingborg": "Skåne", "Ystad": "Skåne",
@@ -1118,6 +1125,7 @@
     BILAR.forEach(b => {
       b.mnamn = MODELLNAMN[b.foto] || b.modell.split(" ")[0];
       b.mkey = slug(b.marke + " " + b.mnamn);
+      b.kaross = KAROSS[b.foto] || "";
       b.msida = "privatleasing-" + b.mkey + ".html";
       b.lan = !b.lokal ? ["Hela Sverige"] : b.orter ? [...new Set(b.orter.map(o => LAN[o] || LANEXTRA[o] || o))] : ["Okänd ort"];
       (MODELLER[b.mkey] = MODELLER[b.mkey] || []).push(b);
@@ -1185,6 +1193,45 @@
     const STEGVIS = 12;            // så många bilar visas åt gången
     let antalVisas = STEGVIS;
 
+    // Förval för listan: kategorisidor sätter data-driv/-tak/-kaross/-sort på <body>, och adressen kan ha ?q=&driv=&max=&kaross=&sort=
+    const _qs = new URLSearchParams(location.search), _bd = document.body.dataset;
+    const FORVAL = { driv: _qs.get("driv") || _bd.driv || "", tak: Number(_qs.get("max") || _bd.tak) || 0, kaross: _qs.get("kaross") || _bd.kaross || "", sort: _qs.get("sort") || _bd.sort || "", q: _qs.get("q") || "" };
+
+    // Jämför bilar sida vid sida: valda modeller sparas bara i webbläsaren (högst 4)
+    const JMF = {
+      lista() { try { return JSON.parse(localStorage.getItem("jp_jamfor") || "[]").filter(k => MODELLER[k]); } catch (e) { return this._m || []; } },
+      spara(l) { this._m = l; try { localStorage.setItem("jp_jamfor", JSON.stringify(l)); } catch (e) {} },
+      har(k) { return this.lista().includes(k); },
+      vaxla(k) { let l = this.lista(); if (l.includes(k)) l = l.filter(x => x !== k); else { if (l.length >= 4) return false; l.push(k); } this.spara(l); return true; }
+    };
+    function jmfFalt() {
+      let f = document.getElementById("jmffalt");
+      const l = JMF.lista();
+      if (!l.length || SIDA === "jamforbilar") { if (f) f.remove(); return; }
+      if (!f) { f = document.createElement("div"); f.id = "jmffalt"; f.className = "jmffalt"; document.body.appendChild(f); }
+      f.innerHTML = `<span><b>${l.length}</b> ${l.length === 1 ? "bil vald" : "bilar valda"}<small>${l.map(k => esc(MODELLER[k][0].mnamn)).join(", ")}</small></span>
+        <button type="button" class="lanklik" id="jmfrensa">Rensa</button><a class="cta" href="jamfor-bilar.html">${l.length > 1 ? "Jämför sida vid sida →" : "Välj en bil till →"}</a>`;
+      document.getElementById("jmfrensa").onclick = () => { JMF.spara([]); jmfFalt(); document.querySelectorAll("[data-jmf]").forEach(uppdJmfKnapp); };
+    }
+    function uppdJmfKnapp(b) {
+      const pa = JMF.har(b.dataset.jmf);
+      b.classList.toggle("vald", pa); b.setAttribute("aria-pressed", pa);
+      b.textContent = pa ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar";
+    }
+    document.addEventListener("click", e => {
+      const b = e.target.closest("button[data-jmf]"); if (!b) return;
+      if (!JMF.vaxla(b.dataset.jmf)) { b.textContent = "Högst 4 bilar – ta bort en först"; return; }
+      uppdJmfKnapp(b); jmfFalt();
+    });
+    // Lägsta faktiska månadskostnad per modell (insats och avgifter utslagna på 36 mån, bara erbjudanden med känd körsträcka)
+    function modellSammanfattning(k) {
+      const g = MODELLER[k] || [];
+      const rader = g.map(bil => { const m = bil.manad + bil.adm + (bil.forsakring || 0), total = m * 36 + bil.start + bil.forhojd; return { ...bil, m, total, eff: Math.round(total / 36), krmil: bil.milokand ? null : total / (bil.mil * 3) }; });
+      const kanda = rader.filter(r => !r.milokand);
+      const bast = [...(kanda.length ? kanda : rader)].sort((a, b) => a.eff - b.eff)[0];
+      return { rader, bast, antal: rader.length, saljare: new Set(rader.map(r => r.kalla.split(/ \(|,/)[0])).size };
+    }
+
     // Hjälpfunktioner: 20865 -> "20 865 kr", 0.384 -> "38 %"
     const kr = n => n.toLocaleString("sv-SE") + " kr";
     const pct = x => Math.round(x * 100) + " %";
@@ -1220,7 +1267,7 @@
         const leasing = m == null ? null : m * 36 + bil.start + bil.forhojd;   // allt du betalar till leasingbolaget
         const total = leasing == null ? null : leasing + (bil.forsakring ?? forsMan) * 36;   // vissa märken har obligatorisk försäkring
         const andel = leasing != null && bil.nypris ? leasing / bil.nypris : null;
-        return { ...bil, m, total, andel, idx: BILAR.indexOf(bil) };
+        return { ...bil, m, total, andel, eff: leasing == null ? null : Math.round(leasing / 36) + (bil.forsakring || 0), idx: BILAR.indexOf(bil) };
       });
 
       // 1b) Topp 5 överst: bästa erbjudandet per populär modell (räknas på alla bilar, oberoende av filtren)
@@ -1233,11 +1280,12 @@
       rader = rader.filter(b =>
         (!drivmedel || drivmedel.value === "alla" || b.drivmedel === drivmedel.value) &&
         (SIDMARKE ? b.marke === SIDMARKE : (!markeSel || markeSel.value === "alla" || b.marke === markeSel.value)) &&
-        (!tak || (b.m != null && b.m <= tak)) &&
+        (!tak || (b.eff != null && !b.milokand && b.eff <= tak)) &&
+        (!FORVAL.kaross || b.kaross === FORVAL.kaross) &&
         (SIDA !== "kampanjer" || (b.andel != null && b.andel < 0.45)) &&
         (!radie || !MINPLATS || !b.orter || avstand(b) <= radie) &&
         (!tillvalIn || tillvalIn.value === "alla" || (tillvalIn.value === "bygg" ? b.tillval === "alla" : b.tillval !== "alla")) &&
-        (b.marke + " " + b.modell).toLowerCase().includes(text)
+        (b.marke + " " + b.mnamn + " " + b.modell).toLowerCase().includes(text)
       );
 
       // 3) Sortera (bilar där något värde saknas hamnar sist)
@@ -1292,12 +1340,13 @@
           </div>
           <div class="price">
             ${b.m != null
-              ? `<small class="fran">${flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div><div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
+              ? `<small class="fran">${flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div>${b.forhojd || b.start || b.forsakring ? `<div class="effpris">= ${kr(b.eff)}/mån med ${[b.forhojd && "insats", b.start && "avgifter", b.forsakring && "obligatorisk försäkring"].filter(Boolean).join(" och ")} inräknat</div>` : ""}<div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
             <div class="kortpiller"><span class="antalerb">${b.antal} ${b.antal === 1 ? "erbjudande" : "erbjudanden"}${b.handlare > 1 ? ` · ${b.handlare} säljare` : ""}</span><span>36 mån</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : (b.m != null ? valdMil : b.mil).toLocaleString("sv-SE") + " mil/år"}</span></div>
             ${flera
               ? `<a class="cta" href="${b.msida}">Jämför ${b.antal} erbjudanden →</a><a class="ext" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till billigaste erbjudandet ↗</a>`
               : `<a class="cta" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till erbjudandet ↗</a><a class="ext" href="${b.msida}">Om ${esc(b.mnamn)} →</a>`}${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
+            <button type="button" class="jmfval ${JMF.har(b.mkey) ? "vald" : ""}" data-jmf="${b.mkey}" aria-pressed="${JMF.har(b.mkey)}">${JMF.har(b.mkey) ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar"}</button>
           </div>
           <div class="tags">
             ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : `<span class="tag">Andel av nypris: –</span>`}
@@ -1767,68 +1816,205 @@
       }).join("");
     }
     if (document.getElementById("topp")) document.getElementById("topp").addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
-    if (document.getElementById("trust")) document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Direkt till erbjudandet</span>`;
+    if (document.getElementById("trust")) document.getElementById("trust").innerHTML = `<span>${BILAR.length} erbjudanden på ${Object.keys(MODELLER).length} modeller</span><span>Kontrollerat ${KONTROLL}</span><span>Bara riktig privatleasing</span><span>Inga betalda placeringar</span>`;
     if (document.getElementById("fotforetag")) document.getElementById("fotforetag").innerHTML = [FORETAG.namn + " (enskild firma)", FORETAG.orgnr && "Org.nr " + FORETAG.orgnr, FORETAG.epost].filter(Boolean).map(esc).join("<br>");
     // ---------- Jämför handlare: alla erbjudanden på en modell, billigast först ----------
     const jamfor = document.getElementById("jamfor");
-    let jmfRegion = "Alla";
+    let jmfRegion = "Alla", jmfMil = 0, jmfFors = 0;
+    try { jmfFors = Number(localStorage.getItem("jp_fors")) || 0; } catch (e) {}
+    const MAN = ["jan", "feb", "mars", "apr", "maj", "juni", "juli", "aug", "sep", "okt", "nov", "dec"];
+    const datumKort = d => { const [, m, dag] = d.split("-"); return Number(dag) + " " + MAN[Number(m) - 1]; };
+    // Prishistorik: lägsta faktiska månadskostnad per dag (prishistorik.js, fylls på av den dagliga kontrollen)
+    function histHtml(k) {
+      const h = (typeof PRISHIST !== "undefined" && PRISHIST[k]) || [];
+      if (h.length < 2) return "";
+      const nu = h[h.length - 1], forr = h[h.length - 2], forst = h[0], lagst = Math.min(...h.map(x => x[1])), hogst = Math.max(...h.map(x => x[1]));
+      let andr = [...h].reverse().find(x => x[1] !== nu[1]);
+      const diff = andr ? nu[1] - andr[1] : 0;
+      const w = 220, hh = 44, n = h.length, sx = i => 4 + i * (w - 8) / Math.max(1, n - 1), sy = v => hogst === lagst ? hh / 2 : 6 + (hogst - v) * (hh - 12) / (hogst - lagst);
+      const linje = h.map((x, i) => (i ? "L" : "M") + sx(i).toFixed(1) + " " + sy(x[1]).toFixed(1)).join(" ");
+      return `<section class="jmfhist"><div><b>Lägsta pris över tid</b>
+        <p>${diff ? `<span class="${diff < 0 ? "ned" : "upp"}">${diff < 0 ? "↓ " + kr(-diff) + " lägre" : "↑ " + kr(diff) + " högre"}</span> än ${datumKort(andr[0])}. ` : `Oförändrat sedan ${datumKort(forst[0])}. `}Lägst ${kr(lagst)}/mån, högst ${kr(hogst)}/mån sedan vi började mäta ${datumKort(forst[0])}.</p></div>
+        <svg viewBox="0 0 ${w} ${hh}" width="${w}" height="${hh}" role="img" aria-label="Kurva över lägsta pris per dag"><path d="${linje}" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${sx(n - 1).toFixed(1)}" cy="${sy(nu[1]).toFixed(1)}" r="3.5" fill="currentColor"/></svg></section>`;
+    }
     function ritaJamfor() {
-      const alla = (MODELLER[document.body.dataset.modell] || []).map(bil => {
-        const m = manadFor(bil, bil.mil) + (bil.forsakring || 0);
-        const total = m * 36 + bil.start + bil.forhojd;
-        return { ...bil, m, total, krmil: bil.milokand ? null : total / (bil.mil * 3), andel: bil.nypris ? (total - (bil.forsakring || 0) * 36) / bil.nypris : null, idx: BILAR.indexOf(bil), avst: avstand(bil) };
+      const mk = document.body.dataset.modell, grund = MODELLER[mk] || [];
+      if (!grund.length) { jamfor.innerHTML = `<p>Just nu finns inga erbjudanden på den här modellen. <a href="alla-bilar.html">Se alla bilar →</a></p>`; return; }
+      // Körsträckor som går att välja: de som minst ett erbjudande har pris för
+      const milval = [...new Set(grund.filter(b => !b.milokand).flatMap(b => [b.mil, ...(b.milharledd ? [] : Object.keys(b.mer || {}).map(Number))]))].sort((a, b) => a - b);
+      if (!milval.includes(jmfMil)) jmfMil = 0;
+      const alla = grund.map(bil => {
+        const vald = jmfMil || bil.mil;
+        const pm = bil.milokand ? (jmfMil ? null : bil.manad + bil.adm) : (bil.milharledd && vald > bil.mil ? null : manadFor(bil, vald));   // härledd körsträcka: vi lånar inte märkets tillägg för fler mil   // null = säljaren har inget pris för den körsträckan
+        const fors = bil.forsakring || jmfFors;
+        const m = pm == null ? null : pm + (bil.forsakring || 0);
+        const total = m == null ? null : m * 36 + bil.start + bil.forhojd;
+        const medfors = total == null ? null : total + (bil.forsakring ? 0 : jmfFors * 36);
+        const ingar = bil.milokand ? null : Math.max(bil.mil, vald);
+        return { ...bil, m, total, medfors, ingar, eff: medfors == null ? null : medfors / 36, krmil: total == null || bil.milokand ? null : medfors / (ingar * 3),
+          andel: total != null && bil.nypris && !jmfMil ? (total - (bil.forsakring || 0) * 36) / bil.nypris : null, avst: avstand(bil) };
       });
-      if (!alla.length) { jamfor.innerHTML = `<p>Just nu finns inga erbjudanden på den här modellen. <a href="alla-bilar.html">Se alla bilar →</a></p>`; return; }
-      alla.forEach(r => r.eff = r.total / 36);   // månadskostnad med ev. insats/förhöjd hyra utslagen på 36 mån
-      const kanda = alla.filter(r => !r.milokand);
-      const b0 = alla[0], lagst = Math.min(...(kanda.length ? kanda : alla).map(r => r.eff));
+      const kanda = alla.filter(r => !r.milokand && r.eff != null);
+      const b0 = alla[0], lagst = kanda.length ? Math.min(...kanda.map(r => r.eff)) : null;
       const lan = {}; alla.forEach(r => r.lan.forEach(l => lan[l] = (lan[l] || 0) + 1));
       const lankn = Object.keys(lan).sort((a, b) => (a === "Hela Sverige" ? -1 : b === "Hela Sverige" ? 1 : a.localeCompare(b, "sv")));
       if (jmfRegion !== "Alla" && !lan[jmfRegion]) jmfRegion = "Alla";
       const sortSel = document.getElementById("jmfsort"), s = sortSel ? sortSel.value : "manad";
       // Väljer man ett län visas även erbjudanden som gäller i hela landet – de går att hämta där också
       let rader = alla.filter(r => jmfRegion === "Alla" || r.lan.includes(jmfRegion) || (jmfRegion !== "Hela Sverige" && r.lan[0] === "Hela Sverige"));
-      const big = Number.MAX_SAFE_INTEGER;
-      rader.sort((a, b) => s === "krmil" ? (a.krmil ?? big) - (b.krmil ?? big) : s === "total" ? a.total - b.total : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || a.eff - b.eff : a.eff - b.eff || a.m - b.m);
+      const big = Number.MAX_SAFE_INTEGER, e = r => r.eff ?? big;
+      rader.sort((a, b) => s === "krmil" ? (a.krmil ?? big) - (b.krmil ?? big) : s === "total" ? (a.medfors ?? big) - (b.medfors ?? big) : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || e(a) - e(b) : e(a) - e(b) || (a.m ?? big) - (b.m ?? big));
       const tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const milTxt = n => n.toLocaleString("sv-SE") + " mil/år";
+      const bast = kanda.length ? [...kanda].sort((a, b) => a.eff - b.eff)[0] : null;
       jamfor.innerHTML = `
         <h2 class="jmfrub">${alla.length} ${alla.length === 1 ? "erbjudande" : "erbjudanden"} på ${esc(b0.mnamn)}</h2>
+        <div class="jmfdin">
+          ${milval.length > 1 ? `<div><label>Hur långt kör du per år?</label><div class="chips" id="jmfmil"><button type="button" data-mil="0" class="${!jmfMil ? "vald" : ""}">Som i erbjudandet</button>${milval.map(v => `<button type="button" data-mil="${v}" class="${jmfMil === v ? "vald" : ""}">${milTxt(v)}</button>`).join("")}</div></div>` : ""}
+          <div><label for="jmffors">Din bilförsäkring, kr/mån <small>(valfritt – räknas in där den inte redan ingår)</small></label><input id="jmffors" type="number" inputmode="numeric" min="0" step="50" value="${jmfFors || ""}" placeholder="t.ex. 600"></div>
+        </div>
         <div class="jmfkontroll">
           <select id="jmfsort" aria-label="Sortera erbjudandena">
-            <option value="manad">Lägsta pris per månad (insats inräknad)</option><option value="total">Lägsta totalkostnad</option><option value="krmil">Lägsta pris per mil</option>${MINPLATS ? `<option value="nara">Närmast mig</option>` : ""}
+            <option value="manad">Lägsta faktiska månadskostnad</option><option value="total">Lägsta totalkostnad</option><option value="krmil">Lägsta pris per mil</option>${MINPLATS ? `<option value="nara">Närmast mig</option>` : ""}
           </select>
           ${lankn.length > 1 ? `<div class="jmfregion"><span>Region:</span><button type="button" data-lan="Alla" class="${jmfRegion === "Alla" ? "vald" : ""}">Alla</button>${lankn.map(l => `<button type="button" data-lan="${esc(l)}" class="${jmfRegion === l ? "vald" : ""}">${esc(l)} <i>${lan[l]}</i></button>`).join("")}</div>` : ""}
         </div>
         ${jmfRegion !== "Alla" && jmfRegion !== "Hela Sverige" && rader.some(r => r.lan[0] === "Hela Sverige") ? `<p class="jmfnot">Erbjudanden som gäller i hela Sverige visas också – de hämtas hos närmaste märkeshandlare.</p>` : ""}
         <div class="jmflista">${rader.map(r => {
-          const billigast = r.eff === lagst && !r.milokand, handlare = esc(r.kalla.split(/ \(|,/)[0]);
+          const billigast = lagst != null && r.eff === lagst && !r.milokand, handlare = esc(r.kalla.split(/ \(|,/)[0]);
           const plats = !r.lokal ? "Hela Sverige – hämtas hos närmaste märkeshandlare" : r.orter ? r.orter.slice(0, 3).join(", ") + (r.orter.length > 3 ? " m.fl." : "") + (r.lan.length === 1 && !r.orter.includes(r.lan[0]) ? ", " + r.lan[0] : "") : "Lokal handlare – fråga var bilen hämtas";
+          const bt = betyg(r.andel);
+          const extra = r.forhojd || r.start || r.adm || r.forsakring || (jmfFors && r.total != null);
+          const milrad = r.milokand ? `<b class="jmfokand">Körsträcka: fråga handlaren</b>` : milTxt(r.ingar) + (r.milharledd ? " (som märkets kampanj)" : "") + (jmfMil && r.ingar > jmfMil ? ` – mer än du behöver` : "");
           return `<article class="jmfkort ${billigast ? "bast" : ""}">
             <div class="jmftopp">
               <span class="jmfbadge ${billigast ? "bast" : ""}">${billigast ? "Billigast" : r.typ === "Märket" ? "Märkets pris" : "Handlare"}</span>
-              <div class="jmfpris"><b>${kr(r.m)}</b><small>/mån</small><span>${r.krmil == null ? "kr/mil: –" : tal(r.krmil) + " kr/mil"}</span>${r.forhojd ? `<span class="jmfins">+ ${kr(r.forhojd)} vid start</span>` : ""}</div>
+              <div class="jmfpris">${r.m == null ? `<b class="jmfsaknas">Pris saknas</b><span>för ${milTxt(jmfMil)} – fråga säljaren</span>` : `<b>${kr(r.m)}</b><small>/mån</small><span>${r.krmil == null ? "kr/mil: –" : tal(r.krmil) + " kr/mil"}</span>${r.forhojd ? `<span class="jmfins">+ ${kr(r.forhojd)} vid start</span>` : ""}`}</div>
             </div>
             <h3>${esc(r.marke)} ${esc(r.modell)}</h3>
             <p class="jmfhandlare">${handlare}</p>
             <p class="jmfplats">📍 ${esc(plats)}${r.avst != null ? ` · ${tillMil(r.avst)} mil från dig` : ""}</p>
-            <p class="jmfinfo">36 mån · ${r.milokand ? `<b class="jmfokand">Körsträcka: fråga handlaren</b>` : r.mil.toLocaleString("sv-SE") + " mil/år" + (r.milharledd ? " (som märkets kampanj)" : "")} · ${esc(r.drivmedel)} · ${kr(r.total)} totalt${r.forhojd ? ` · ${kr(r.forhojd)} vid start` : ""}${r.forsakring ? " · försäkring inräknad" : ""}</p>
+            <p class="jmfinfo">36 mån · ${milrad} · ${esc(r.drivmedel)}</p>
+            ${r.total != null && extra ? `<p class="jmfeff"><b>${kr(Math.round(r.eff))}/mån</b> i faktisk kostnad – ${[r.forhojd && "insats", (r.start || r.adm) && "avgifter", (r.forsakring || jmfFors) && "försäkring"].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " och $1")} inräknat</p>` : ""}
+            <div class="jmfchips">
+              <span class="${r.service ? "ja" : r.service === false ? "nej" : ""}">${r.service ? "✓ Service ingår" : r.service === false ? "✗ Service ingår inte" : "Service: fråga säljaren"}</span>
+              <span class="${r.forsakring ? "ja" : ""}">${r.forsakring ? "✓ Försäkring ingår" : "Försäkring tillkommer"}</span>
+              ${r.forhojd ? `<span class="nej">${kr(r.forhojd)} vid start</span>` : `<span class="ja">✓ 0 kr vid start</span>`}
+              ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(r.andel)} av nypris</span>` : ""}
+            </div>
+            <details class="jmfmerinfo"><summary>Hela kostnaden och villkor</summary>
+              <table>
+                <tr><td>Månadshyra${jmfMil && !r.milokand && r.m != null && r.ingar === jmfMil && jmfMil > r.mil ? ` (${milTxt(jmfMil)})` : ""}</td><td>${r.m == null ? "–" : kr(r.m - r.adm - (r.forsakring || 0)) + " × 36"}</td></tr>
+                ${r.adm ? `<tr><td>Avi-/administrationsavgift</td><td>${kr(r.adm)} × 36</td></tr>` : ""}
+                ${r.forsakring ? `<tr><td>Obligatorisk försäkring</td><td>${kr(r.forsakring)} × 36</td></tr>` : ""}
+                ${r.start ? `<tr><td>Uppläggningsavgift</td><td>${kr(r.start)}</td></tr>` : ""}
+                ${r.forhojd ? `<tr><td>Insats / förhöjd första hyra</td><td>${kr(r.forhojd)}</td></tr>` : ""}
+                ${!r.forsakring && jmfFors && r.total != null ? `<tr><td>Din försäkring</td><td>${kr(jmfFors)} × 36</td></tr>` : ""}
+                <tr class="sum"><td>Totalt på 36 månader</td><td>${r.medfors == null ? "–" : kr(r.medfors)}</td></tr>
+                ${r.nypris ? `<tr><td>Bilens nypris</td><td>${kr(r.nypris)}</td></tr>` : ""}
+              </table>
+              ${r.mer && !r.milokand && !r.milharledd ? `<p>Fler mil: ${Object.entries(r.mer).map(([k, v]) => `${milTxt(Number(k))} +${kr(v)}/mån`).join(" · ")}</p>` : ""}
+              ${r.not ? `<p><b>Obs:</b> ${r.not}</p>` : ""}
+              <p class="jmftillk">Tillkommer normalt: ${r.forsakring ? "" : "helförsäkring, "}vinterhjul, fordonsskatt (om inget annat står), drivmedel/el och eventuella övermil. Kontrollera alltid hos säljaren.</p>
+              ${r.nypris && r.total != null ? `<p><a href="rakna.html?pris=${r.nypris}&leasing=${r.m}&start=${r.start + r.forhojd}&bil=${encodeURIComponent(r.marke + " " + r.mnamn)}#kopa">Räkna: leasa eller köpa den här bilen? →</a></p>` : ""}
+            </details>
             <div class="jmfknappar">
               <a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet →</a>${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
             </div>
           </article>`;
         }).join("") || "<p>Inga erbjudanden i den regionen.</p>"}</div>
-        <p class="jmffot">${rader.some(r => r.milokand) ? "Står körsträckan inte i handlarens annons visar vi den inte och räknar inget pris per mil – fråga handlaren. Sådana erbjudanden kan inte bli märkta Billigast. " : ""}Priserna gäller 36 månader med 0 kr i kontantinsats om inget annat anges. Avi- och uppläggningsavgifter är inräknade i månadspris, totalkostnad och kr/mil. Kontrollerat ${KONTROLL}.</p>`;
+        <p class="jmffot">${rader.some(r => r.milokand) ? "Står körsträckan inte i handlarens annons visar vi den inte och räknar inget pris per mil – fråga handlaren. Sådana erbjudanden kan inte bli märkta Billigast. " : ""}Priserna gäller 36 månader. Avi- och uppläggningsavgifter är inräknade i totalkostnad och kr/mil. Kontrollerat ${KONTROLL}.</p>
+        ${histHtml(mk)}
+        <div class="jmfverktyg"><button type="button" class="jmfval ${JMF.har(mk) ? "vald" : ""}" data-jmf="${mk}" aria-pressed="${JMF.har(mk)}">${JMF.har(mk) ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar"}</button><a href="rakna.html${bast ? `?leasing=${bast.m}&start=${bast.start + bast.forhojd}&ingar=${bast.ingar}&bil=${encodeURIComponent(b0.marke + " " + b0.mnamn)}` : ""}">Räkna på hela kostnaden →</a></div>`;
       document.getElementById("jmfsort").value = s;
     }
     if (jamfor) {
       ritaJamfor();
-      jamfor.addEventListener("change", e => { if (e.target.id === "jmfsort") ritaJamfor(); });
+      jamfor.addEventListener("change", e => {
+        if (e.target.id === "jmfsort") ritaJamfor();
+        if (e.target.id === "jmffors") { jmfFors = Math.max(0, Number(e.target.value) || 0); try { localStorage.setItem("jp_fors", String(jmfFors)); } catch (err) {} ritaJamfor(); }
+      });
       jamfor.addEventListener("click", e => {
         const l = e.target.closest("button[data-lan]"); if (l) { jmfRegion = l.dataset.lan; ritaJamfor(); return; }
-        const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]);
+        const m = e.target.closest("#jmfmil button[data-mil]"); if (m) { jmfMil = Number(m.dataset.mil); ritaJamfor(); }
       });
       const bild = document.getElementById("jmfbild"), b0 = (MODELLER[document.body.dataset.modell] || [])[0];
       if (bild && b0 && b0.foto) bild.innerHTML = `<img src="${bildUrl(b0, "", 900)}" alt="${esc(b0.marke)} ${esc(b0.mnamn)}" width="960" height="600">`;
+    }
+
+    // ---------- Jämför bilar sida vid sida (jamfor-bilar.html) ----------
+    const sidavid = document.getElementById("sidavid");
+    function ritaSidavid() {
+      const q = new URLSearchParams(location.search).get("m");
+      if (q) JMF.spara(q.split(",").filter(k => MODELLER[k]).slice(0, 4));
+      const l = JMF.lista(), tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const alla = Object.keys(MODELLER).sort((a, b) => (MODELLER[a][0].marke + MODELLER[a][0].mnamn).localeCompare(MODELLER[b][0].marke + MODELLER[b][0].mnamn, "sv"));
+      const valj = l.length < 4 ? `<div class="svvalj"><label for="svny">Lägg till bil</label><select id="svny"><option value="">Välj modell…</option>${alla.filter(k => !l.includes(k)).map(k => `<option value="${k}">${esc(MODELLER[k][0].marke)} ${esc(MODELLER[k][0].mnamn)}</option>`).join("")}</select></div>` : "";
+      if (!l.length) { sidavid.innerHTML = `<p class="svtom">Du har inte valt några bilar än. Välj två till fyra modeller här, eller tryck på <b>＋ Jämför med andra bilar</b> på ett bilkort.</p>${valj}`; return; }
+      const d = l.map(k => ({ k, ...modellSammanfattning(k) }));
+      const minst = f => Math.min(...d.map(f).filter(v => v != null));
+      const lEff = minst(x => x.bast.eff), lKrmil = minst(x => x.bast.krmil), lStart = minst(x => x.bast.forhojd + x.bast.start);
+      const rad = (rub, f, bastF) => `<tr><th scope="row">${rub}</th>${d.map(x => { const v = f(x); return `<td class="${bastF && bastF(x) && d.length > 1 ? "bast" : ""}">${v}</td>`; }).join("")}</tr>`;
+      sidavid.innerHTML = `
+        <div class="svrull"><table class="svtab">
+          <thead><tr><td></td>${d.map(x => `<th scope="col"><a href="${x.bast.msida}">${x.bast.foto ? `<img src="${bildUrl(x.bast, "", 600)}" alt="" loading="lazy">` : ""}<span>${esc(x.bast.marke)}</span><b>${esc(x.bast.mnamn)}</b></a><button type="button" class="lanklik" data-bort="${x.k}">Ta bort</button></th>`).join("")}</tr></thead>
+          <tbody>
+            ${rad("Faktisk kostnad per månad", x => `<b>${kr(x.bast.eff)}</b>`, x => x.bast.eff === lEff)}
+            ${rad("Månadshyra", x => kr(x.bast.m))}
+            ${rad("Betalas vid start", x => kr(x.bast.forhojd + x.bast.start), x => x.bast.forhojd + x.bast.start === lStart)}
+            ${rad("Totalt på 36 månader", x => kr(x.bast.total), x => x.bast.eff === lEff)}
+            ${rad("Körsträcka som ingår", x => x.bast.milokand ? "Fråga handlaren" : x.bast.mil.toLocaleString("sv-SE") + " mil/år")}
+            ${rad("Pris per mil", x => x.bast.krmil == null ? "–" : tal(x.bast.krmil) + " kr", x => x.bast.krmil != null && x.bast.krmil === lKrmil)}
+            ${rad("Drivmedel", x => esc(x.bast.drivmedel))}
+            ${rad("Karosstyp", x => esc(x.bast.kaross || "–"))}
+            ${rad("Service", x => x.bast.service ? "Ingår" : x.bast.service === false ? "Ingår inte" : "Fråga säljaren")}
+            ${rad("Försäkring", x => x.bast.forsakring ? "Ingår" : "Tillkommer")}
+            ${rad("Nypris", x => x.bast.nypris ? kr(x.bast.nypris) : "–")}
+            ${rad("Billigaste säljare", x => esc(x.bast.kalla.split(/ \(|,/)[0]))}
+            ${rad("Erbjudanden hos oss", x => `${x.antal} st från ${x.saljare} ${x.saljare === 1 ? "säljare" : "säljare"}`)}
+            ${rad("", x => `<a class="cta" href="${x.bast.msida}">Se ${x.antal > 1 ? "alla " + x.antal : "erbjudandet"} →</a>`)}
+          </tbody></table></div>
+        <p class="jmffot">Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell. Faktisk kostnad = allt du betalar till säljaren på 36 månader (hyra, insats och avgifter) delat på 36. Grönt = bäst i raden. Kontrollerat ${KONTROLL}.</p>
+        ${valj}
+        <p class="svdela"><button type="button" class="lanklik" id="svlank">Kopiera länk till jämförelsen</button></p>`;
+    }
+    if (sidavid) {
+      ritaSidavid();
+      sidavid.addEventListener("change", e => { if (e.target.id === "svny" && e.target.value) { JMF.vaxla(e.target.value); history.replaceState(null, "", location.pathname); ritaSidavid(); } });
+      sidavid.addEventListener("click", e => {
+        const b = e.target.closest("button[data-bort]"); if (b) { JMF.vaxla(b.dataset.bort); history.replaceState(null, "", location.pathname); ritaSidavid(); return; }
+        if (e.target.id === "svlank") { const u = location.origin + location.pathname + "?m=" + JMF.lista().join(","); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => e.target.textContent = "✓ Länken är kopierad", () => { history.replaceState(null, "", "?m=" + JMF.lista().join(",")); e.target.textContent = "Länken står nu i adressfältet"; }); }
+      });
+    }
+
+    // ---------- Räkna (rakna.html): hela kostnaden + leasa eller köpa ----------
+    const rakna = document.getElementById("rakna");
+    if (rakna) {
+      const q = new URLSearchParams(location.search), v = id => Math.max(0, Number(document.getElementById(id).value) || 0), satt = (id, x) => { if (x != null && x !== "" && document.getElementById(id)) document.getElementById(id).value = x; };
+      satt("rLeasing", q.get("leasing")); satt("rStart", q.get("start")); satt("rIngar", q.get("ingar")); satt("kLeasing", q.get("leasing")); satt("kStart", q.get("start")); satt("kPris", q.get("pris"));
+      if (q.get("bil")) document.querySelectorAll(".raknabil").forEach(x => x.textContent = "Förifyllt med " + q.get("bil") + ". ");
+      const r1 = () => {
+        const man = v("rLeasing"), start = v("rStart"), fors = v("rFors"), hjul = v("rHjul"), skatt = v("rSkatt"), ingar = v("rIngar"), kor = v("rKor"), over = v("rOver");
+        if (!man) { document.getElementById("rSvar").innerHTML = "<p>Fyll i månadshyran, så räknar vi.</p>"; return; }
+        const overmil = Math.max(0, kor - ingar) * 3, overkost = overmil * over;
+        const tot = man * 36 + start + fors * 36 + hjul + skatt * 3 + overkost, mil = (kor || ingar) * 3;
+        document.getElementById("rSvar").innerHTML = `<div class="rstor"><small>Faktisk kostnad</small><b>${kr(Math.round(tot / 36))}/mån</b><span>${kr(Math.round(tot))} på 36 månader${mil ? " · " + (tot / mil).toLocaleString("sv-SE", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + " kr/mil" : ""}</span></div>
+          <table><tr><td>Månadshyra × 36</td><td>${kr(man * 36)}</td></tr><tr><td>Vid start (insats och avgifter)</td><td>${kr(start)}</td></tr><tr><td>Försäkring × 36</td><td>${kr(fors * 36)}</td></tr><tr><td>Vinterhjul</td><td>${kr(hjul)}</td></tr><tr><td>Fordonsskatt × 3 år</td><td>${kr(skatt * 3)}</td></tr><tr><td>Övermil (${overmil.toLocaleString("sv-SE")} mil)</td><td>${kr(overkost)}</td></tr></table>
+          ${overmil && !over ? `<p class="rvarn">Du kör ${overmil.toLocaleString("sv-SE")} mil mer än avtalet tillåter på tre år. Fyll i säljarens pris per övermil – eller välj en högre körsträcka från början, det är oftast billigare.</p>` : ""}
+          <p class="rnot">Drivmedel eller el, parkering, tvätt och eventuella skador vid återlämning ingår inte i beräkningen.</p>`;
+      };
+      const r2 = () => {
+        const pris = v("kPris"), insats = Math.min(v("kInsats"), pris), ranta = v("kRanta") / 100, rest = v("kRest") / 100, serv = v("kService"), man = v("kLeasing"), start = v("kStart");
+        if (!pris || !man) { document.getElementById("kSvar").innerHTML = "<p>Fyll i bilens pris och leasingens månadshyra, så jämför vi.</p>"; return; }
+        const lan = pris - insats, rantekost = lan * ranta / 12 * 37 / 2, vardem = pris * (1 - rest);
+        const kopa = vardem + rantekost + serv * 3, leasa = man * 36 + start, diff = kopa - leasa;
+        document.getElementById("kSvar").innerHTML = `<div class="rtva"><div class="${diff > 0 ? "vinn" : ""}"><small>Leasa i 3 år</small><b>${kr(Math.round(leasa))}</b><span>${kr(Math.round(leasa / 36))}/mån</span></div><div class="${diff < 0 ? "vinn" : ""}"><small>Köpa och sälja efter 3 år</small><b>${kr(Math.round(kopa))}</b><span>${kr(Math.round(kopa / 36))}/mån</span></div></div>
+          <p class="rslut">${Math.abs(diff) < 1000 ? "Det går ungefär jämnt ut." : diff > 0 ? `<b>Leasing blir ${kr(Math.round(diff))} billigare</b> med dina siffror.` : `<b>Köp blir ${kr(Math.round(-diff))} billigare</b> med dina siffror.`}</p>
+          <table><tr><td>Värdeminskning (${Math.round((1 - rest) * 100)} % av priset)</td><td>${kr(Math.round(vardem))}</td></tr><tr><td>Ränta på lånet (${kr(lan)}, rak amortering 36 mån)</td><td>${kr(Math.round(rantekost))}</td></tr><tr><td>Service × 3 år</td><td>${kr(serv * 3)}</td></tr></table>
+          <p class="rnot">Försäkring, skatt, däck och drivmedel kostar ungefär lika mycket i båda fallen och är därför inte med. Restvärdet är den stora osäkerheten: ingen vet vad bilen är värd om tre år. Prova gärna ett lägre restvärde och se hur svaret ändras – den risken slipper du när du leasar.</p>`;
+      };
+      rakna.addEventListener("input", () => { r1(); r2(); });
+      r1(); r2();
     }
 
     // Kör rita() när något ändras, och en gång direkt när sidan laddas.
@@ -1902,7 +2088,30 @@
     document.querySelectorAll("[data-antal]").forEach(el => {
       el.textContent = SIDMARKE ? BILAR.filter(b => b.marke === SIDMARKE).length : BILAR.length;
     });
+    // Förval från kategorisidan eller adressen
+    if (lista) {
+      if (FORVAL.q && sok) sok.value = FORVAL.q;
+      if (FORVAL.driv && drivmedel) { drivmedel.value = FORVAL.driv; if (chips) chips.querySelectorAll("button").forEach(x => x.classList.toggle("vald", x.dataset.v === FORVAL.driv)); }
+      if (FORVAL.tak && maxpris) { if (![...maxpris.options].some(o => Number(o.value) === FORVAL.tak)) maxpris.add(new Option(kr(FORVAL.tak), FORVAL.tak)); maxpris.value = FORVAL.tak; }
+      if (FORVAL.sort && sortera) sortera.value = FORVAL.sort;
+    }
     rita();
+    jmfFalt();
+    // Sök direkt från startsidan
+    const startSok = document.getElementById("startsok");
+    if (startSok) {
+      const dl = document.getElementById("modellforslag");
+      if (dl) dl.innerHTML = Object.values(MODELLER).map(g => `<option value="${esc(g[0].marke + " " + g[0].mnamn)}">`).join("");
+      startSok.addEventListener("submit", e => {
+        e.preventDefault();
+        const t = startSok.q.value.trim(); if (!t) { location.href = "alla-bilar.html"; return; }
+        const k = Object.keys(MODELLER).find(k => (MODELLER[k][0].marke + " " + MODELLER[k][0].mnamn).toLowerCase() === t.toLowerCase());
+        location.href = k ? MODELLER[k][0].msida : "alla-bilar.html?q=" + encodeURIComponent(t);
+      });
+    }
+    // Siffror i löptext: <span data-tal="modeller|erbjudanden|saljare|kontroll">
+    const _tal = { modeller: Object.keys(MODELLER).length, erbjudanden: BILAR.length, saljare: new Set(BILAR.map(b => b.kalla.split(/ \(|,/)[0])).size, kontroll: KONTROLL };
+    document.querySelectorAll("[data-tal]").forEach(el => { if (_tal[el.dataset.tal] != null) el.textContent = _tal[el.dataset.tal]; });
   
     // "Visa fler frågor"
     if (document.getElementById("visaFler")) document.getElementById("visaFler").onclick = e => { document.getElementById("fragor").classList.add("visaalla"); e.target.remove(); };

@@ -1,84 +1,136 @@
 {
- "Volvo": {
-  "n": 8,
-  "min": 3795,
-  "mod": "EX30 Single Motor Plus",
-  "el": 0,
-  "driv": [
-   "El",
-   "Laddhybrid"
-  ]
- },
- "Polestar": {
-  "n": 1,
-  "min": 7295,
-  "mod": "4 coupé Rear Motor Business edition Pilot",
-  "el": 0,
-  "driv": [
-   "El"
-  ]
- },
  "Audi": {
-  "n": 12,
+  "n": 37,
   "min": 2795,
-  "mod": "A3 Sportback 35 TFSI S tronic Proline",
-  "el": 0,
-  "driv": [
-   "Laddhybrid",
-   "El",
-   "Bensin"
-  ]
- },
- "Cupra": {
-  "n": 15,
-  "min": 2495,
-  "mod": "Formentor eTSI 150 DSG",
-  "el": 0,
+  "mod": "A3 Sportback",
   "driv": [
    "Bensin",
    "Laddhybrid",
+   "El"
+  ]
+ },
+ "BMW": {
+  "n": 3,
+  "min": 3690,
+  "mod": "1-serie",
+  "driv": [
+   "Bensin",
+   "El"
+  ]
+ },
+ "BYD": {
+  "n": 2,
+  "min": 4511,
+  "mod": "Seal 6",
+  "driv": [
+   "Laddhybrid"
+  ]
+ },
+ "Cupra": {
+  "n": 28,
+  "min": 2495,
+  "mod": "Formentor",
+  "driv": [
+   "El",
+   "Bensin",
+   "Laddhybrid"
+  ]
+ },
+ "Hyundai": {
+  "n": 9,
+  "min": 2395,
+  "mod": "i20",
+  "driv": [
+   "Hybrid",
+   "Laddhybrid",
+   "Bensin"
+  ]
+ },
+ "Kia": {
+  "n": 25,
+  "min": 2996,
+  "mod": "K4 Sportswagon",
+  "driv": [
+   "El",
+   "Bensin",
+   "Hybrid",
+   "Laddhybrid"
+  ]
+ },
+ "Nissan": {
+  "n": 9,
+  "min": 2995,
+  "mod": "Juke",
+  "driv": [
+   "Bensin",
+   "Hybrid",
+   "El"
+  ]
+ },
+ "Peugeot": {
+  "n": 13,
+  "min": 2699,
+  "mod": "2008",
+  "driv": [
+   "Hybrid",
+   "El"
+  ]
+ },
+ "Polestar": {
+  "n": 4,
+  "min": 6995,
+  "mod": "4",
+  "driv": [
    "El"
   ]
  },
  "Skoda": {
-  "n": 22,
+  "n": 46,
   "min": 2795,
-  "mod": "Epiq 35 Essence",
-  "el": 0,
+  "mod": "Epiq",
+  "driv": [
+   "El",
+   "Laddhybrid",
+   "Bensin",
+   "Hybrid"
+  ]
+ },
+ "Toyota": {
+  "n": 30,
+  "min": 2995,
+  "mod": "Aygo X",
   "driv": [
    "Bensin",
+   "Hybrid",
    "Laddhybrid",
    "El"
   ]
  },
  "Volkswagen": {
-  "n": 26,
-  "min": 2995,
-  "mod": "ID.Cross Trend",
-  "el": 0,
+  "n": 113,
+  "min": 2499,
+  "mod": "Polo",
   "driv": [
    "Bensin",
    "El",
-   "Laddhybrid"
+   "Laddhybrid",
+   "Hybrid"
   ]
  },
- "Kia": {
-  "n": 11,
-  "min": 3204,
-  "mod": "Picanto 1.0 GDI AMT Action",
-  "el": 0,
+ "Volvo": {
+  "n": 22,
+  "min": 3790,
+  "mod": "EX30",
   "driv": [
-   "Bensin",
-   "Hybrid",
    "El",
+   "Bensin",
    "Laddhybrid"
   ]
  },
  "Mercedes-Benz": {
-  "n": 9,
-  "min": 5560,
-  "mod": "GLA 250+ electric Advanced Edition",
-  "el": 0,
+  "n": 8,
+  "min": 5495,
+  "mod": "GLA",
   "driv": [
    "El",
    "Laddhybrid"
@@ -87,8 +139,7 @@
  "Tesla": {
   "n": 5,
   "min": 4595,
-  "mod": "Model Y bakhjulsdrift",
-  "el": 0,
+  "mod": "Model Y",
   "driv": [
    "El"
   ]
@@ -96,104 +147,39 @@
  "Seat": {
   "n": 1,
   "min": 2695,
-  "mod": "Ibiza Edition 1.0 MPI 80 hk",
-  "el": 0,
+  "mod": "Ibiza",
   "driv": [
    "Bensin"
   ]
  },
- "BMW": {
-  "n": 2,
-  "min": 3745,
-  "mod": "120",
-  "el": 0,
-  "driv": [
-   "Bensin",
-   "El"
-  ]
- },
- "Hyundai": {
-  "n": 5,
-  "min": 2455,
-  "mod": "i20 1.0 T-GDi Essential (manuell)",
-  "el": 0,
-  "driv": [
-   "Bensin",
-   "Hybrid",
-   "Laddhybrid"
-  ]
- },
- "Toyota": {
-  "n": 11,
-  "min": 3054,
-  "mod": "Aygo X Hybrid",
-  "el": 0,
-  "driv": [
-   "Hybrid",
-   "El"
-  ]
- },
- "Nissan": {
-  "n": 3,
-  "min": 3054,
-  "mod": "Juke DIG-T DCT Acenta",
-  "el": 0,
-  "driv": [
-   "Bensin",
-   "El"
-  ]
- },
  "Renault": {
   "n": 1,
-  "min": 3549,
-  "mod": "5 E-Tech Evolution EV40",
-  "el": 0,
+  "min": 3490,
+  "mod": "5 E-Tech",
   "driv": [
    "El"
   ]
  },
  "Dacia": {
   "n": 1,
-  "min": 2050,
-  "mod": "Sandero Essential TCe 100",
-  "el": 0,
+  "min": 1990,
+  "mod": "Sandero",
   "driv": [
    "Bensin"
   ]
  },
- "Peugeot": {
-  "n": 4,
-  "min": 2699,
-  "mod": "2008 Allure Hybrid",
-  "el": 0,
-  "driv": [
-   "Hybrid",
-   "El"
-  ]
- },
  "MG": {
   "n": 1,
-  "min": 3055,
-  "mod": "MG4 Urban",
-  "el": 0,
+  "min": 2995,
+  "mod": "MG4",
   "driv": [
    "El"
-  ]
- },
- "BYD": {
-  "n": 1,
-  "min": 4511,
-  "mod": "Seal 6 DM-i Touring Comfort",
-  "el": 0,
-  "driv": [
-   "Laddhybrid"
   ]
  },
  "Mazda": {
   "n": 1,
   "min": 8530,
-  "mod": "6e Takumi",
-  "el": 0,
+  "mod": "6e",
   "driv": [
    "El"
   ]

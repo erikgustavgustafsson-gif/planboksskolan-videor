@@ -822,3 +822,119 @@
     .jmfknappar .annons, .car .annons { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
     .jmfpris .jmfins { color: #8A5A00 !important; font-weight: 700; font-size: 13px; }
     .jmfokand { color: #8A5A00; font-weight: 700; }
+
+    /* ===== Bäst på varje punkt (nov 2026): kategorier, direktsvar, hela kostnaden, jämför sida vid sida, räkna ===== */
+    .direktsvar { background: var(--ytmork); border-left: 4px solid #2EC4B6; border-radius: 12px; padding: 14px 16px; margin: 18px 0 12px; color: var(--textljus) !important; font-size: 16px; line-height: 1.55; }
+    .direktsvar b { color: #fff; }
+    .katlankar { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 10px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; }
+    .katlankar::-webkit-scrollbar { display: none; }
+    .katlankar a { flex: none; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 99px; border: 1.5px solid #34485F; color: var(--textljus) !important; text-decoration: none; white-space: nowrap; }
+    .katlankar a:hover { border-color: #2EC4B6; }
+    .startsok { display: flex; gap: 8px; max-width: 520px; margin: 18px 0 4px; }
+    .startsok input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 14px 16px; border-radius: 12px; border: 0; background: #fff; color: var(--text); }
+    .startsok button { font: inherit; font-weight: 800; padding: 0 20px; border-radius: 12px; border: 0; background: #2EC4B6; color: #08202B; cursor: pointer; }
+    .darfor { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    .darfor div { background: var(--ytmork); border: 1px solid #24384F; border-radius: 14px; padding: 16px; }
+    .darfor b { display: block; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .darfor p { margin: 0; font-size: 14.5px; color: var(--mutedljus) !important; }
+    .car .effpris { font-size: 13px; font-weight: 700; color: #8A5A00; margin-top: 2px; }
+    .jmfval { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 13.5px; font-weight: 700; padding: 9px 10px; border-radius: 10px; border: 1.5px dashed #B8C2CF; background: transparent; color: var(--navy); cursor: pointer; }
+    .jmfval.vald { border-style: solid; border-color: #11734B; background: #E2F5EC; color: #11734B; }
+    .jmfverktyg { display: grid; gap: 10px; margin: 16px 0; }
+    .jmfverktyg .jmfval { margin: 0; color: var(--textljus); border-color: #3A5068; padding: 12px; font-size: 15px; }
+    .jmfverktyg .jmfval.vald { background: #123B31; color: #8FE3C0; border-color: #1E7A5C; }
+    .jmfverktyg a { text-align: center; font-weight: 700; padding: 12px; border-radius: 10px; border: 1.5px solid #3A5068; text-decoration: none; }
+    @media (min-width: 640px) { .jmfverktyg { grid-template-columns: 1fr 1fr; } }
+    /* Valda bilar – fält längst ned */
+    .jmffalt { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: flex; align-items: center; gap: 12px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: #07101A; border-top: 2px solid #2EC4B6; color: #fff; box-shadow: 0 -8px 24px rgba(0,0,0,.4); }
+    .jmffalt span { flex: 1; min-width: 0; font-size: 14px; }
+    .jmffalt span small { display: block; color: var(--mutedljus); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .jmffalt .lanklik { color: var(--mutedljus); font-size: 13px; }
+    .jmffalt a.cta { flex: none; padding: 10px 14px; font-size: 14px; color: #fff !important; }
+    body:has(.jmffalt) { padding-bottom: 74px; }
+    /* Modellsidan */
+    .jmfstats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 6px; }
+    .jmfstats div { background: var(--ytmork); border-radius: 12px; padding: 10px 8px; text-align: center; }
+    .jmfstats small { display: block; color: var(--mutedljus); font-size: 12px; }
+    .jmfstats b { color: #fff; font-size: clamp(14px, 3.9vw, 19px); white-space: nowrap; }
+    .jmfstatisk { color: var(--textljus); padding-left: 20px; line-height: 1.6; }
+    .jmfdin { display: grid; gap: 14px; background: var(--ytmork); border: 1px solid #24384F; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+    .jmfdin label { display: block; font-weight: 700; font-size: 14px; color: var(--textljus); margin-bottom: 8px; }
+    .jmfdin label small { font-weight: 500; color: var(--mutedljus); }
+    .jmfdin input { width: 100%; max-width: 220px; box-sizing: border-box; font: inherit; font-size: 16px; padding: 11px 12px; border-radius: 10px; border: 1.5px solid #2A3F57; background: #fff; color: var(--text); }
+    .jmfdin .chips button { background: transparent; color: var(--textljus); border-color: #34485F; }
+    .jmfdin .chips button.vald { background: #fff; color: var(--navy); border-color: #fff; }
+    .jmfkort p.jmfeff { margin-top: 8px; padding: 8px 10px; background: #FFF6E0; border-radius: 8px; color: #6B4700 !important; font-size: 14px; }
+    .jmfkort p.jmfeff b { color: #6B4700; }
+    .jmfpris b.jmfsaknas { font-size: 18px; color: #8A5A00; }
+    .jmfchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .jmfchips span { font-size: 12.5px; font-weight: 600; padding: 5px 9px; border-radius: 7px; background: #EEF2F6; color: #44505F; }
+    .jmfchips span.ja { background: #E2F5EC; color: #11734B; }
+    .jmfchips span.nej { background: #FFF1D6; color: #8A5A00; }
+    .jmfmerinfo { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+    .jmfmerinfo summary { cursor: pointer; font-weight: 700; font-size: 14.5px; color: var(--navy); padding: 4px 0; }
+    .jmfmerinfo table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 14px; }
+    .jmfmerinfo td { padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--text); }
+    .jmfmerinfo td:last-child { text-align: right; white-space: nowrap; font-weight: 600; }
+    .jmfmerinfo tr.sum td { font-weight: 800; border-bottom: 2px solid var(--navy); }
+    .jmfmerinfo a { color: var(--navy) !important; font-weight: 700; }
+    .jmfkort p.jmftillk { font-size: 13px; }
+    .jmfhist { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; background: var(--ytmork); border: 1px solid #24384F; border-radius: 14px; padding: 14px 16px; margin: 16px 0; color: #2EC4B6; }
+    .jmfhist b { color: #fff; } .jmfhist p { margin: 4px 0 0; font-size: 14px; color: var(--mutedljus) !important; max-width: 460px; }
+    .jmfhist .ned { color: #7FE0B0; font-weight: 800; } .jmfhist .upp { color: #FFC56B; font-weight: 800; }
+    .kollruta { background: var(--ytmork); border: 1px solid #24384F; border-radius: 16px; padding: 18px; margin: 26px 0; color: var(--textljus); }
+    .kollruta h2 { margin: 0 0 10px; font-size: 20px; color: #fff; }
+    .kollruta ul, .checklista ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+    .kollruta li, .checklista li { font-size: 14.5px; line-height: 1.5; color: #C3CFDC; }
+    .kollruta li b, .checklista li b { color: #fff; }
+    .kollruta p { margin: 12px 0 0; font-size: 13px; color: var(--mutedljus) !important; }
+    .checklista h3 { margin: 22px 0 8px; font-size: 18px; color: #fff; }
+    .checklista .kalla { font-size: 13px; margin-top: 18px; }
+    .modellfaq { margin: 26px 0; }
+    .modellfaq h2 { color: var(--textljus); font-size: 20px; }
+    .markegrid a small { display: block; color: var(--mutedljus); font-weight: 500; }
+    /* Jämför sida vid sida */
+    .svrull { overflow-x: auto; margin: 20px -16px 0; padding: 0 16px; }
+    .svtab { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 480px; background: #fff; color: var(--text); border-radius: 14px; overflow: hidden; }
+    .svtab th, .svtab td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; font-size: 14px; vertical-align: middle; }
+    .svtab tbody th { position: sticky; left: 0; background: #F5F7FA; font-weight: 600; color: var(--muted); width: 118px; min-width: 118px; font-size: 13px; z-index: 1; }
+    .svtab thead th { vertical-align: bottom; min-width: 150px; }
+    .svtab thead a { display: block; color: var(--navy) !important; text-decoration: none; }
+    .svtab thead img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
+    .svtab thead span { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .svtab thead b { font-size: 16px; }
+    .svtab td.bast { background: #E2F5EC; color: #0B5A3A; font-weight: 700; }
+    .svtab .lanklik { color: var(--muted); font-size: 12px; padding: 4px 0 0; }
+    .svtab a.cta { color: #fff !important; padding: 9px 10px; font-size: 13.5px; }
+    .svvalj { margin: 18px 0; max-width: 420px; }
+    .svvalj label { display: block; font-weight: 700; margin-bottom: 6px; color: var(--textljus); }
+    .svvalj select { width: 100%; font: inherit; font-size: 16px; padding: 13px 14px; border-radius: 12px; border: 0; background: #fff; color: var(--text); }
+    .svtom { color: var(--textljus) !important; margin: 24px 0 8px; font-size: 16px; }
+    .svdela .lanklik, .jmffalt .lanklik { background: none; border: 0; text-decoration: underline; cursor: pointer; font: inherit; }
+    .svdela .lanklik { color: #8FE3DA; font-size: 14px; }
+    /* Räkna */
+    .raknasida { max-width: 860px; }
+    .raknare { background: #fff; color: var(--text); border-radius: 16px; padding: 20px 18px; margin: 22px 0; box-shadow: 0 8px 26px rgba(0,0,0,.3); }
+    .raknare h2 { margin: 0 0 6px; font-size: 22px; color: var(--navy); }
+    .raknare > p { margin: 0 0 14px; color: var(--muted) !important; font-size: 14.5px; }
+    .rform { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .rform label { display: block; font-size: 13.5px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .rform label small { display: block; font-weight: 500; color: var(--muted); }
+    .rform input { width: 100%; box-sizing: border-box; font: inherit; font-size: 16px; padding: 11px 12px; border-radius: 10px; border: 1.5px solid #CBD3DE; background: #fff; color: var(--text); }
+    .rsvar { margin-top: 16px; }
+    .rsvar p { color: var(--muted) !important; font-size: 14px; }
+    .rstor { background: var(--navy); color: #fff; border-radius: 14px; padding: 16px; text-align: center; }
+    .rstor small { display: block; color: #B9C6D6; font-size: 13px; } .rstor b { font-size: 30px; letter-spacing: -.02em; } .rstor span { display: block; color: #D5DDEA; font-size: 14px; }
+    .rsvar table { width: 100%; border-collapse: collapse; margin: 12px 0 4px; font-size: 14px; }
+    .rsvar td { padding: 7px 0; border-bottom: 1px solid var(--line); } .rsvar td:last-child { text-align: right; font-weight: 600; white-space: nowrap; }
+    .rtva { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .rtva div { border: 2px solid var(--line); border-radius: 14px; padding: 14px 10px; text-align: center; }
+    .rtva div.vinn { border-color: #2EC4B6; background: #F4FCFB; }
+    .rtva small { display: block; color: var(--muted); font-size: 13px; } .rtva b { font-size: clamp(18px, 5vw, 26px); color: var(--navy); } .rtva span { display: block; color: var(--muted); font-size: 13px; }
+    .rsvar p.rslut { font-size: 16px; color: var(--text) !important; margin: 14px 0 4px; }
+    .rsvar p.rvarn { background: #FFF6E0; color: #6B4700 !important; border-radius: 8px; padding: 10px; }
+    .textsida { max-width: 760px; padding-bottom: 30px !important; }
+    .textsida h2 { color: #fff; font-size: 22px; margin: 30px 0 8px; }
+    .textsida p, .textsida li { color: #C3CFDC; font-size: 16px; line-height: 1.6; }
+    .textsida b { color: #fff; }
+    .textsida ul { padding-left: 20px; display: grid; gap: 6px; }
