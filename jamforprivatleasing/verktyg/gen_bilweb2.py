@@ -169,7 +169,7 @@ for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app
     nyckel = m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0])
     foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
-BLOCK = re.compile(r"\n([A-ZÅÄÖ][A-Za-zåäö ]+): \\1\n([\d  ]+) kr/mån[^\n]*(?:\n[^\n]*)?")
+BLOCK = re.compile(r"\n([A-ZÅÄÖ][A-Za-zåäö ]+): \1\n([\d  ]+) kr/mån[^\n]*(?:\n[^\n]*)?")
 def finansblock(a):
     """Bilweb lägger ibland in egna kalkyler i annonsen ("Billån: Billån / 1 754 kr/mån"). Returnerar ({etikett: kr/mån}, texten utan lån- och företagsblock)."""
     t = html.unescape(a.get("besk") or ""); block = {}
