@@ -56,6 +56,7 @@ VARIANT = {
     "Volkswagen|Polo": [(r"\bid\.?\s?polo", "Volkswagen|ID.Polo"), (r".", "Volkswagen|Polo")],
     "Volkswagen|Tiguan": [(r"\bid\.?\s?tiguan|tiguan id\b|tiguan id\.", "Volkswagen|ID.Tiguan"), (r".", "Volkswagen|Tiguan")],
     "Toyota|Yaris": [(r"cross", "Toyota|Yaris Cross"), (r".", "Toyota|Yaris")],
+    "Kia|K4": [(r"sportswagon|\bsw\b|kombi", "Kia|K4 Sportswagon"), (r".", "Kia|K4")],
 }
 
 FAM = {m: f for f, regler in VARIANT.items() for _, m in regler}
@@ -167,6 +168,8 @@ for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app
     nyckel = m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0])
     foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
+kanon = {norm(k): k for k in foto}
+SLUGMAP["kia/k4"] = "Kia|K4"
 data = json.load(open(BW))["annonser"]
 modeller, stat = {}, {"ok": 0, "borta": 0, "gammal": 0, "begagnad": 0, "avtal": 0, "pris": 0, "driv": 0, "dubblett": 0, "ej_personbil": 0, "ingen_modell": 0}
 for a in data.values():
@@ -178,6 +181,7 @@ for a in data.values():
     if not k:
         mnamn = re.sub(rf"^{re.escape(a['marke'])}\s+", "", a["modell"], flags=re.I).strip() or a["modell"]
         k = marke + "|" + mnamn
+        k = kanon.get(norm(k), k)
     if k in VARIANT:
         k = next((m for regex, m in VARIANT[k] if re.search(regex, a["titel"].lower())), k)
     modeller.setdefault(k, []).append(a)
