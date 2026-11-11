@@ -1013,6 +1013,16 @@
       if (s === "manad") rader.sort((a, b) => (a.m ?? big) - (b.m ?? big));
       if (s === "marke") rader.sort((a, b) => (a.marke + a.modell).localeCompare(b.marke + b.modell, "sv"));
 
+      // 3b) Ren jämförelse: ett kort per modell, med modellens billigaste erbjudande (som matchar filtren) som "från"-pris
+      const grupper = {};
+      rader.forEach(r => (grupper[r.mkey] = grupper[r.mkey] || []).push(r));
+      const kmp = (a, b) => s === "andel" ? (a.andel ?? big) - (b.andel ?? big) : s === "total" ? (a.total ?? big) - (b.total ?? big)
+        : s === "marke" ? (a.marke + a.mnamn).localeCompare(b.marke + b.mnamn, "sv") : (a.m ?? big) - (b.m ?? big);
+      const modellRader = Object.values(grupper).map(g => {
+        const bill = [...g].sort((a, b) => (a.m ?? big) - (b.m ?? big))[0];
+        return { ...bill, antal: g.length, handlare: new Set(g.map(x => x.kalla.split(/ \(|,/)[0])).size, maxm: Math.max(...g.map(x => x.m ?? 0)) };
+      }).sort(kmp);
+
       // 4) Sammanfattningen överst
       const minst = (lista, falt) => lista.filter(r => r[falt] != null).sort((a, b) => a[falt] - b[falt])[0];
       const bast = minst(rader, "andel");
@@ -1023,32 +1033,35 @@
         <div class="stat"><small>Bästa erbjudande</small><b>${bast ? pct(bast.andel) + " av nypriset" : "–"}</b><small>${namn(bast)}</small></div>
         <div class="stat"><small>Billigast totalt</small><b>${billigast ? kr(billigast.total) : "–"}</b><small>${namn(billigast)}</small></div>
         <div class="stat"><small>Billigaste elbil totalt</small><b>${billigastEl ? kr(billigastEl.total) : "–"}</b><small>${namn(billigastEl)}</small></div>
-        <div class="stat"><small>Bilar i listan</small><b>${rader.length}</b></div>`;
+        <div class="stat"><small>Modeller · erbjudanden</small><b>${modellRader.length} · ${rader.length}</b></div>`;
 
       // 5) Bygg ett kort per bil
       if (visaMer) {
-        const kvar = rader.length - antalVisas;
+        const kvar = modellRader.length - antalVisas;
         visaMer.hidden = kvar <= 0;
-        visaMer.textContent = `Visa fler bilar (${kvar} till)`;
+        visaMer.textContent = `Visa fler modeller (${kvar} till)`;
       }
-      lista.innerHTML = rader.slice(0, antalVisas).map((b, i) => {
+      lista.innerHTML = modellRader.slice(0, antalVisas).map((b, i) => {
         const bt = betyg(b.andel);
         const visaRank = s !== "marke" && (s === "andel" ? b.andel != null : b.total != null);
+        const flera = b.antal > 1, handl = esc(b.kalla.split(/ \(|,/)[0]);
+        const huvudlank = flera ? b.msida : ut(b.url), ny = flera ? "" : ` target="_blank" rel="${rel(b.url)}"`;
         return `
         <article class="car">
-          <a class="piclink" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">${b.andel != null && b.andel < .45 ? `<span class="kortbadge">🔥 Kampanjpris</span>` : ""}${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.modell}" loading="lazy">` : `<div class="pic ingen"><b>Helt ny modell</b><small>Fri bild finns ännu inte</small></div>`}</a>
+          <a class="piclink" href="${huvudlank}"${ny}>${b.andel != null && b.andel < .45 ? `<span class="kortbadge">🔥 Kampanjpris</span>` : ""}${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.mnamn}" loading="lazy">` : `<div class="pic ingen"><b>Helt ny modell</b><small>Fri bild finns ännu inte</small></div>`}</a>
           <div>
             <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
-            <h3><a href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}" style="color:inherit;text-decoration:none">${b.modell}</a></h3>
+            <h3><a href="${b.msida}" style="color:inherit;text-decoration:none">${esc(b.marke)} ${esc(b.mnamn)}</a></h3>
+            <p class="kortvariant">Billigast: ${esc(b.modell)} · ${handl}</p>
           </div>
           <div class="price">
             ${b.m != null
-              ? `${b.tillval !== "inga" ? `<small class="fran">Från</small>` : ""}<div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div><div class="total">${kr(b.total)} totalt på 36 mån</div>`
+              ? `<small class="fran">${flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div><div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
-            <div class="kortpiller"><span>36 månader</span><span>${(b.m != null ? valdMil : b.mil).toLocaleString("sv-SE")} mil/år</span></div>
-            <button type="button" class="cta" data-bil="${b.idx}">${b.tillval === "inga" ? "Beställ →" : "Välj tillval & beställ →"}</button>
-            ${MODELLER[b.mkey].length > 1 && SIDA !== "modell" ? `<a class="jmflank" href="${b.msida}">Jämför ${MODELLER[b.mkey].length} erbjudanden på ${esc(b.mnamn)} →</a>` : ""}
-            <a class="ext" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Se erbjudandet hos ${b.typ === "Märket" ? "märket" : "handlaren"} ↗</a>${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
+            <div class="kortpiller"><span class="antalerb">${b.antal} ${b.antal === 1 ? "erbjudande" : "erbjudanden"}${b.handlare > 1 ? ` · ${b.handlare} säljare` : ""}</span><span>36 mån</span><span>${(b.m != null ? valdMil : b.mil).toLocaleString("sv-SE")} mil/år</span></div>
+            ${flera
+              ? `<a class="cta" href="${b.msida}">Jämför ${b.antal} erbjudanden →</a><a class="ext" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till billigaste erbjudandet ↗</a>`
+              : `<a class="cta" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till erbjudandet ↗</a><a class="ext" href="${b.msida}">Om ${esc(b.mnamn)} →</a>`}${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
           </div>
           <div class="tags">
             ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : `<span class="tag">Andel av nypris: –</span>`}
@@ -1512,13 +1525,13 @@
             </div>
             <div class="tchips"><span>36 månader</span><span>${b.mil.toLocaleString("sv-SE")} mil/år</span>${b.forhojd ? `<span>${kr(b.forhojd)} första hyra</span>` : ""}</div>
             <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "via "}${b.kalla.split(/ \(|,/)[0]}${alla.length > 1 ? ` · bäst av ${alla.length}` : ""}</div>
-            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : "<span></span>"}<button type="button" class="cta" data-bil="${b.idx}">Beställ</button></div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">Jämför${alla.length > 1 ? " " + alla.length : ""} →</a></div>
           </div>
         </article>`;
       }).join("");
     }
     if (document.getElementById("topp")) document.getElementById("topp").addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
-    if (document.getElementById("trust")) document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Beställ med tillval direkt här</span>`;
+    if (document.getElementById("trust")) document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Direkt till erbjudandet</span>`;
     if (document.getElementById("fotforetag")) document.getElementById("fotforetag").innerHTML = [FORETAG.namn + " (enskild firma)", FORETAG.orgnr && "Org.nr " + FORETAG.orgnr, FORETAG.epost].filter(Boolean).map(esc).join("<br>");
     // ---------- Jämför handlare: alla erbjudanden på en modell, billigast först ----------
     const jamfor = document.getElementById("jamfor");
@@ -1562,8 +1575,7 @@
             <p class="jmfplats">📍 ${esc(plats)}${r.avst != null ? ` · ${tillMil(r.avst)} mil från dig` : ""}</p>
             <p class="jmfinfo">36 mån · ${r.mil.toLocaleString("sv-SE")} mil/år · ${esc(r.drivmedel)} · ${kr(r.total)} totalt${r.forhojd ? ` · ${kr(r.forhojd)} vid start` : ""}${r.forsakring ? " · försäkring inräknad" : ""}</p>
             <div class="jmfknappar">
-              <button type="button" class="cta" data-bil="${r.idx}">${r.tillval === "inga" ? "Beställ →" : "Välj tillval & beställ →"}</button>
-              <a class="jmfut" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet ↗${arAff(r.url) ? " <small>(annonslänk)</small>" : ""}</a>
+              <a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet →</a>${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
             </div>
           </article>`;
         }).join("") || "<p>Inga erbjudanden i den regionen.</p>"}</div>

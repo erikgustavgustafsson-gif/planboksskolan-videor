@@ -58,8 +58,8 @@
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
       <div class="hel"><label>Tillval</label>
-        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Välj alla tillval själv <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
-        <small class="hjalp">🛠 = du väljer färg, motor och tillval med pris direkt här. Färdiga erbjudanden = bilen som handlaren har den, önskemål skickas med beställningen.</small>
+        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Bygg din bil <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
+        <small class="hjalp">🛠 = märkets egen konfigurator, där du väljer färg och tillval. Färdiga erbjudanden = bilen som handlaren har den i lager eller på kampanj.</small>
         <input type="hidden" id="tillval" value="alla"></div>
       <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
         <div class="rad">
@@ -71,25 +71,9 @@
     <section class="summary" id="summary"></section>
     <h2 class="allarubrik">Bilar som matchar</h2>
     <section class="list" id="lista"></section>
-    <button type="button" class="visamer" id="visaMer" hidden>Visa fler bilar</button>
+    <button type="button" class="visamer" id="visaMer" hidden>Visa fler modeller</button>
     <p class="villkor" id="villkor"><sup>1</sup> <b>Så läser du priserna:</b> Privatleasing i 36 månader utan kontantinsats, med den körsträcka som står i erbjudandet. Månadspriset inkluderar avi- och adminavgift och eventuell obligatorisk försäkring. Totalkostnaden inkluderar dessutom uppläggningsavgift och eventuell förhöjd första hyra. Fordonsskatt, din egen försäkring, övermil och onormalt slitage tillkommer. Många erbjudanden har rörlig ränta, så månadskostnaden kan ändras under avtalstiden. Erbjudandena gäller ofta ett begränsat antal bilar. Priserna kontrolleras varje dag mot märkenas och handlarnas egna sidor, men det är alltid handlarens avtal som gäller. Bilderna är vägledande.</p>
-    <section class="ejbil" id="hittar-inte">
-      <div>
-        <h2>Hittar du inte din bil?</h2>
-        <p>Berätta vilken bil du letar efter, så hör vi av oss när vi hittar ett bra erbjudande. Det är gratis och inte bindande.</p>
-      </div>
-      <form class="ejbilform" id="ejbilForm" novalidate>
-        <input class="hel" name="bil" placeholder="Vilken bil letar du efter?">
-        <select name="budget" aria-label="Max per månad"><option value="">Max per månad</option><option>Under 3 000 kr</option><option>3 000–4 000 kr</option><option>4 000–5 000 kr</option><option>5 000–7 000 kr</option><option>Över 7 000 kr</option></select>
-        <select name="mil" aria-label="Mil per år"><option value="">Mil per år</option><option>1 000</option><option>1 500</option><option>2 000</option><option>Mer än 2 000</option></select>
-        <input name="namn" placeholder="Namn" autocomplete="name">
-        <input name="epost" type="email" placeholder="E-post" autocomplete="email">
-        <input class="hel" name="tel" type="tel" placeholder="Telefon (valfritt)" autocomplete="tel">
-        <label class="hel"><input type="checkbox" name="ok"><span>Jag godkänner att Jämföra Privatleasing sparar mina uppgifter för att kontakta mig om erbjudanden på bilen jag letar efter (<a href="integritetspolicy.html">integritetspolicy</a>).</span></label>
-        <button type="submit">Bli kontaktad</button>
-        <div id="ejbilSvar" aria-live="polite"></div>
-      </form>
-    </section>
+    
   </main>
   <div class="wrap" style="padding:0 16px"><section class="infokort">
       <div><h3>Totalkostnad</h3><p>Vi räknar ihop allt du betalar under 36 månader: månadspris, avgifter, förhöjd första hyra och obligatorisk försäkring.</p></div>

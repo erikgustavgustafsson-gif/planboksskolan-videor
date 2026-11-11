@@ -48,6 +48,23 @@ FRAGOR = block('<section class="info" id="fragor">', "</section>")
 KONF = block('<dialog id="konf"', "</dialog>").replace('<span class="klogo">Jämföra <b>Privatleasing</b></span>', '<span class="klogo"><b>JÄMFÖRA</b><br>PRIVATLEASING</span>')
 FAQ_LD = block('{"@type":"FAQPage"', "]}")
 
+# ---- Ren jämförelsesajt (nov 2026): kunden går vidare till handlarens erbjudande, ingen beställning här ----
+STEG = (STEG.replace("<h2><b>Beställ</b> steg för steg</h2>", "<h2><b>Så funkar</b> det</h2>")
+  .replace("<li><span>2</span><div><b>Välj färg och tillval</b>Lägg till vinterhjul, dragkrok eller paket och se det nya priset direkt.</div></li>",
+           "<li><span>2</span><div><b>Jämför säljarna</b>Samma bil kan kosta olika hos märket och hos olika handlare. Vi listar alla erbjudanden på modellen, billigast överst.</div></li>")
+  .replace("<li><span>3</span><div><b>Skicka beställningen</b>Fyll i dina uppgifter, så skickar vi beställningen till handlaren åt dig.</div></li>",
+           "<li><span>3</span><div><b>Gå till erbjudandet</b>Klicka dig vidare till märket eller handlaren och välj färg, tillval och leverans där.</div></li>")
+  .replace("<li><span>4</span><div><b>Signera avtalet</b>Handlaren skickar avtalet till dig. Du godkänner det med BankID, och inget är bindande innan dess.</div></li>",
+           "<li><span>4</span><div><b>Leasa hos säljaren</b>Avtalet tecknar du direkt med handlaren eller leasingbolaget. Inget är bindande förrän du har signerat.</div></li>"))
+assert "Gå till erbjudandet" in STEG and "Leasa hos säljaren" in STEG
+_gammal_f = "<details><summary>Är beställningen bindande?</summary><p>Nej. Vi skickar din beställning till handlaren, som skickar avtalet till dig. Först när du har godkänt avtalet med BankID är det bindande. Handlaren och leasingbolaget gör en vanlig kreditprövning.</p></details>"
+assert _gammal_f in FRAGOR
+FRAGOR = FRAGOR.replace(_gammal_f, "<details><summary>Kan jag leasa bilen hos er?</summary><p>Nej. Jämföra Privatleasing är en oberoende jämförelsetjänst. Du klickar dig vidare till märket eller handlaren och tecknar avtalet direkt med dem. Där väljer du färg och tillval, och leasingbolaget gör en vanlig kreditprövning. Inget är bindande förrän du har signerat avtalet.</p></details>")
+FAQ_LD = FAQ_LD.replace('{"@type":"Question","name":"Är beställningen bindande?","acceptedAnswer":{"@type":"Answer","text":"Nej. Vi skickar beställningen till handlaren, som skickar avtalet till dig. Först när du godkänner avtalet med BankID är det bindande."}}',
+  '{"@type":"Question","name":"Kan jag leasa bilen hos er?","acceptedAnswer":{"@type":"Answer","text":"Nej. Jämföra Privatleasing är en oberoende jämförelsetjänst. Du klickar dig vidare till märket eller handlaren och tecknar avtalet direkt med dem."}}')
+assert "Kan jag leasa bilen hos er?" in FAQ_LD
+EJBIL = ""   # formuläret "Hittar du inte din bil?" används inte när vi bara jämför
+
 HERO = """<header class="hero foto">
     <div class="wrap herotext">
       <h1>Jämför privatleasing och hitta bästa kampanjen</h1>
@@ -162,8 +179,8 @@ def filter_html(med_marke=True):
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
       <div class="hel"><label>Tillval</label>
-        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Välj alla tillval själv <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
-        <small class="hjalp">🛠 = du väljer färg, motor och tillval med pris direkt här. Färdiga erbjudanden = bilen som handlaren har den, önskemål skickas med beställningen.</small>
+        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Bygg din bil <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
+        <small class="hjalp">🛠 = märkets egen konfigurator, där du väljer färg och tillval. Färdiga erbjudanden = bilen som handlaren har den i lager eller på kampanj.</small>
         <input type="hidden" id="tillval" value="alla"></div>
       <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
         <div class="rad">
@@ -181,7 +198,7 @@ def lista_html(rubrik, med_marke=True, ejbil=True):
     <section class="summary" id="summary"></section>
     <h2 class="allarubrik">{rubrik}</h2>
     <section class="list" id="lista"></section>
-    <button type="button" class="visamer" id="visaMer" hidden>Visa fler bilar</button>
+    <button type="button" class="visamer" id="visaMer" hidden>Visa fler modeller</button>
     {VILLKOR}
     {EJBIL if ejbil else ""}
   </main>"""
@@ -218,7 +235,7 @@ antal_bilar = sum(m["n"] for m in MARKEN.values())
 sidor["index.html"] = sida(
     "index.html",
     "Jämför privatleasing 2026 – alla bilar, kampanjer och totalpris | Jämföra Privatleasing",
-    f"Jämför privatleasing på {antal_bilar} nya bilar från {len(MARKEN)} märken. Vi räknar med alla avgifter, visar bästa kampanjerna och låter dig välja tillval och beställa direkt.",
+    f"Jämför privatleasing på {antal_bilar} nya bilar från {len(MARKEN)} märken. Vi räknar med alla avgifter, visar alla erbjudanden på varje modell med billigast överst och länkar direkt till erbjudandet.",
     f"""
   {HERO}
   {TOPP.replace('</small>', '</small><p style="text-align:center;margin:18px 0 0"><a class="knapp" href="kampanjer.html">Se alla kampanjer →</a></p>', 1)}
@@ -275,8 +292,8 @@ sidor["marken.html"] = sida(
 sidor["guide.html"] = sida(
     "guide.html",
     "Så funkar privatleasing – vad ingår och vad tillkommer? | Jämföra Privatleasing",
-    "Guide till privatleasing: så beställer du, vad som ingår i månadskostnaden och vad som tillkommer, som försäkring, fordonsskatt och övermil.",
-    sidhuvud("Så funkar privatleasing", "Allt du behöver veta innan du leasar: hur du beställer, vad som ingår och vilka kostnader som tillkommer.", brod((None, "Guide")))
+    "Guide till privatleasing: så funkar det, vad som ingår i månadskostnaden och vad som tillkommer, som försäkring, fordonsskatt och övermil.",
+    sidhuvud("Så funkar privatleasing", "Allt du behöver veta innan du leasar: hur det funkar, vad som ingår och vilka kostnader som tillkommer.", brod((None, "Guide")))
     + "\n  " + STEG + "\n  " + INGAR + f"\n  <div class=\"wrap\" style=\"padding:0 16px\">{INFOKORT}</div>"
     + '\n  <section class="block"><div class="wrap"><div class="genvagar"><a href="alla-bilar.html"><b>Jämför alla bilar →</b><span>Hitta rätt bil och pris.</span></a><a href="fragor.html"><b>Frågor &amp; svar →</b><span>Fler svar om privatleasing.</span></a></div></div></section>',
     aktiv="guide.html", sida_typ="guide", ld=[brod_ld(("guide.html", "Guide"))])
@@ -288,7 +305,7 @@ faq = json.loads(FAQ_LD)
 sidor["fragor.html"] = sida(
     "fragor.html",
     "Frågor och svar om privatleasing – övermil, ränta, försäkring | Jämföra Privatleasing",
-    "Svar på vanliga frågor om privatleasing: vad ingår, är beställningen bindande, vad kostar övermil, kan månadskostnaden ändras och vilken försäkring krävs.",
+    "Svar på vanliga frågor om privatleasing: vad ingår, var tecknar jag avtalet, vad kostar övermil, kan månadskostnaden ändras och vilken försäkring krävs.",
     sidhuvud("Frågor &amp; svar om privatleasing", "Det folk oftast undrar innan de leasar en ny bil.", brod((None, "Frågor &amp; svar")))
     + f'\n  <main class="wrap" style="padding: 0 16px;">{fragor}\n  {EJBIL}\n  </main>',
     aktiv="fragor.html", sida_typ="fragor", ld=[faq, brod_ld(("fragor.html", "Frågor & svar"))])

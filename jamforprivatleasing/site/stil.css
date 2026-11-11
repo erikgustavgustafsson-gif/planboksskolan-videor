@@ -810,3 +810,13 @@
     .jmffot, .jmfmer { color: var(--mutedljus) !important; font-size: 13px; margin: 16px 0; }
     .jmfmer { font-size: 15px; }
     .jmfsida .villkor, .jmfsida .villkor * { color: var(--mutedljus); }
+
+    /* ===== Ren jämförelsesajt (nov 2026): ett kort per modell, knappar leder till erbjudandet ===== */
+    a.cta { display: block; text-align: center; text-decoration: none !important; box-sizing: border-box; }
+    .car a.cta { color: #fff !important; }
+    .jmfkort a.cta { color: #fff !important; flex: 1 1 200px; }
+    .tfot a.cta { display: inline-block; color: #fff !important; }
+    .car .kortvariant { margin: 4px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+    .kortpiller .antalerb { background: #E2F5EC; color: #11734B; }
+    .car .ext { display: inline-block; margin-top: 8px; }
+    .jmfknappar .annons, .car .annons { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
