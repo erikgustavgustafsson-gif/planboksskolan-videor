@@ -169,21 +169,28 @@ for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app
     nyckel = m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0])
     foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
-def verifierat_pris(a):
-    """Bilwebs "kr/mån" är ibland Bilwebs egen lånekalkyl, inte leasingpriset. Priset måste därför stå i rubriken/adressen
-    eller i annonstexten. Returnerar priset, eller None om det inte går att belägga (gissa aldrig)."""
+BLOCK = re.compile(r"\n([A-ZÅÄÖ][A-Za-zåäö ]+): \\1\n([\d  ]+) kr/mån[^\n]*(?:\n[^\n]*)?")
+def finansblock(a):
+    """Bilweb lägger ibland in egna kalkyler i annonsen ("Billån: Billån / 1 754 kr/mån"). Returnerar ({etikett: kr/mån}, texten utan lån- och företagsblock)."""
+    t = html.unescape(a.get("besk") or ""); block = {}
+    for m in BLOCK.finditer(t): block[m.group(1)] = int(re.sub(r"\D", "", m.group(2)))
+    ren = BLOCK.sub(lambda m: m.group(0) if m.group(1) == "Privatleasing" else "\n", t)
+    return block, ren
+
+def verifierat_pris(a, block):
+    """Sidans "kr/mån" är ibland Bilwebs lånekalkyl, inte leasingpriset. Returnerar leasingpriset, eller None om det inte går att belägga (gissa aldrig)."""
     slug = re.sub(r"-\d{4}-[a-z-]+-\d{5,}$", "", a["url"].rsplit("/", 1)[-1])
+    slug = re.sub(r"(?<!\d)(\d{1,2})-(\d{3})(?=-?kr|-?man|-?sek)", r"\1\2", slug)
     sn = {int(x) for x in re.findall(r"(?<!\d)(\d{4,5})(?=-?kr|-?man|-?manad|-?sek)", slug)}
     sn |= {int(x) for x in re.findall(r"(?:fr|fran|pl|privatleasing|leasing|manad|man)-(\d{4,5})(?!\d)", slug)}
     sn = {x for x in sn if 1500 <= x <= 25000}
-    t = re.sub(r"(\d)[ .\u00a0](\d{3})(?!\d)", r"\1\2", html.unescape(a.get("besk") or ""))
-    dn = {int(x) for x in re.findall(r"(?<!\d)(\d{4,5})\s?(?:kr|:-|sek)?\s?(?:/|per|i)\s?(?:mån|månad|månaden)\b", t, re.I)}
-    dn = {x for x in dn if 1500 <= x <= 25000}
     m = a.get("manad")
-    if m in sn or m in dn: return m
-    if sn: return min(sn)
-    if len(dn) == 1: return next(iter(dn))
-    return None
+    if "Privatleasing" in block: return block["Privatleasing"]
+    if m in sn: return m
+    lan = {v for k, v in block.items() if k != "Privatleasing"}
+    if m in lan: return min(sn) if sn else None          # sidans pris är lånekalkylen
+    if sn: return None                                   # rubriken säger ett annat pris än sidan – oklart
+    return m                                             # handlarens eget angivna månadspris i en privatleasingannons
 
 kanon = {norm(k): k for k in foto}
 def modellfamilj(marke, m):
@@ -220,15 +227,18 @@ for mal, annonser in sorted(modeller.items()):
     marke, mnamn = mal.split("|", 1)
     bra = []
     for a in annonser:
+        aorig = a
         d = datum(a.get("datum", "") or next((h for h in a.get("huvud", []) if re.match(r"(idag|igår|\d{1,2} [a-zå]{3})", h.lower())), ""))
         if not d or (IDAG - d).days > 180: stat["gammal"] += 1; continue
         ar, km = tal(a.get("ar")), tal(a.get("matare"))
         if not ar or ar < IDAG.year - 1 or (km or 0) > 100: stat["begagnad"] += 1; continue
         if not a.get("saljare") or not a.get("manad"): stat["pris"] += 1; continue
+        a = {**a, "besk": finansblock(a)[1]}
         if man(a) != 36 or ej_privatleasing(a): stat["avtal"] += 1; continue
         if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag|operationell|exkl\.? moms|ex\.? moms", a["titel"] + " " + a["url"], re.I): stat["pris"] += 1; continue
         if re.search(r"exkl\.? moms|ex\.? moms|företagsleasing", a["besk"][:400], re.I) and not re.search(r"privatleasing", a["titel"] + a["url"], re.I): stat["pris"] += 1; continue
-        vp = verifierat_pris(a)
+        block = finansblock(aorig)[0]
+        vp = verifierat_pris(a, block)
         if not vp: stat["obelagt_pris"] += 1; continue
         a = {**a, "manad": vp}
         pi = pris_och_insats(a)
