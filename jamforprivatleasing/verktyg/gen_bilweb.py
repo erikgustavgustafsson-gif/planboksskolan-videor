@@ -53,6 +53,8 @@ VARIANT = {
     "Toyota|bZ4X": [(r"touring", "Toyota|bZ4X Touring"), (r".", "Toyota|bZ4X")],
     "Toyota|Corolla": [(r"cross", "Toyota|Corolla Cross"), (r"touring|\bts\b", "Toyota|Corolla Touring Sports"), (r".", "Toyota|Corolla")],
     "Toyota|C-HR": [(r"c-hr\+|chr\+|c-hr plus", "Toyota|C-HR+"), (r".", "Toyota|C-HR")],
+    "Volkswagen|Polo": [(r"\bid\.?\s?polo", "Volkswagen|ID.Polo"), (r".", "Volkswagen|Polo")],
+    "Volkswagen|Tiguan": [(r"\bid\.?\s?tiguan|tiguan id\b|tiguan id\.", "Volkswagen|ID.Tiguan"), (r".", "Volkswagen|Tiguan")],
     "Toyota|Yaris": [(r"cross", "Toyota|Yaris Cross"), (r".", "Toyota|Yaris")],
 }
 
@@ -72,8 +74,9 @@ def datum(d):
 def driv(a):
     d, t = (a.get("driv") or "").lower(), (a["titel"] + " " + a["besk"][:300]).lower()
     if d == "el" or "elektrisk" in d: return "El"
-    if "laddhybrid" in d or "plug" in d or re.search(r"e-?hybrid|phev|plug-in|laddhybrid|\bt8\b|\bt6\b", t): return "Laddhybrid"
-    if "hybrid" in d or "hybrid" in t: return "Hybrid"
+    if "diesel" in d: return None
+    if "laddhybrid" in d or "plug" in d or re.search(r"e-?hybrid|phev|plug-in|laddhybrid|\bt8\b|\bt6\b|\bp\.?hev\b|\bdm-i\b", t): return "Laddhybrid"
+    if "hybrid" in d or "el/bensin" in d or "hybrid" in t: return "Hybrid"
     if "bensin" in d or "etsi" in t or "tsi" in t: return "Bensin"
     return None
 
@@ -116,10 +119,12 @@ def man(a):
 
 def rensa_modell(titel, marke):
     t = re.sub(r"\s*[\|–\-]\s*(privatleasing|kampanj|p\.?leasing).*$", "", titel, flags=re.I)
-    t = re.sub(r"\b(privatleasing|kampanj|erbjudande|fr\.?|från)\b.*$", "", t, flags=re.I)
+    t = re.sub(r"\b(privatleasing|p\.?leasing|kampanj\w*|superkampanj\w*|erbjudande\w*|helgerbjudande\w*|fr\.?|från|nu|just nu|lagerbil\w*|snabb leverans|leasing)\b.*$", "", t, flags=re.I)
+    t = re.sub(r"\b(bilia|din bil|hedin|rejmes)\b", "", t, flags=re.I)
     t = re.sub(r"\d[\d .]*\s?(kr|:-).*$", "", t).strip(" -|*,")
     t = re.sub(rf"^{re.escape(marke)}\s+", "", t, flags=re.I)
-    return re.sub(r"\s+", " ", t).strip()[:60] or "Privatleasing"
+    t = re.sub(r"\s+", " ", t).strip(" -|*,.:!/") [:60].strip()
+    return t
 
 data = json.load(open(BW))
 modeller = {}
@@ -159,6 +164,7 @@ for mal, annonser in sorted(modeller.items()):
         if not pi or not pi[0] or pi[0] < 1000: stat["pris"] += 1; continue
         dm = driv(a)
         if not dm: stat["driv"] += 1; continue
+        if mal == "Toyota|C-HR" and dm == "El": stat["driv"] += 1; continue   # C-HR+ är en annan bil
         mil = bas_mil(a)
         bra.append({**a, "pris": pi[0], "forhojd": pi[1], "drivm": dm, "mil": mil, "d": d})
     # en per säljare och variant, billigast (inkl. insats utslagen på 36 mån)
@@ -178,7 +184,8 @@ for mal, annonser in sorted(modeller.items()):
         extra = {"kalla": f"{saljare} (via Bilweb)", "url": a["url"], "ort": ort, "ortpos": pos, "ortlan": lan_namn,
                  "service": None, "not": ". ".join(noter), "tillval": "inga", "bilweb": True}
         if a["forhojd"]: extra["forhojd"] = a["forhojd"]
-        rader.append(f'      B({json.dumps(marke, ensure_ascii=False)}, {json.dumps(rensa_modell(a["titel"], marke), ensure_ascii=False)}, "{foto[mal]}", "{a["drivm"]}", {a["pris"]}, {a["mil"] or 1000}, null, {json.dumps(extra, ensure_ascii=False)}),')
+        namn = rensa_modell(a["titel"], marke) or mal.split("|")[1]
+        rader.append(f'      B({json.dumps(marke, ensure_ascii=False)}, {json.dumps(namn, ensure_ascii=False)}, "{foto[mal]}", "{a["drivm"]}", {a["pris"]}, {a["mil"] or 1000}, null, {json.dumps(extra, ensure_ascii=False)}),')
         stat["ok"] += 1
 
 block = "      // --- BILWEB START: handlarnas egna annonser från Bilweb (genereras av verktyg/gen_bilweb.py – ändra inte för hand) ---\n" + "\n".join(rader) + "\n      // --- BILWEB SLUT ---"
