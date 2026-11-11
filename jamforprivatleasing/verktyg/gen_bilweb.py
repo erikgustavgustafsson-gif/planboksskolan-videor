@@ -108,6 +108,8 @@ def bas_mil(a):
         if "+" in before or re.search(r"\+\s*\d", t[m.end():m.end() + 6]): continue
         v = int(m.group(1))
         if v in (1000, 1500, 2000, 2500, 3000): return v
+    # "1500 mil/år: +247 kr/mån" betyder att 1 000 mil ingår
+    if re.search(r"1500\s?mil[^\n]{0,12}\+\s?\d", t): return 1000
     return None
 
 def man(a):
@@ -161,7 +163,7 @@ for mal, annonser in sorted(modeller.items()):
         if not a.get("saljare") or not a.get("manad"): stat["pris"] += 1; continue
         if man(a) != 36: stat["avtal"] += 1; continue
         pi = pris_och_insats(a)
-        if not pi or not pi[0] or pi[0] < 1000: stat["pris"] += 1; continue
+        if not pi or not pi[0] or pi[0] < 1000 or pi[1] > 50000: stat["pris"] += 1; continue
         dm = driv(a)
         if not dm: stat["driv"] += 1; continue
         if mal == "Toyota|C-HR" and dm == "El": stat["driv"] += 1; continue   # C-HR+ är en annan bil
