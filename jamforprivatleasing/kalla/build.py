@@ -62,12 +62,12 @@ MENY = [("index.html", "Start"), ("kampanjer.html", "Kampanjer"), ("alla-bilar.h
         ("marken.html", "Märken"), ("guide.html", "Guide"), ("fragor.html", "Frågor & svar")]
 
 
-def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, ogtitel=None):
+def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, ogtitel=None, modell=""):
     url = DOMAN + ("" if fil == "index.html" else fil)
     graf = ld or []
     ldtext = json.dumps({"@context": "https://schema.org", "@graph": graf}, ensure_ascii=False) if graf else ""
     meny = "".join(f'<a href="{f}"{" class=\"aktiv\" aria-current=\"page\"" if f == aktiv else ""}>{html.escape(n)}</a>' for f, n in MENY)
-    data = f' data-sida="{sida_typ}"' + (f' data-marke="{html.escape(marke)}"' if marke else "")
+    data = f' data-sida="{sida_typ}"' + (f' data-marke="{html.escape(marke)}"' if marke else "") + (f' data-modell="{modell}"' if modell else "")
     return f"""<!DOCTYPE html>
 <!-- Jämföra Privatleasing – byggs av kalla/build.py. Stil: stil.css, logik: app.js, bilar och priser: i app.js (BILAR) och konfig.js. -->
 <html lang="sv">
@@ -311,6 +311,38 @@ for marke, m in sorted(MARKEN.items(), key=lambda x: x[0]):
         + MARKE_BLOCK.replace("Privatleasing per märke", "Andra märken"),
         aktiv="marken.html", sida_typ="marke", marke=marke,
         ld=[brod_ld(("marken.html", "Märken"), (fil, f"Privatleasing {marke}"))])
+
+# ---------- En sida per modell: jämför handlare ----------
+APPJS = (HIT / "app.js").read_text(encoding="utf-8")
+MODELLNAMN = json.loads(re.search(r"const MODELLNAMN = (\{.*?\});", APPJS).group(1))
+MODELLER = {}
+for mm in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", (?:"([a-z0-9]+)"|null), "([^"]+)", (\d+),', APPJS, re.M):
+    marke, modell, foto, driv, manad = mm.group(1), mm.group(2), mm.group(3), mm.group(4), int(mm.group(5))
+    namn = MODELLNAMN.get(foto) or modell.split(" ")[0]
+    g = MODELLER.setdefault(slug(marke + " " + namn), {"marke": marke, "namn": namn, "n": 0, "min": manad, "foto": foto})
+    g["n"] += 1; g["min"] = min(g["min"], manad)
+for key, g in sorted(MODELLER.items()):
+    fil = f"privatleasing-{key}.html"
+    assert fil not in sidor, fil
+    marke, namn, hel = g["marke"], g["namn"], html.escape(f"{g['marke']} {g['namn']}")
+    mfil = f"privatleasing-{slug(marke)}.html"
+    bilord = "erbjudande" if g["n"] == 1 else "erbjudanden"
+    sidor[fil] = sida(
+        fil,
+        f"Privatleasing {marke} {namn} 2026 – jämför {g['n']} {bilord} från {kr(g['min'])}/mån | Jämföra Privatleasing",
+        f"Jämför privatleasing på {marke} {namn} hos olika handlare: {g['n']} {bilord} från {kr(g['min'])}/mån. Se pris per månad, per mil och totalt på 36 månader – alla avgifter inräknade.",
+        sidhuvud(f"Privatleasing {hel}",
+                 f"Jämför handlare och märkets egna priser på {hel}. Billigast överst – med alla avgifter inräknade.",
+                 brod(("marken.html", "Märken"), (mfil, html.escape(marke)), (None, html.escape(namn))))
+        + f"""
+  <main class="wrap jmfsida" style="padding: 0 16px;">
+    <div class="jmfbild" id="jmfbild"></div>
+    <section id="jamfor"></section>
+    <p class="jmfmer"><a href="{mfil}">Alla {html.escape(marke)}-erbjudanden →</a> · <a href="alla-bilar.html">Jämför alla bilar →</a></p>
+    {VILLKOR}
+  </main>""" + MARKE_BLOCK.replace("Privatleasing per märke", "Andra märken"),
+        aktiv="marken.html", sida_typ="modell", marke=marke, modell=key,
+        ld=[brod_ld(("marken.html", "Märken"), (mfil, f"Privatleasing {marke}"), (fil, f"{marke} {namn}"))])
 
 # ---------- Skriv ut ----------
 for fil, text in sidor.items():

@@ -32,6 +32,12 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 7. **Publicera** ändrade filer från `site/` till artifact-sluggen ovan, commit och push till `main`.
 8. **Rapportera** kort på svenska bara vad som ändrats. Om priser ändrats: skriv att en ny zip till Strato behövs. Om inget ändrats: en rad.
 
+## Jämför handlare (modellsidor)
+- Varje modell har en egen sida `privatleasing-<märke>-<modell>.html` som listar alla erbjudanden på modellen, billigast först. Bilar hör till samma modell när de har samma `foto`-nyckel; modellens namn står i `MODELLNAMN` i kalla/app.js.
+- **Lägg gärna till fler handlares erbjudanden på modeller som redan finns** (samma `foto`-nyckel, `kalla` = handlarens namn och ort, `url` till handlarens sida) – det är det som gör jämförelsen värdefull. Samma krav som alltid: verifierat pris, 36 mån, nypris.
+- Ny modell: lägg till `"<foto>": "<Modellnamn>"` i `MODELLNAMN`. Ny ort: lägg till den i `ORT`, `ORTREGLER` och `LAN` (län).
+- build.py skapar modellsidorna och sitemap automatiskt. Publicera nya/ändrade modellsidor till artefakten.
+
 ## Regler
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.

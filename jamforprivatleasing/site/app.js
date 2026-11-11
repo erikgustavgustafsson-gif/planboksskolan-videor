@@ -881,6 +881,23 @@
       b.orttext = r ? (r.text || b.orter.join(", ")) : "";
     });
 
+    // ---------- Modeller: samma bil hos olika handlare jämförs på en egen sida ----------
+    // Nyckel = bildnamnet (foto). Namnet är modellens namn utan utrustningsnivå. build.py läser raden nedan.
+    const MODELLNAMN = {"a3":"A3 Sportback","a3sedan":"A3 Sedan","a5":"A5","a5avant":"A5 Avant","aygox":"Aygo X","bayon":"Bayon","bmw120":"1-serie","born":"Born","bz4x":"bZ4X","bz4xt":"bZ4X Touring","chr":"C-HR","cla":"CLA","clasb":"CLA Shooting Brake","corollacross":"Corolla Cross","corollats":"Corolla Touring Sports","cupraleon":"Leon Sportstourer","ec40":"EC40","eclass":"E-Klass","elroq":"Elroq","enyaq":"Enyaq","enyaqc":"Enyaq Coupé","epiq":"Epiq","ev2":"EV2","ev3":"EV3","ev4":"EV4","ev5":"EV5","ex30":"EX30","ex30cc":"EX30 Cross Country","ex40":"EX40","ex60":"EX60","fabia":"Fabia","formentor":"Formentor","glb":"GLB","glc":"GLC","golf":"Golf","golfsc":"Golf Sportscombi","i20":"i20","ibiza":"Ibiza","id3":"ID.3","id4":"ID.4","id7":"ID.7","id7t":"ID.7 Tourer","idcross":"ID.Cross","idpolo":"ID.Polo","idtiguan":"ID.Tiguan","ix2":"iX2","juke":"Juke","k4sw":"K4 Sportswagon","kamiq":"Kamiq","karoq":"Karoq","kodiaq":"Kodiaq","kona":"Kona","leon":"Leon","m3":"Model 3","mazda6e":"6e","mg4":"MG4","micra":"Micra","my":"Model Y","octaviac":"Octavia Combi","p2008":"2008","p3008":"3008","p5008":"5008","passat":"Passat","pe2008":"e-2008","peaq":"Peaq","picanto":"Picanto","pol4":"4","polo":"Polo","q4":"Q4 e-tron","q6":"Q6 e-tron","qashqai":"Qashqai","r5":"5 E-Tech","rav4":"RAV4","raval":"Raval","sandero":"Sandero","seal6":"Seal 6","seltos":"Seltos","sorento":"Sorento","sportage":"Sportage","stonic":"Stonic","superb":"Superb Combi","taigo":"Taigo","tavascan":"Tavascan","tayron":"Tayron","terramar":"Terramar","tiguan":"Tiguan","troc":"T-Roc","tucson":"Tucson","v60":"V60","xc60":"XC60","xc90":"XC90","yaris":"Yaris","yariscross":"Yaris Cross"};
+    // Län per ort, för regionknapparna i jämförelsen
+    const LAN = { "Stockholm": "Stockholm", "Hammarby Sjöstad": "Stockholm", "Kungsängen": "Stockholm", "Kista": "Stockholm", "Danderyd": "Stockholm", "Segeltorp": "Stockholm",
+      "Mölndal": "Västra Götaland", "Göteborg": "Västra Götaland", "Hisings Backa": "Västra Götaland", "Malmö": "Skåne", "Helsingborg": "Skåne", "Ystad": "Skåne",
+      "Gävle": "Gävleborg", "Borlänge": "Dalarna", "Falun": "Dalarna", "Karlstad": "Värmland", "Arvika": "Värmland",
+      "Jönköping": "Jönköping", "Nässjö": "Jönköping", "Habo": "Jönköping", "Linköping": "Östergötland", "Norrköping": "Östergötland", "Mjölby": "Östergötland", "Åtvidaberg": "Östergötland" };
+    const MODELLER = {};
+    BILAR.forEach(b => {
+      b.mnamn = MODELLNAMN[b.foto] || b.modell.split(" ")[0];
+      b.mkey = slug(b.marke + " " + b.mnamn);
+      b.msida = "privatleasing-" + b.mkey + ".html";
+      b.lan = !b.lokal ? ["Hela Sverige"] : b.orter ? [...new Set(b.orter.map(o => LAN[o] || o))] : ["Okänd ort"];
+      (MODELLER[b.mkey] = MODELLER[b.mkey] || []).push(b);
+    });
+
     // Postnummer -> ungefärlig plats (två första siffrorna). Räcker för avstånd i mil.
     const POSTNR = {
       10:[59.33,18.06],11:[59.33,18.06],12:[59.30,18.05],13:[59.31,18.15],14:[59.22,17.95],15:[59.20,17.63],16:[59.36,17.95],17:[59.37,17.98],18:[59.44,18.07],19:[59.58,17.85],
@@ -1030,6 +1047,7 @@
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
             <div class="kortpiller"><span>36 månader</span><span>${(b.m != null ? valdMil : b.mil).toLocaleString("sv-SE")} mil/år</span></div>
             <button type="button" class="cta" data-bil="${b.idx}">${b.tillval === "inga" ? "Beställ →" : "Välj tillval & beställ →"}</button>
+            ${MODELLER[b.mkey].length > 1 && SIDA !== "modell" ? `<a class="jmflank" href="${b.msida}">Jämför ${MODELLER[b.mkey].length} erbjudanden på ${esc(b.mnamn)} →</a>` : ""}
             <a class="ext" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Se erbjudandet hos ${b.typ === "Märket" ? "märket" : "handlaren"} ↗</a>${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
           </div>
           <div class="tags">
@@ -1502,6 +1520,67 @@
     if (document.getElementById("topp")) document.getElementById("topp").addEventListener("click", e => { const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]); });
     if (document.getElementById("trust")) document.getElementById("trust").innerHTML = `<span>${BILAR.length} bilar från ${new Set(BILAR.map(b => b.marke)).size} märken</span><span>Priser kontrollerade ${KONTROLL}</span><span>Alla avgifter inräknade</span><span>Beställ med tillval direkt här</span>`;
     if (document.getElementById("fotforetag")) document.getElementById("fotforetag").innerHTML = [FORETAG.namn + " (enskild firma)", FORETAG.orgnr && "Org.nr " + FORETAG.orgnr, FORETAG.epost].filter(Boolean).map(esc).join("<br>");
+    // ---------- Jämför handlare: alla erbjudanden på en modell, billigast först ----------
+    const jamfor = document.getElementById("jamfor");
+    let jmfRegion = "Alla";
+    function ritaJamfor() {
+      const alla = (MODELLER[document.body.dataset.modell] || []).map(bil => {
+        const m = manadFor(bil, bil.mil) + (bil.forsakring || 0);
+        const total = m * 36 + bil.start + bil.forhojd;
+        return { ...bil, m, total, krmil: total / (bil.mil * 3), andel: bil.nypris ? (total - (bil.forsakring || 0) * 36) / bil.nypris : null, idx: BILAR.indexOf(bil), avst: avstand(bil) };
+      });
+      if (!alla.length) { jamfor.innerHTML = `<p>Just nu finns inga erbjudanden på den här modellen. <a href="alla-bilar.html">Se alla bilar →</a></p>`; return; }
+      const b0 = alla[0], lagst = Math.min(...alla.map(r => r.m));
+      const lan = {}; alla.forEach(r => r.lan.forEach(l => lan[l] = (lan[l] || 0) + 1));
+      const lankn = Object.keys(lan).sort((a, b) => (a === "Hela Sverige" ? -1 : b === "Hela Sverige" ? 1 : a.localeCompare(b, "sv")));
+      if (jmfRegion !== "Alla" && !lan[jmfRegion]) jmfRegion = "Alla";
+      const sortSel = document.getElementById("jmfsort"), s = sortSel ? sortSel.value : "manad";
+      // Väljer man ett län visas även erbjudanden som gäller i hela landet – de går att hämta där också
+      let rader = alla.filter(r => jmfRegion === "Alla" || r.lan.includes(jmfRegion) || (jmfRegion !== "Hela Sverige" && r.lan[0] === "Hela Sverige"));
+      const big = Number.MAX_SAFE_INTEGER;
+      rader.sort((a, b) => s === "krmil" ? a.krmil - b.krmil : s === "total" ? a.total - b.total : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || a.m - b.m : a.m - b.m);
+      const tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      jamfor.innerHTML = `
+        <h2 class="jmfrub">${alla.length} ${alla.length === 1 ? "erbjudande" : "erbjudanden"} på ${esc(b0.mnamn)}</h2>
+        <div class="jmfkontroll">
+          <select id="jmfsort" aria-label="Sortera erbjudandena">
+            <option value="manad">Lägsta pris per månad</option><option value="total">Lägsta totalkostnad</option><option value="krmil">Lägsta pris per mil</option>${MINPLATS ? `<option value="nara">Närmast mig</option>` : ""}
+          </select>
+          ${lankn.length > 1 ? `<div class="jmfregion"><span>Region:</span><button type="button" data-lan="Alla" class="${jmfRegion === "Alla" ? "vald" : ""}">Alla</button>${lankn.map(l => `<button type="button" data-lan="${esc(l)}" class="${jmfRegion === l ? "vald" : ""}">${esc(l)} <i>${lan[l]}</i></button>`).join("")}</div>` : ""}
+        </div>
+        ${jmfRegion !== "Alla" && jmfRegion !== "Hela Sverige" && rader.some(r => r.lan[0] === "Hela Sverige") ? `<p class="jmfnot">Erbjudanden som gäller i hela Sverige visas också – de hämtas hos närmaste märkeshandlare.</p>` : ""}
+        <div class="jmflista">${rader.map(r => {
+          const billigast = r.m === lagst, handlare = esc(r.kalla.split(/ \(|,/)[0]);
+          const plats = !r.lokal ? "Hela Sverige – hämtas hos närmaste märkeshandlare" : r.orter ? r.orter.slice(0, 3).join(", ") + (r.orter.length > 3 ? " m.fl." : "") + (r.lan.length === 1 && !r.orter.includes(r.lan[0]) ? ", " + r.lan[0] : "") : "Lokal handlare – fråga var bilen hämtas";
+          return `<article class="jmfkort ${billigast ? "bast" : ""}">
+            <div class="jmftopp">
+              <span class="jmfbadge ${billigast ? "bast" : ""}">${billigast ? "Billigast" : r.typ === "Märket" ? "Märkets pris" : "Handlare"}</span>
+              <div class="jmfpris"><b>${kr(r.m)}</b><small>/mån</small><span>${tal(r.krmil)} kr/mil</span></div>
+            </div>
+            <h3>${esc(r.marke)} ${esc(r.modell)}</h3>
+            <p class="jmfhandlare">${handlare}</p>
+            <p class="jmfplats">📍 ${esc(plats)}${r.avst != null ? ` · ${tillMil(r.avst)} mil från dig` : ""}</p>
+            <p class="jmfinfo">36 mån · ${r.mil.toLocaleString("sv-SE")} mil/år · ${esc(r.drivmedel)} · ${kr(r.total)} totalt${r.forhojd ? ` · ${kr(r.forhojd)} vid start` : ""}${r.forsakring ? " · försäkring inräknad" : ""}</p>
+            <div class="jmfknappar">
+              <button type="button" class="cta" data-bil="${r.idx}">${r.tillval === "inga" ? "Beställ →" : "Välj tillval & beställ →"}</button>
+              <a class="jmfut" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet ↗${arAff(r.url) ? " <small>(annonslänk)</small>" : ""}</a>
+            </div>
+          </article>`;
+        }).join("") || "<p>Inga erbjudanden i den regionen.</p>"}</div>
+        <p class="jmffot">Priserna gäller 36 månader med 0 kr i kontantinsats. Avi- och uppläggningsavgifter är inräknade i månadspris, totalkostnad och kr/mil. Kontrollerat ${KONTROLL}.</p>`;
+      document.getElementById("jmfsort").value = s;
+    }
+    if (jamfor) {
+      ritaJamfor();
+      jamfor.addEventListener("change", e => { if (e.target.id === "jmfsort") ritaJamfor(); });
+      jamfor.addEventListener("click", e => {
+        const l = e.target.closest("button[data-lan]"); if (l) { jmfRegion = l.dataset.lan; ritaJamfor(); return; }
+        const b = e.target.closest("button[data-bil]"); if (b) oppnaKonf(BILAR[Number(b.dataset.bil)]);
+      });
+      const bild = document.getElementById("jmfbild"), b0 = (MODELLER[document.body.dataset.modell] || [])[0];
+      if (bild && b0 && b0.foto) bild.innerHTML = `<img src="${bildUrl(b0, "", 900)}" alt="${esc(b0.marke)} ${esc(b0.mnamn)}" width="960" height="600">`;
+    }
+
     // Kör rita() när något ändras, och en gång direkt när sidan laddas.
     [sok, drivmedel, mil, forsakring, sortera, markeSel, maxpris].filter(Boolean)
       .forEach(el => el.addEventListener("input", () => { antalVisas = STEGVIS; rita(); }));
