@@ -11,7 +11,7 @@
  },
  "Polestar": {
   "n": 1,
-  "min": 7295,
+  "min": 6995,
   "mod": "4 coupé Rear Motor Business edition Pilot",
   "el": 0,
   "driv": [
@@ -75,7 +75,7 @@
   ]
  },
  "Mercedes-Benz": {
-  "n": 9,
+  "n": 8,
   "min": 5560,
   "mod": "GLA 250+ electric Advanced Edition",
   "el": 0,

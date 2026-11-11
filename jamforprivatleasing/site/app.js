@@ -38,7 +38,7 @@
          not     = något viktigt i villkoren som inte syns i siffrorna
          kalla   = vem som erbjuder avtalet, url = länk dit
        ---------------------------------------------------------------- */
-    const KONTROLL = "8 nov 2026"; // uppdateras vid varje daglig kontroll
+    const KONTROLL = "11 nov 2026"; // uppdateras vid varje daglig kontroll
     const HEDIN = { start: 995, adm: 59, kalla: "Hedin Automotive" };
     const LEASABIL = { start: 495, kalla: "Leasabil" };
     const TOYOTA = { typ: "Märket", kalla: "Toyota Easy Privatleasing", start: 695, adm: 59, url: "https://easyprivatleasing.toyota.se/", not: "Fordonsskatt tillkommer. Övermil 8 kr/mil" };
@@ -67,7 +67,7 @@
     const BILAR = [
       B("Volvo", "EX30 Single Motor Plus", "ex30", "El", 3795, 1000, 457000, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ex30" }),
       B("Volvo", "EX30 Cross Country P5 Long Range Plus", "ex30cc", "El", 3990, 1000, 542000, { mer: {1500: 380, 2000: 839}, kalla: "Volvo Car Kungsängen", url: "https://bilweb.se/stockholms-lan/volvo-ex30-cross-country-plus-2027-suv-445689" }),
-      B("Volvo", "EX40 Single Motor Extended Range Plus", "ex40", "El", 4790, 1000, 591000, { kalla: "Volvo Car Kista (Volvofinans)", url: "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/ex40/single-motor-extended-range-f4db20f053bd471db94996bcf8d0a9e0", not: "Modellår 2027. Lagerbil, begränsat antal. Försäkring tillkommer", utr: ["Metalliclack", "Serviceavtal", "Volvo Assistans (36 mån)", "Privatleasingskydd i 3 månader"] }),
+      B("Volvo", "EX40 Single Motor Extended Range Plus", "ex40", "El", 4790, 1000, 591000, { kalla: "Volvo Car Kista (Volvofinans)", url: "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/ex40/single-motor-extended-range-b87144ea45ec4d118984580faf6be5f1", not: "Modellår 2027. Lagerbil, begränsat antal. Försäkring tillkommer", utr: ["Serviceavtal", "Volvo Assistans (36 mån)", "Privatleasingskydd i 3 månader"] }),
       B("Polestar", "4 coupé Rear Motor Business edition Pilot", "pol4", "El", 6995, 1500, 619000, { typ: "Märket", kalla: "Polestar Privatleasing", url: "https://www.polestar.com/se/offers/polestar-4-business-edition-private-lease", not: "Fast ränta, 0 kr förhöjd hyra. Leverans senast 31 dec 2026" }),
       // --- Škoda (märkets egna priser) ---
       // --- Kia (märkets egna priser) ---
@@ -162,7 +162,6 @@
       B("Mercedes-Benz", "GLB 250+ electric Advanced Edition", "glb", "El", 6495, 1500, 619000, MB),
       B("Mercedes-Benz", "C 300 4MATIC electric Advanced Edition", null, "El", 6995, 1500, 649000, MB),
       B("Mercedes-Benz", "GLC 300 4MATIC electric Advanced Edition", "glc", "El", 7995, 1500, 719000, MB),
-      B("Mercedes-Benz", "GLC 400 4MATIC electric Advanced Edition", "glc", "El", 8895, 1500, 784000, MB),
       B("Mercedes-Benz", "Mercedes-AMG CLA 45 4MATIC+ electric", "cla", "El", 9595, 1500, 799000, MB),
       B("Mercedes-Benz", "E 300 e Sedan", "eclass", "Laddhybrid", 6795, 1500, 634000, { ...MB, kalla: "Hedin Automotive (Mercedes-Benz Finans)", typ: "Återförsäljare", url: HA + "47407/pc-sc-mercedes-benz-e-class" }),
       // --- Tesla ---
@@ -174,7 +173,7 @@
       // --- Volvo, fler modeller ---
       B("Volvo", "EC40 Single Motor Core SE", "ec40", "El", 5195, 1000, 529900, { typ: "Märket", kalla: "Volvo Nationell Privatleasing (via Nybergs Bil)", url: "https://nybergsbil.se/kampanjer/volvo-ec40" }),
       B("Volvo", "XC60 T6 Plus", "xc60", "Laddhybrid", 7995, 1000, 599900, { ...LEASABIL, url: LB + "Volvo/Volvo-XC60-Plus" }),
-      B("Volvo", "V60 T6 Plug-in Hybrid AWD", "v60", "Laddhybrid", 8210, 1000, 539900, { kalla: "Bilmånsson Ystad via Wayke", url: "https://www.wayke.se/objekt/a82469f4-b54f-48dd-8071-c35e79e7b944", not: "Lagerbil som körts 2 739 mil (demobil)" }),
+      B("Volvo", "V60 T6 Plus Dark Nordic Edition", "v60", "Laddhybrid", 7595, 1000, 542900, { kalla: "Volvo Car Hisings Backa (Volvofinans)", url: "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/v60/bf247c793d344dd38df67cf0a40ff31d", not: "Modellår 2026. Lagerbil, begränsat antal. Försäkring tillkommer", utr: ["Serviceavtal", "Volvo Assistans (36 mån)", "Privatleasingskydd i 3 månader"] }),
       B("Volvo", "EX60 P6 Plus", "ex60", "El", 8995, 1000, 689000, { kalla: "Volvo Car Hammarby Sjöstad via Wayke", url: "https://www.wayke.se/objekt/170a712b-5743-4b66-9e23-bb33b98d7edd" }),
       B("Volvo", "XC90 T8 AWD Ultra Dark", "xc90", "Laddhybrid", 10900, 1000, 1050200, { kalla: "Volvo Car Hisings Backa (Volvofinans)", url: "https://www.volvocarretail.se/bilar-i-lager/nya/volvo/xc90/recharge-t8-awd-01a0aaa83f127b4a9ea8344ce2d7b075", not: "Modellår 2027. Lagerbil, begränsat antal. Annonsen anger 1 000 mil/år men handlarens kampanjtext 1 500 mil/år och vinterhjul – fråga handlaren. Försäkring tillkommer" }),
       B("Cupra", "Formentor eTSI 150 DSG", "formentor", "Bensin", 2495, 1000, 324500, { forhojd: 10000, kalla: "Lecab", url: "https://lecab.se/erbjudande/cupra-formentor-10/", not: "Gäller ett begränsat antal lagerbilar i färgen Fiord Blue. Metalliclack +300 kr/mån. Nybeställd bil 3 295 kr/mån" }),
