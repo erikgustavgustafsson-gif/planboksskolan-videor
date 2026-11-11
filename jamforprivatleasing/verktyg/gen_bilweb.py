@@ -146,9 +146,11 @@ for k, v in data.items():
 
 app = open(APP, encoding="utf-8").read()
 mn = json.loads(re.search(r"const MODELLNAMN = (\{.*?\});", app).group(1))
-foto = {}
-for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)"', app, re.M):
-    foto.setdefault(m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0]), m.group(3))
+foto, kanddriv = {}, {}
+for m in re.finditer(r'^\s*B\("([^"]+)", "([^"]+)", "([a-z0-9]+)", "(\w+)"', app, re.M):
+    if "bilweb" in m.group(0): continue
+    nyckel = m.group(1) + "|" + (mn.get(m.group(3)) or m.group(2).split(" ")[0])
+    foto.setdefault(nyckel, m.group(3)); kanddriv.setdefault(nyckel, set()).add(m.group(4))
 
 rader, stat = [], {"ok": 0, "gammal": 0, "begagnad": 0, "avtal": 0, "pris": 0, "driv": 0, "dubblett": 0}
 for mal, annonser in sorted(modeller.items()):
@@ -162,10 +164,12 @@ for mal, annonser in sorted(modeller.items()):
         if not ar or ar < IDAG.year - 1 or (km or 0) > 100: stat["begagnad"] += 1; continue
         if not a.get("saljare") or not a.get("manad"): stat["pris"] += 1; continue
         if man(a) != 36: stat["avtal"] += 1; continue
-        if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag", a["titel"], re.I): stat["pris"] += 1; continue   # villkorade priser
+        if re.search(r"premie|bidrag|förmånsvärde|tjänstebil|företag", a["titel"] + " " + a["url"], re.I): stat["pris"] += 1; continue   # villkorade priser
         pi = pris_och_insats(a)
         if not pi or not pi[0] or pi[0] < 1000 or pi[1] > 50000: stat["pris"] += 1; continue
         dm = driv(a)
+        if not dm and not a.get("driv") and len(kanddriv.get(mal, ())) == 1 and "El" in kanddriv[mal]:
+            dm = "El"   # äldre insamling utan drivmedelsfält: modellen finns bara som elbil
         if not dm: stat["driv"] += 1; continue
         if mal == "Toyota|C-HR" and dm == "El": stat["driv"] += 1; continue   # C-HR+ är en annan bil
         mil = bas_mil(a)
@@ -176,7 +180,11 @@ for mal, annonser in sorted(modeller.items()):
         nyckel = (a["saljare"], a["pris"], a["drivm"])
         if nyckel in bast: stat["dubblett"] += 1; continue
         bast[nyckel] = a
-    for a in list(bast.values())[:8]:
+    per_saljare, urval = {}, []
+    for a in bast.values():
+        per_saljare[a["saljare"]] = per_saljare.get(a["saljare"], 0) + 1
+        if per_saljare[a["saljare"]] <= 2: urval.append(a)
+    for a in urval[:8]:
         lan_namn, lan_pos = LAN.get(a["lan"], ("", None))
         ort = a["ort"] or lan_namn
         pos = STAD.get(ort) or lan_pos
