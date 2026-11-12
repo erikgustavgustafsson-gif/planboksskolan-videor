@@ -67,10 +67,18 @@
     // --- BWORT START (genereras av verktyg/gen_bilweb2.py) ---
     const BWORT = {"Segeltorp":[[59.28,17.94],"Stockholm"],"Kalmar":[[56.66,16.36],"Kalmar"],"Gävle":[[60.67,17.14],"Gävleborg"],"Mölndal":[[57.66,12.01],"Västra Götaland"],"Helsingborg":[[56.05,12.69],"Skåne"],"Hudiksvall":[[61.0,16.8],"Gävleborg"],"Ängelholm":[[55.8,13.4],"Skåne"],"Växjö":[[56.88,14.81],"Kronoberg"],"Motala":[[58.41,15.62],"Östergötland"],"Handen":[[59.17,18.14],"Stockholm"],"Kista":[[59.4,17.94],"Stockholm"],"Stockholm":[[59.33,18.07],"Stockholm"],"Danderyd":[[59.4,18.04],"Stockholm"],"Norrtälje":[[59.76,18.7],"Stockholm"],"Åskloster":[[56.9,12.7],"Halland"],"Södertälje":[[59.2,17.63],"Stockholm"],"Sundsvall":[[62.39,17.31],"Västernorrland"],"Karlskrona":[[56.16,15.59],"Blekinge"],"Jönköping":[[57.78,14.16],"Jönköping"],"Kungälv":[[57.87,11.98],"Västra Götaland"],"Karlstad":[[59.38,13.5],"Värmland"],"Malmö":[[55.6,13.0],"Skåne"],"Kristianstad":[[56.03,14.16],"Skåne"],"Lund":[[55.7,13.19],"Skåne"],"Trollhättan":[[58.28,12.29],"Västra Götaland"],"Åby":[[58.41,15.62],"Östergötland"],"Halmstad":[[56.67,12.86],"Halland"],"Uppsala":[[59.86,17.64],"Uppsala"],"Falkenberg":[[56.9,12.7],"Halland"],"Linköping":[[58.41,15.62],"Östergötland"],"Täby":[[59.44,18.07],"Stockholm"],"Skärholmen":[[59.28,17.91],"Stockholm"],"Vällingby":[[59.33,18.07],"Stockholm"],"Hisings Kärra":[[57.9,12.6],"Västra Götaland"],"Upplands Väsby":[[59.52,17.91],"Stockholm"],"Västra Frölunda":[[57.9,12.6],"Västra Götaland"],"Borlänge":[[60.48,15.43],"Dalarna"],"Varberg":[[57.11,12.25],"Halland"],"Falun":[[60.61,15.63],"Dalarna"],"Norrköping":[[58.59,16.19],"Östergötland"],"Österhaninge":[[59.33,18.07],"Stockholm"],"Saltsjö-Boo":[[59.33,18.07],"Stockholm"],"Borås":[[57.72,12.94],"Västra Götaland"],"Alingsås":[[57.9,12.6],"Västra Götaland"],"Västerås":[[59.61,16.55],"Västmanland"],"Värnamo":[[57.78,14.16],"Jönköping"],"Nacka Strand":[[59.33,18.07],"Stockholm"],"Eskilstuna":[[59.37,16.51],"Södermanland"],"Karlshamn":[[56.17,14.86],"Blekinge"],"Enköping":[[59.64,17.08],"Uppsala"],"Laholm":[[56.9,12.7],"Halland"],"Nässjö":[[57.78,14.16],"Jönköping"],"Kungsängen":[[59.48,17.75],"Stockholm"],"Bromma":[[59.34,17.94],"Stockholm"],"Järfälla":[[59.43,17.83],"Stockholm"],"Arvika":[[59.38,13.5],"Värmland"],"Åkersberga":[[59.48,18.3],"Stockholm"],"Örebro":[[59.27,15.21],"Örebro"],"Ludvika":[[60.6,15.4],"Dalarna"],"Lindesberg":[[59.27,15.21],"Örebro"],"Sollentuna":[[59.33,18.07],"Stockholm"],"Igår":[[57.9,12.6],"Västra Götaland"],"Västervik":[[56.66,16.36],"Kalmar"],"Nacka":[[59.31,18.16],"Stockholm"],"Mora":[[60.6,15.4],"Dalarna"],"Hässleholm":[[55.8,13.4],"Skåne"],"Tranås":[[57.78,14.16],"Jönköping"],"Eksjö":[[57.78,14.16],"Jönköping"],"Lidköping":[[58.5,13.16],"Västra Götaland"],"Oskarshamn":[[56.66,16.36],"Kalmar"],"Hisings Backa":[[57.75,11.93],"Västra Götaland"],"Haninge":[[59.17,18.14],"Stockholm"],"Östhammar":[[59.86,17.64],"Uppsala"],"13 Okt":[[57.9,12.6],"Västra Götaland"],"Kungsbacka":[[57.49,12.08],"Halland"],"Sundbyberg":[[59.36,17.97],"Stockholm"],"Kungens Kurva":[[59.33,18.07],"Stockholm"],"Trelleborg":[[55.8,13.4],"Skåne"],"Skee":[[57.9,12.6],"Västra Götaland"],"Askim":[[57.63,11.94],"Västra Götaland"],"Arlandastad":[[59.33,18.07],"Stockholm"],"10 Okt":[[59.33,18.07],"Stockholm"],"Nyköping":[[58.75,17.01],"Södermanland"],"Ljungby":[[56.88,14.81],"Kronoberg"],"Vallentuna":[[59.53,18.08],"Stockholm"],"Köping":[[59.61,16.55],"Västmanland"],"Solna":[[59.36,18.0],"Stockholm"]};
     // --- BWORT SLUT ---
+    // Samma bil under olika namn hos säljarna slås ihop till ett modellnamn (annars får bilen två sidor)
+    const MODELLALIAS = { "Renault|5": "5 E-Tech", "Renault|4": "4 E-Tech", "Renault|Scénic": "Scenic E-Tech", "Renault|Scenic": "Scenic E-Tech", "Hyundai|Ioniq 3": "IONIQ 3", "Hyundai|Ioniq 5": "IONIQ 5",
+      "Kia|Sportage Plug-In Hybrid": "Sportage", "Nissan|Juke Hybrid": "Juke", "BYD|SEAL U DM-i": "Seal U", "BYD|SEAL 6 DM-i Touring": "Seal 6 Touring", "Mercedes-Benz|C-Klass": "C", "Audi|A2": "A2 e-tron",
+      "Toyota|Aygo": "Aygo X", "DS|7 Crossback": "7", "MG|MG4": "MG4", "Dacia|Sandero Stepway": "Sandero", "Opel|Corsa-e": "Corsa", "Suzuki|e Vitara": "e Vitara" };
+    // Elvarianter med samma kaross som en modell vi redan har bild på
+    const FOTOALIAS = {"Peugeot|e-3008": "p3008", "Peugeot|e-5008": "p5008", "Renault|5 E-Tech": "r5", "Opel|Frontera": "frontera", "Opel|Grandland": "grandland", "Kia|K4": "k4", "Citroën|C5 AirCross": "c5aircross", "Mitsubishi|Outlander": "outlander", "Hyundai|Santa Fe": "santafe", "Citroën|C3 Aircross": "c3aircross", "Renault|Scenic E-Tech": "scenic", "Hyundai|IONIQ 9": "ioniq9", "Ford|Explorer": "explorer", "Opel|Mokka": "mokka", "Leapmotor|B10": "b10", "Leapmotor|T03": "t03", "MG|S5": "mgs5", "Ford|Capri": "capri", "MINI|Aceman": "aceman", "Dacia|Duster": "duster", "BMW|iX1": "ix1", "Mercedes-Benz|GLA": "gla", "Peugeot|408": "p408", "Opel|Mokka-e": "mokka", "Citroën|e-C3 Aircross": "c3aircross"};
+    const _alias = (marke, mnamn) => MODELLALIAS[marke + "|" + mnamn] || mnamn;
     // En handlarannons från Bilweb. Kort form för att hålla filen liten:
     // BW(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år (0 = står inte i annonsen), säljare, ort, sökväg hos Bilweb, annonsens datum, insats, karosstyp)
     function BW(marke, mnamn, modell, foto, drivmedel, manad, mil, saljare, ort, vag, dat, forhojd, kaross) {
       const o = BWORT[ort] || [];
+      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null;
       const noter = [`Annons hos ${saljare}, uppdaterad ${dat}`];
       if (!mil) noter.push("Körsträckan framgår inte av annonsen – fråga handlaren");
       if (forhojd) noter.push(`Priset förutsätter ${forhojd.toLocaleString("sv-SE")} kr i insats/förhöjd första hyra`);
@@ -81,6 +89,7 @@
     // En lagerbil hos Hedin Automotive med Hedins egna privatleasinguppgifter (pris, avgifter, körsträcka):
     // HD(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år, uppläggning, avi/mån, ort, [lat, lon], id/slug, service ingår (1/0), karosstyp)
     function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross, premie) {
+      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null;
       return B(marke, modell, foto, drivmedel, manad, mil, null, { mnamn, kaross: kaross || "", kalla: "Hedin Automotive " + ort, url: "https://hedinautomotive.se/bilar/kop-bil/" + vag,
         start, adm, ort, ortpos: pos || (BWORT[ort] || [])[0] || null, ortlan: (BWORT[ort] || [])[1] || "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer" + (premie ? ". Bilen kan ge rätt till elbilspremie – fråga Hedin om den påverkar priset" : ""), tillval: "inga", hedin: true });
     }
@@ -3135,6 +3144,26 @@
     const C = "https://commons.wikimedia.org/wiki/File:";
     const M = "Alexander Migl", A = "Alexander-93";
     const FOTON = {
+      frontera: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Opel_Frontera_C_Electric_Auto_Zuerich_2024_DSC_6234.jpg" },
+      grandland: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Opel_Grandland_B_Electric_DSC_6030.jpg" },
+      k4: { av: "Oleg Yunakov", lic: "CC BY-SA 4.0", fil: "2026_Kia_K4_Hatchback_-_02.jpg" },
+      c5aircross: { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "Citro%C3%ABn_%C3%AB-C5_Aircross_Auto_Zuerich_2025_DSC_2991.jpg" },
+      outlander: { av: "TTTNIS", lic: "CC0", fil: "2024_Mitsubishi_Outlander_PHEV_P_Executive_Package.jpg" },
+      santafe: { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "2024_Hyundai_Santa_Fe_%28MX5%29_IMG_5295.jpg" },
+      c3aircross: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Citro%C3%ABn_C3_Aircross_%282024%29_DSC_0591.jpg" },
+      scenic: { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Renault_Sc%C3%A9nic_E-Tech_Electric_220_Long_Range_Techno_%E2%80%93_f_30062024.jpg" },
+      ioniq9: { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "Hyundai_Ioniq_9_IMG_5950.jpg" },
+      explorer: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Ford_Explorer_EV_Auto_Zuerich_2024_DSC_6362.jpg" },
+      mokka: { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Opel_Mokka_Electric_Edition_%28B%2C_Facelift%29_%E2%80%93_f_12102025.jpg" },
+      b10: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Leapmotor_B10_IAA_2025_DSC_2067.jpg" },
+      t03: { av: "Alexander Migl (retuscherad av NearEMPTiness)", lic: "CC BY-SA 4.0", fil: "Leapmotor_T03_DSC_9337_%28retouched%29.jpg" },
+      mgs5: { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "MGS5_EV_DSC_2698.jpg" },
+      capri: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Ford_Capri_%282024%29_Auto_Zuerich_2024_DSC_6382.jpg" },
+      aceman: { av: "Alexander Migl", lic: "CC BY-SA 4.0", fil: "Mini_Aceman_JCW_Trim_DSC_7951.jpg" },
+      duster: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Dacia_Duster_III_IMG_8961.jpg" },
+      ix1: { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "BMW_iX1_xDrive30_%28U11%29_%E2%80%93_f_05052024.jpg" },
+      gla: { av: "Dinkun Chen", lic: "CC BY-SA 4.0", fil: "MERCEDES-BENZ_GLA_%28H247%29_China_%286%29.jpg" },
+      p408: { av: "Alexander-93", lic: "CC BY-SA 4.0", fil: "Peugeot_408_%28crossover%29_1X7A7195.jpg" },
       a3:         { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Audi_A3_Sportback_(8Y,_Facelift)_%E2%80%93_f_03102025.jpg" },
       aygox:      { av: M, fil: "Toyota_Aygo_X_Hybrid_IMG_5984.jpg" },
       bayon:      { av: "M 93", lic: "CC BY-SA 3.0 de", fil: "Hyundai_Bayon_1.0_T-GDI_Prime_(Facelift)_%E2%80%93_f_07072024.jpg" },
@@ -3276,14 +3305,14 @@
 
     // ---------- Modeller: samma bil hos olika handlare jämförs på en egen sida ----------
     // Nyckel = bildnamnet (foto). Namnet är modellens namn utan utrustningsnivå. build.py läser raden nedan.
-    const MODELLNAMN = {"a3":"A3 Sportback","a3sedan":"A3 Sedan","a5":"A5","a5avant":"A5 Avant","aygox":"Aygo X","bayon":"Bayon","bmw120":"1-serie","born":"Born","bz4x":"bZ4X","bz4xt":"bZ4X Touring","chr":"C-HR","cla":"CLA","clasb":"CLA Shooting Brake","corollacross":"Corolla Cross","corollats":"Corolla Touring Sports","cupraleon":"Leon Sportstourer","ec40":"EC40","eclass":"E-Klass","elroq":"Elroq","enyaq":"Enyaq","enyaqc":"Enyaq Coupé","epiq":"Epiq","ev2":"EV2","ev3":"EV3","ev4":"EV4","ev5":"EV5","ex30":"EX30","ex30cc":"EX30 Cross Country","ex40":"EX40","ex60":"EX60","fabia":"Fabia","formentor":"Formentor","glb":"GLB","glc":"GLC","golf":"Golf","golfsc":"Golf Sportscombi","i20":"i20","ibiza":"Ibiza","id3":"ID.3","id4":"ID.4","id7":"ID.7","id7t":"ID.7 Tourer","idcross":"ID.Cross","idpolo":"ID.Polo","idtiguan":"ID.Tiguan","ix2":"iX2","juke":"Juke","k4sw":"K4 Sportswagon","kamiq":"Kamiq","karoq":"Karoq","kodiaq":"Kodiaq","kona":"Kona","leon":"Leon","m3":"Model 3","mazda6e":"6e","mg4":"MG4","micra":"Micra","my":"Model Y","octaviac":"Octavia Combi","p2008":"2008","p3008":"3008","p5008":"5008","passat":"Passat","pe2008":"e-2008","peaq":"Peaq","picanto":"Picanto","pol4":"4","polo":"Polo","q4":"Q4 e-tron","q6":"Q6 e-tron","qashqai":"Qashqai","r5":"5 E-Tech","rav4":"RAV4","raval":"Raval","sandero":"Sandero","seal6":"Seal 6","seltos":"Seltos","sorento":"Sorento","sportage":"Sportage","stonic":"Stonic","superb":"Superb Combi","taigo":"Taigo","tavascan":"Tavascan","tayron":"Tayron","terramar":"Terramar","tiguan":"Tiguan","troc":"T-Roc","tucson":"Tucson","v60":"V60","xc60":"XC60","xc90":"XC90","yaris":"Yaris","yariscross":"Yaris Cross"};
+    const MODELLNAMN = {"a3":"A3 Sportback","a3sedan":"A3 Sedan","a5":"A5","a5avant":"A5 Avant","aygox":"Aygo X","bayon":"Bayon","bmw120":"1-serie","born":"Born","bz4x":"bZ4X","bz4xt":"bZ4X Touring","chr":"C-HR","cla":"CLA","clasb":"CLA Shooting Brake","corollacross":"Corolla Cross","corollats":"Corolla Touring Sports","cupraleon":"Leon Sportstourer","ec40":"EC40","eclass":"E-Klass","elroq":"Elroq","enyaq":"Enyaq","enyaqc":"Enyaq Coupé","epiq":"Epiq","ev2":"EV2","ev3":"EV3","ev4":"EV4","ev5":"EV5","ex30":"EX30","ex30cc":"EX30 Cross Country","ex40":"EX40","ex60":"EX60","fabia":"Fabia","formentor":"Formentor","glb":"GLB","glc":"GLC","golf":"Golf","golfsc":"Golf Sportscombi","i20":"i20","ibiza":"Ibiza","id3":"ID.3","id4":"ID.4","id7":"ID.7","id7t":"ID.7 Tourer","idcross":"ID.Cross","idpolo":"ID.Polo","idtiguan":"ID.Tiguan","ix2":"iX2","juke":"Juke","k4sw":"K4 Sportswagon","kamiq":"Kamiq","karoq":"Karoq","kodiaq":"Kodiaq","kona":"Kona","leon":"Leon","m3":"Model 3","mazda6e":"6e","mg4":"MG4","micra":"Micra","my":"Model Y","octaviac":"Octavia Combi","p2008":"2008","p3008":"3008","p5008":"5008","passat":"Passat","pe2008":"e-2008","peaq":"Peaq","picanto":"Picanto","pol4":"4","polo":"Polo","q4":"Q4 e-tron","q6":"Q6 e-tron","qashqai":"Qashqai","r5":"5 E-Tech","rav4":"RAV4","raval":"Raval","sandero":"Sandero","seal6":"Seal 6","seltos":"Seltos","sorento":"Sorento","sportage":"Sportage","stonic":"Stonic","superb":"Superb Combi","taigo":"Taigo","tavascan":"Tavascan","tayron":"Tayron","terramar":"Terramar","tiguan":"Tiguan","troc":"T-Roc","tucson":"Tucson","v60":"V60","xc60":"XC60","xc90":"XC90","yaris":"Yaris","yariscross":"Yaris Cross","frontera":"Frontera","grandland":"Grandland","k4":"K4","c5aircross":"C5 Aircross","outlander":"Outlander","santafe":"Santa Fe","c3aircross":"C3 Aircross","scenic":"Scenic E-Tech","ioniq9":"IONIQ 9","explorer":"Explorer","mokka":"Mokka","b10":"B10","t03":"T03","mgs5":"S5","capri":"Capri","aceman":"Aceman","duster":"Duster","ix1":"iX1","gla":"GLA","p408":"408"};
     // Karosstyp per modell (nyckel = bildnamnet). Används av kategorisidorna (SUV, kombi, småbil).
     const KAROSS = {};
     const _kar = (typ, lista) => lista.split(" ").forEach(k => KAROSS[k] = typ);
-    _kar("SUV", "bayon bz4x bz4xt chr corollacross ec40 elroq enyaq enyaqc epiq ev2 ev3 ev5 ex30 ex30cc ex40 ex60 formentor glb glc id4 idcross idtiguan ix2 juke kamiq karoq kodiaq kona my p2008 p3008 p5008 pe2008 peaq pol4 q4 q6 qashqai rav4 seltos sorento sportage stonic taigo tavascan tayron terramar tiguan troc tucson xc60 xc90 yariscross");
+    _kar("SUV", "bayon bz4x bz4xt chr corollacross ec40 elroq enyaq enyaqc epiq ev2 ev3 ev5 ex30 ex30cc ex40 ex60 formentor glb glc id4 idcross idtiguan ix2 juke kamiq karoq kodiaq kona my p2008 p3008 p5008 pe2008 peaq pol4 q4 q6 qashqai rav4 seltos sorento sportage stonic taigo tavascan tayron terramar tiguan troc tucson xc60 xc90 yariscross frontera grandland c5aircross outlander santafe c3aircross scenic ioniq9 explorer mokka b10 mgs5 capri aceman duster ix1 gla");
     _kar("Kombi", "a5avant clasb corollats cupraleon golfsc id7t k4sw octaviac passat superb v60");
-    _kar("Småbil", "aygox fabia i20 ibiza idpolo micra picanto polo r5 raval sandero yaris");
-    _kar("Halvkombi/sedan", "a3 a3sedan a5 bmw120 born cla eclass ev4 golf id3 id7 leon m3 mazda6e mg4 seal6");
+    _kar("Småbil", "aygox fabia i20 ibiza idpolo micra picanto polo r5 raval sandero yaris t03");
+    _kar("Halvkombi/sedan", "a3 a3sedan a5 bmw120 born cla eclass ev4 golf id3 id7 leon m3 mazda6e mg4 seal6 k4 p408");
     // Län per ort, för regionknapparna i jämförelsen
     const LAN = { "Stockholm": "Stockholm", "Hammarby Sjöstad": "Stockholm", "Kungsängen": "Stockholm", "Kista": "Stockholm", "Danderyd": "Stockholm", "Segeltorp": "Stockholm",
       "Mölndal": "Västra Götaland", "Göteborg": "Västra Götaland", "Hisings Backa": "Västra Götaland", "Malmö": "Skåne", "Helsingborg": "Skåne", "Ystad": "Skåne",
@@ -3302,6 +3331,11 @@
       b.msida = "privatleasing-" + b.mkey + ".html";
       b.lan = !b.lokal ? ["Hela Sverige"] : b.orter ? [...new Set(b.orter.map(o => LAN[o] || LANEXTRA[o] || o))] : ["Okänd ort"];
       (MODELLER[b.mkey] = MODELLER[b.mkey] || []).push(b);
+    });
+    // Erbjudanden utan egen bild lånar bild och karosstyp från samma modell
+    Object.values(MODELLER).forEach(g => {
+      const f = g.find(b => b.foto), k = g.find(b => b.kaross);
+      g.forEach(b => { if (!b.foto && f) b.foto = f.foto; if (!b.kaross && k) b.kaross = k.kaross; });
     });
     // Körsträcka som saknas i handlarens annons: om priset är exakt detsamma som märkets eget erbjudande
     // på samma modell är det samma kampanj – då gäller märkets körsträcka. Annars gissar vi inte.

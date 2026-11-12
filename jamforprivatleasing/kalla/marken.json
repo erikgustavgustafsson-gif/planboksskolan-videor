@@ -13,13 +13,13 @@
  "BYD": {
   "n": 16,
   "min": 4510,
-  "mod": "SEAL 6 DM-i Touring",
+  "mod": "Seal 6 Touring",
   "driv": [
    "Laddhybrid"
   ]
  },
  "Dacia": {
-  "n": 30,
+  "n": 27,
   "min": 1990,
   "mod": "Sandero",
   "driv": [
@@ -98,9 +98,9 @@
   ]
  },
  "Renault": {
-  "n": 106,
+  "n": 104,
   "min": 3290,
-  "mod": "5",
+  "mod": "5 E-Tech",
   "driv": [
    "El",
    "Hybrid",
