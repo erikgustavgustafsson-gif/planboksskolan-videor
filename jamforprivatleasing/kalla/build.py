@@ -15,7 +15,7 @@ UT = HIT.parent / "site"
 DOMAN = "https://jamforprivatleasing.se/"
 DATUM = datetime.date.today().isoformat()
 import hashlib
-VER = hashlib.md5(b"".join((HIT / f).read_bytes() for f in ("app.js", "stil.css", "../site/foretag.js", "../site/affiliate.js", "../site/bildkalla.js"))).hexdigest()[:8]   # ny adress när koden ändras -> webbläsaren kan spara filerna länge
+VER = hashlib.md5(b"".join((HIT / f).read_bytes() for f in ("app.js", "stil.css", "../site/foretag.js", "../site/affiliate.js", "../site/bildkalla.js", "../site/samtycke.js"))).hexdigest()[:8]   # ny adress när koden ändras -> webbläsaren kan spara filerna länge
 _MAN = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"]
 MANAD = f"{_MAN[datetime.date.today().month - 1]} {datetime.date.today().year}"   # t.ex. "november 2026" – står i sidtitlarna
 ORIG = (HIT / "original-index.html").read_text(encoding="utf-8")
@@ -142,7 +142,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <footer class="sidfot">
     <div class="wrap fotrad">
       <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
-      <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="#" data-kakor>Kakinställningar</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
       <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
       <div><b>Företag</b><span id="fotforetag"></span></div>
     </div>
@@ -155,6 +155,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   </section>
   <footer>Jämföra Privatleasing · priser kontrollerade {KONTROLL} · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
+  <script src="samtycke.js?v={VER}"></script>
   <script src="foretag.js?v={VER}"></script>
   <script src="affiliate.js?v={VER}"></script>
   <script src="bildkalla.js?v={VER}"></script>
@@ -745,6 +746,17 @@ for key, lst in sorted(MOD.items()):
     <p class="direktsvar">{svar}</p>
     {rutor}
     <section id="jamfor"><h2 class="jmfrub">{erb} på {html.escape(namn)}</h2><ol class="jmfstatisk">{statisk}</ol></section>
+    <section class="bevaka" id="bevaka">
+      <h2>Bevaka priset på {hel}</h2>
+      <p>Få ett mejl när det billigaste erbjudandet blir lägre än i dag ({kr(st["min"])}/mån). Gratis, och du avslutar med ett klick.</p>
+      <form id="bevakaform" data-mkey="{key}" data-namn="{hel}" novalidate>
+        <input type="text" name="webbplats" tabindex="-1" autocomplete="off" class="honung" aria-hidden="true">
+        <div class="bevrad"><input type="email" name="epost" required placeholder="din@epost.se" aria-label="Din e-postadress" autocomplete="email"><button type="submit">Bevaka priset</button></div>
+        <label class="bevkryss"><input type="checkbox" name="samtycke" value="1" required> <span>Ja, mejla mig när priset på {hel} sänks. Jag har läst <a href="integritetspolicy.html#epost">hur min e-postadress används</a>.</span></label>
+        <label class="bevkryss"><input type="checkbox" name="nyhetsbrev" value="1"> <span>Skicka också nyhetsbrev med de bästa privatleasingerbjudandena (högst ett par gånger i månaden).</span></label>
+        <p class="bevsvar" role="status" hidden></p>
+      </form>
+    </section>
     <p class="jmfmer"><a href="{mfil}">Alla {html.escape(marke)}-erbjudanden →</a> · <a href="alla-bilar.html">Jämför alla bilar →</a> · <a href="sa-jamfor-vi.html">Så jämför vi →</a></p>
     {CHECKLISTA}
     {faqhtml}

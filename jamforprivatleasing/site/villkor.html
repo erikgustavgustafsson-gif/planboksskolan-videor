@@ -27,6 +27,7 @@
     a { color: #1F7A6B; }
     footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
   </style>
+  <script src="samtycke.js"></script>
   <script src="foretag.js"></script>
 </head>
 <body>
@@ -51,7 +52,7 @@
       <span class="valfri">Adress: <span data-f="adress"></span><br></span>
       <span class="valfri">E-post: <span data-f="epost"></span></span></div>
   </main>
-  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="villkor.html">Villkor</a></footer>
+  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="#" data-kakor>Kakinställningar</a> · <a href="villkor.html">Villkor</a></footer>
   <script>
     // Fyller i företagsuppgifterna från foretag.js där det står data-f="..."
     document.querySelectorAll("[data-f]").forEach(el => {

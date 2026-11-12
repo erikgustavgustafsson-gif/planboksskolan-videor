@@ -10,7 +10,9 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       } catch (e) {}
     }
     stat("visa");
-    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) stat("utlank"); });
+    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank"); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
+    // Prisbevakningen kontrolleras högst en gång per dygn på servern; första besökaren för dagen knuffar igång den
+    try { const dag = new Date().toISOString().slice(0, 10); if (/^https?:$/.test(location.protocol) && !/claude|localhost/.test(location.hostname) && localStorage.getItem("jp_bevkor") !== dag) { localStorage.setItem("jp_bevkor", dag); fetch("bevaka.php?kor=1").catch(() => {}); } } catch (e) {}
 
     // Gör ett märkesnamn till en adress: "Mercedes-Benz" -> "mercedes-benz", "Škoda" -> "skoda"
     function slug(t) { return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
@@ -4175,6 +4177,24 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       const bild = document.getElementById("jmfbild"), b0 = (MODELLER[document.body.dataset.modell] || [])[0];
       if (bild && b0 && b0.foto) bild.innerHTML = `<img src="${bildUrl(b0, "", 900)}" alt="${esc(b0.marke)} ${esc(b0.mnamn)}" width="960" height="600">`;
     }
+
+    // ---------- Prisbevakning (formuläret på modellsidan -> bevaka.php) ----------
+    const bevForm = document.getElementById("bevakaform");
+    if (bevForm) bevForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const svar = bevForm.querySelector(".bevsvar"), knapp = bevForm.querySelector("button");
+      const visa = (t, ok) => { svar.hidden = false; svar.textContent = t; svar.className = "bevsvar " + (ok ? "ok" : "fel"); };
+      if (!bevForm.epost.value.includes("@")) return visa("Skriv din e-postadress.", false);
+      if (!bevForm.samtycke.checked) return visa("Kryssa i rutan så att vi får mejla dig om prisändringar.", false);
+      if (!/^https?:$/.test(location.protocol) || /claude|localhost/.test(location.hostname)) return visa("Bevakningen fungerar på jamforprivatleasing.se – det här är en förhandsvisning.", true);
+      knapp.disabled = true;
+      try {
+        const d = new FormData(bevForm); d.set("mkey", bevForm.dataset.mkey); d.set("namn", bevForm.dataset.namn); if (!bevForm.nyhetsbrev.checked) d.delete("nyhetsbrev");
+        const r = await (await fetch("bevaka.php", { method: "POST", body: d })).json();
+        visa(r.message, r.success); if (r.success) { bevForm.epost.value = ""; if (window.jpHandelse) jpHandelse("bevakning", { bil: bevForm.dataset.namn }); }
+      } catch (err) { visa("Det gick inte att spara just nu. Försök igen om en stund.", false); }
+      knapp.disabled = false;
+    });
 
     // ---------- Jämför bilar sida vid sida (jamfor-bilar.html) ----------
     const sidavid = document.getElementById("sidavid");

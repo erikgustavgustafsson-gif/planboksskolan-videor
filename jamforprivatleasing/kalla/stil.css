@@ -963,3 +963,28 @@
     .svtab.par td { padding: 9px 8px; font-size: 13.5px; overflow-wrap: anywhere; }
     .svtab.par a.cta { display: block; text-align: center; padding: 9px 4px; font-size: 13px; }
     .svtab.par thead b { font-size: 15px; }
+
+    /* ===== Kakruta och prisbevakning ===== */
+    .kakruta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; padding: 12px; background: rgba(4,10,18,.55); }
+    .kakinne { max-width: 620px; margin: 0 auto; background: #fff; color: #1A2433; border-radius: 16px; padding: 18px; box-shadow: 0 -10px 40px rgba(0,0,0,.45); max-height: 82vh; overflow: auto; }
+    .kakinne > b { font-size: 18px; color: #0E2A47; }
+    .kakinne p { margin: 6px 0 12px; font-size: 14px; line-height: 1.5; color: #44505F !important; }
+    .kakinne a { color: #0E2A47 !important; font-weight: 700; }
+    .kakval { display: grid; gap: 10px; margin: 0 0 14px; }
+    .kakval label { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; line-height: 1.45; color: #1A2433; }
+    .kakval input { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+    .kakknappar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .kakknappar button { font: inherit; font-weight: 800; font-size: 15px; padding: 13px 10px; border-radius: 12px; border: 2px solid #0E2A47; background: #0E2A47; color: #fff; cursor: pointer; }
+    .kakknappar button[data-k="val"] { grid-column: 1 / -1; order: 3; background: #fff; color: #0E2A47; border-color: #CBD3DE; font-weight: 700; padding: 10px; }
+    .bevaka { background: var(--ytmork); border: 1px solid #24384F; border-radius: 16px; padding: 18px; margin: 22px 0; }
+    .bevaka h2 { margin: 0 0 4px; font-size: 20px; color: #fff; }
+    .bevaka > p { margin: 0 0 12px; font-size: 14.5px; color: var(--mutedljus) !important; }
+    .bevrad { display: flex; gap: 8px; }
+    .bevrad input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 13px 14px; border-radius: 12px; border: 0; background: #fff; color: var(--text); }
+    .bevrad button { font: inherit; font-weight: 800; padding: 0 16px; border-radius: 12px; border: 0; background: #2EC4B6; color: #08202B; cursor: pointer; white-space: nowrap; }
+    .bevkryss { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; font-size: 13.5px; line-height: 1.45; color: #C3CFDC; }
+    .bevkryss input { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+    .bevkryss a { color: #8FE3DA !important; }
+    .honung { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .bevsvar { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
+    .bevsvar.ok { background: #123B31; color: #BFF0DC !important; } .bevsvar.fel { background: #4A2A12; color: #FFD9A8 !important; }

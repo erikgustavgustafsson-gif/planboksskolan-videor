@@ -64,6 +64,11 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - build.py skapar WebP-bilder (`bilder/<namn>-480.webp` och `-960.webp`) av varje jpg, och sätter `?v=<version>` på js/css. Kräver Pillow. Publicera även nya .webp-filer.
 - `site/.htaccess` slår på komprimering och lång cache för js/css/bilder – ändra den inte. `konfig.js` laddas inte längre.
 
+## Kakor, mätning och prisbevakning (12 nov 2026)
+- `site/samtycke.js` innehåller kakrutan och Eriks ID:n för Google Analytics, Google Ads, Meta, TikTok och AdSense (objektet `SPARNING`). **Ändra aldrig ID:na och skriv aldrig över filen.** Inget får laddas från andra företag utanför den filen – allt sådant kräver besökarens samtycke.
+- `site/bevaka.php` är prisbevakningen (e-post med dubbel bekräftelse). Den läser `site/prishistorik.js`, så den filen måste alltid byggas och följa med. Adresserna ligger i `data/` på servern och finns aldrig i repot.
+- Nya ändringar på sidan ska visas för Erik i förhandsvisningen och godkännas innan zip-paketet byts – det gäller inte den dagliga prisuppdateringen.
+
 ## Regler
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.
