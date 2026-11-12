@@ -3502,7 +3502,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       });
 
       // 1b) Topp 5 överst: bästa erbjudandet per populär modell (räknas på alla bilar, oberoende av filtren)
-      if (document.getElementById("topp")) ritaTopp(rader);
+      { const tp = document.getElementById("topp"); if (tp && !tp.children.length) { try { ritaTopp(); } catch (err) {} } }
       if (!lista) return;
 
       // 2) Filtrera
@@ -4021,28 +4021,28 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
 
     // Sveriges mest privatleasade bilar 2026 (VW Finans jan–maj, Carplus kv1, Mobility Sweden jan–aug)
     const TOPP = [
-      { namn: "Volvo EX40", match: b => b.marke === "Volvo" && /^EX40/.test(b.modell) },
-      { namn: "Volvo EX30", match: b => b.marke === "Volvo" && /^EX30/.test(b.modell) },
-      { namn: "Volkswagen Tiguan", match: b => b.marke === "Volkswagen" && /^Tiguan/.test(b.modell) },
-      { namn: "Tesla Model Y", match: b => b.marke === "Tesla" && /^Model Y/.test(b.modell) },
-      { namn: "Volvo XC60", match: b => b.marke === "Volvo" && /^XC60/.test(b.modell) },
+      { namn: "Volvo EX40", k: "volvo-ex40" }, { namn: "Volvo EX30", k: "volvo-ex30" }, { namn: "Volkswagen Tiguan", k: "volkswagen-tiguan" },
+      { namn: "Tesla Model Y", k: "tesla-model-y" }, { namn: "Volvo XC60", k: "volvo-xc60" },
     ];
-    function ritaTopp(rader) {
-      document.getElementById("topp").innerHTML = TOPP.map((t, i) => {
-        const alla = rader.filter(t.match).filter(r => r.andel != null);
-        const b = alla.sort((x, y) => x.andel - y.andel)[0];
-        if (!b) return "";
-        const bt = betyg(b.andel);
+    // Visar det billigaste erbjudandet (faktisk kostnad, känd körsträcka) på varje modell och hur många erbjudanden modellsidan har.
+    // Beror inte på filter eller sparade val, och bilderna laddas direkt – korten ska alltid synas.
+    function ritaTopp() {
+      const el = document.getElementById("topp"); if (!el) return;
+      el.innerHTML = TOPP.map((t, i) => {
+        if (!MODELLER[t.k]) return "";
+        const s = modellSammanfattning(t.k), b = s.bast, antal = s.antal;
+        const bt = b.nypris ? betyg((b.total - (b.forsakring || 0) * 36) / b.nypris) : null;
+        const version = b.modell.replace(new RegExp("^" + b.mnamn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*", "i"), "");
         return `<article class="tkort">
-          <div class="tbild">${b.foto ? `<img src="${bildUrl(b, "", 600)}" alt="${t.namn}" loading="lazy">` : ""}<span class="tplats">#${i + 1} mest leasade</span></div>
+          <a class="tbild" href="${b.msida}">${b.foto ? `<img src="${bildUrl(b, "", 600)}" alt="${t.namn}" width="480" height="300" decoding="async"${i < 2 ? ' fetchpriority="high"' : ""}>` : ""}<span class="tplats">#${i + 1} mest leasade</span></a>
           <div class="tinner">
             <div class="thuvud">
-              <div><div class="tnamn">${t.namn}</div><div class="tversion">${b.modell.replace(/^(EX40|EX30|Tiguan|Model Y|XC60) ?/, "") || "&nbsp;"}</div></div>
+              <div><div class="tnamn">${t.namn}</div><div class="tversion">${esc(version) || "&nbsp;"}</div></div>
               <div class="tfran">Från<div class="tpris">${kr(b.m).replace(" kr", "")}:-<small>/mån</small><sup class="fn"><a href="#villkor">1</a></sup></div></div>
             </div>
-            <div class="tchips"><span>36 månader</span><span>${b.mil.toLocaleString("sv-SE")} mil/år</span>${b.forhojd ? `<span>${kr(b.forhojd)} första hyra</span>` : ""}</div>
-            <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "via "}${b.kalla.split(/ \(|,/)[0]}${alla.length > 1 ? ` · bäst av ${alla.length}` : ""}</div>
-            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">Jämför${alla.length > 1 ? " " + alla.length : ""} →</a></div>
+            <div class="tchips"><span>36 månader</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : b.mil.toLocaleString("sv-SE") + " mil/år"}</span>${b.forhojd ? `<span>${kr(b.forhojd)} vid start</span>` : ""}</div>
+            <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "hos "}${esc(b.kalla.split(/ \(|,/)[0])}${antal > 1 ? ` · billigast av ${antal}` : ""}</div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Jämför " + antal + " →" : "Till erbjudandet →"}</a></div>
           </div>
         </article>`;
       }).join("");

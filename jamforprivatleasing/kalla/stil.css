@@ -963,3 +963,5 @@
     .svtab.par td { padding: 9px 8px; font-size: 13.5px; overflow-wrap: anywhere; }
     .svtab.par a.cta { display: block; text-align: center; padding: 9px 4px; font-size: 13px; }
     .svtab.par thead b { font-size: 15px; }
+
+    a.tbild { display: block; text-decoration: none; }
