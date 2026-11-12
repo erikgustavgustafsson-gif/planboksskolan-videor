@@ -194,7 +194,7 @@ def filter_html(med_marke=True):
         <option value="andel">Bästa erbjudande</option><option value="total">Billigast totalt</option>
         <option value="manad">Lägst månadspris</option><option value="marke">Märke A–Ö</option></select></div>
       <div class="hel"><label>Drivmedel</label>
-        <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button></div>
+        <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button><button type="button" data-v="Diesel">Diesel</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
       <div class="hel"><label>Tillval</label>
         <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Bygg din bil <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
@@ -442,7 +442,7 @@ sidor["fragor.html"] = sida(
     aktiv="fragor.html", sida_typ="fragor", ld=[faq, brod_ld(("fragor.html", "Frågor & svar"))])
 
 # ---------- En sida per märke ----------
-DRIV = {"El": "elbilar", "Laddhybrid": "laddhybrider", "Hybrid": "hybrider", "Bensin": "bensinbilar"}
+DRIV = {"El": "elbilar", "Laddhybrid": "laddhybrider", "Hybrid": "hybrider", "Bensin": "bensinbilar", "Diesel": "dieselbilar"}
 for marke, m in sorted(MARKEN.items(), key=lambda x: x[0]):
     fil = f"privatleasing-{slug(marke)}.html"
     typer = [DRIV.get(d, d.lower()) for d in m["driv"]]

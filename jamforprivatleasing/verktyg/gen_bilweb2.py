@@ -242,7 +242,7 @@ for mal, annonser in sorted(modeller.items()):
         if not vp: stat["obelagt_pris"] += 1; continue
         a = {**a, "manad": vp}
         pi = pris_och_insats(a)
-        if not pi or not pi[0] or pi[0] < 1500 or pi[0] > 25000 or pi[1] > 50000: stat["pris"] += 1; continue
+        if not pi or not pi[0] or pi[0] < 1500 or pi[0] > 25000 or pi[1] > 50000 or 0 < pi[1] < 3000: stat["pris"] += 1; continue   # insats under 3 000 kr = feltolkning
         dm = driv(a)
         if not dm and not a.get("driv") and len(kanddriv.get(mal, ())) == 1 and "El" in kanddriv[mal]: dm = "El"
         if not dm: stat["driv"] += 1; continue
