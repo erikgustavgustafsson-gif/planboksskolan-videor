@@ -1,0 +1,85 @@
+{
+  "slug": "2026-11-12_bensinen-dyrare-1-december",
+  "title": "1 december: bensin och diesel blir 3 kr dyrare per liter",
+  "caption": "Den tillfälliga skattesänkningen på bensin och diesel gäller bara till och med 30 november ⛽ Sedan försvinner 2,40 kr/liter i rabatt – med moms ca 3 kr dyrare per liter, om bolagen för över hela höjningen. En full tank på 50 liter: +150 kr.\n\nHur mycket tankar du i månaden? 👇\n\n#bensinpris #diesel #privatekonomi #bilekonomi #spartips #plånboksskolan",
+  "pinned_comment": "Tankar du fullt innan 1 december? ⛽ Ja / 🚲 Kör inte bil / 🔌 Elbil 👇",
+  "sources": [
+    "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/nyheterinompunktskatter/2026/nyheterinompunktskatter/tillfalligtsanktkoldioxidskattpabensinochdiesel.5.3129d65419ef1497c06893.html (Skatteverket: sänkning 2,40 kr/liter bensin och diesel t.o.m. 30 november 2026)",
+    "https://carup.se/klart-i-dag-diesel-kostar-snart-26-kr-per-liter/ (TT 13 okt 2026: finansutskottet sa nej till förlängning, ca +3 kr/liter inkl. moms från 1 december)",
+    "https://www.vibilagare.se/nyheter/drivmedelsskatt-nej-till-forlangd-rabatt-pa-bensin-och-diesel (Vi Bilägare/TT, 13–14 okt 2026)",
+    "https://www.borskollen.se/nyheter/27/dieseln-kan-kosta-27-kronor-i-december-rekordet-inom-rackhall (Börskollen 4 nov 2026: rabatten 2,40 kr före moms tas bort, ca 3 kr inkl. moms)",
+    "Eget räkneexempel: 2,40 kr × 1,25 moms = 3 kr/liter; 50 liter × 3 kr = 150 kr; 4 tankningar = 600 kr"
+  ],
+  "cover": {
+    "title": [
+      "1 DECEMBER:",
+      "BENSINEN BLIR",
+      "DYRARE"
+    ],
+    "pill": "Skatterabatten försvinner",
+    "label": "Per liter, inkl. moms:",
+    "big": "+3 kr",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Första december blir bensinen tre kronor dyrare per liter. Dieseln också.",
+      "kicker": "HAR DU BIL?",
+      "big": "+3 KR/LITER",
+      "sub": "från 1 december",
+      "punch": [
+        "Bensin och",
+        "diesel."
+      ]
+    },
+    {
+      "type": "statement",
+      "say": "Då slutar skatterabatten på två och fyrtio. Med moms blir det tre kronor.",
+      "title": "VARFÖR?",
+      "lines": [
+        "Skatterabatten slutar",
+        "30 november"
+      ],
+      "highlight": "2,40 kr + moms ≈ 3 kr",
+      "chip": "Källa: Skatteverket"
+    },
+    {
+      "type": "number",
+      "say": "En full tank på femtio liter: hundrafemtio kronor mer. Tankar du varje vecka, sexhundra i månaden.",
+      "top": "Full tank, 50 liter",
+      "prefix": "+",
+      "value": 150,
+      "suffix": " kr",
+      "color": "yellow",
+      "sub": "per tankning",
+      "prefix2": "+",
+      "value2": 600,
+      "suffix2": " kr",
+      "color2": "red",
+      "sub2": "4 tankningar/mån"
+    },
+    {
+      "type": "cards",
+      "say": "Tanka fullt i slutet av november och jämför priser.",
+      "title": "GÖR DET HÄR",
+      "cards": [
+        [
+          "Tanka fullt",
+          "senast 30 november"
+        ],
+        [
+          "Jämför priser",
+          "skillnaden kan vara stor"
+        ]
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Spara videon och följ Plånboksskolan.",
+      "line1": "Tanka före",
+      "big": "1 DECEMBER",
+      "line2": "Följ Plånboksskolan"
+    }
+  ]
+}
