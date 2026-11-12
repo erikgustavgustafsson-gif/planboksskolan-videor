@@ -4095,7 +4095,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       // Väljer man ett län visas även erbjudanden som gäller i hela landet – de går att hämta där också
       let rader = alla.filter(r => jmfRegion === "Alla" || r.lan.includes(jmfRegion) || (jmfRegion !== "Hela Sverige" && r.lan[0] === "Hela Sverige"));
       const big = Number.MAX_SAFE_INTEGER, e = r => r.eff ?? big;
-      rader.sort((a, b) => s === "krmil" ? (a.krmil ?? big) - (b.krmil ?? big) : s === "total" ? (a.medfors ?? big) - (b.medfors ?? big) : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || e(a) - e(b) : e(a) - e(b) || (a.m ?? big) - (b.m ?? big));
+      rader.sort((a, b) => s === "krmil" ? (a.krmil ?? big) - (b.krmil ?? big) : s === "total" ? (a.medfors ?? big) - (b.medfors ?? big) : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || e(a) - e(b) : e(a) - e(b) || (a.milokand ? 1 : 0) - (b.milokand ? 1 : 0) || (a.m ?? big) - (b.m ?? big));
       const tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const milTxt = n => n.toLocaleString("sv-SE") + " mil/år";
       const bast = kanda.length ? [...kanda].sort((a, b) => a.eff - b.eff)[0] : null;
