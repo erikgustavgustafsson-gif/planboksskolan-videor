@@ -81,7 +81,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     function snyggNamn(marke, mnamn, modell) {
       let t = String(modell || "").split("*")[0].split(" / ")[0]
         .replace(/\s*[-–|,]?\s*\d{1,2}([.,]\d{1,2})?\s?%.*$/, "")                          // "2,99% ränta …", "0%"
-        .replace(/\b(europas mest sålda bil|priv\w{0,3}\s?leas\w*|\w*kampanj\w*|leasing fr\.?|erbjudande\w*|beställningsbil\w*|lagerbil\w*|omgående\b.*|snabb leverans.*|NYA!?)/gi, " ")
+        .replace(/\b(europas mest sålda bil|\/?priv\w{0,5}\s?l?t?eas\w*|\w*kampanj\w*|leasing fr\.?|erbjudande\w*|beställningsbil\w*|lagerbil\w*|omgående\b.*|snabb leverans.*|NYA!?)/gi, " ")
         .replace(/\s*(inkl\.?|ink\.?|&|och|med)?\s*(fria\s+)?(drag\s*(&|och)\s*)?(service\w*\s*(&|och)\s*)?vinterhjul.*$/i, "")
         .replace(/\s*\b(serviceavtal|service)\b.*$/i, "").replace(/\s\d[\d ]*\s?kr\b.*$/i, "")
         .replace(/[\s/.\-–]*\b(lager|leasing)\b\.?\s*(fr\.?)?$/i, "")
