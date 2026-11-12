@@ -8,6 +8,24 @@ RewriteCond %{HTTPS} !=on
 RewriteCond %{HTTP:X-Forwarded-Proto} !=https
 RewriteRule ^(.*)$ https://jamforprivatleasing.se/$1 [R=301,L]
 
+# Sammanslagna modellsidor: gamla adresser skickas till den nya sidan
+RewriteRule ^privatleasing-renault-4\.html$ /privatleasing-renault-4-e-tech.html [R=301,L]
+RewriteRule ^privatleasing-citroen-e-c3-aircross\.html$ /privatleasing-citroen-c3-aircross.html [R=301,L]
+RewriteRule ^privatleasing-byd-seal-u-dm-i\.html$ /privatleasing-byd-seal-u.html [R=301,L]
+RewriteRule ^privatleasing-mercedes-benz-c-klass\.html$ /privatleasing-mercedes-benz-c.html [R=301,L]
+RewriteRule ^privatleasing-ds-7-crossback\.html$ /privatleasing-ds-7.html [R=301,L]
+RewriteRule ^privatleasing-opel-mokka-e\.html$ /privatleasing-opel-mokka.html [R=301,L]
+RewriteRule ^privatleasing-nissan-juke-hybrid\.html$ /privatleasing-nissan-juke.html [R=301,L]
+RewriteRule ^privatleasing-peugeot-e-5008\.html$ /privatleasing-peugeot-5008.html [R=301,L]
+RewriteRule ^privatleasing-dacia-sandero-stepway\.html$ /privatleasing-dacia-sandero.html [R=301,L]
+RewriteRule ^privatleasing-byd-seal-6-dm-i-touring\.html$ /privatleasing-byd-seal-6-touring.html [R=301,L]
+RewriteRule ^privatleasing-opel-corsa-e\.html$ /privatleasing-opel-corsa.html [R=301,L]
+RewriteRule ^privatleasing-renault-scenic\.html$ /privatleasing-renault-scenic-e-tech.html [R=301,L]
+RewriteRule ^privatleasing-peugeot-e-3008\.html$ /privatleasing-peugeot-3008.html [R=301,L]
+RewriteRule ^privatleasing-renault-5\.html$ /privatleasing-renault-5-e-tech.html [R=301,L]
+RewriteRule ^privatleasing-toyota-aygo\.html$ /privatleasing-toyota-aygo-x.html [R=301,L]
+RewriteRule ^privatleasing-kia-sportage-plug-in-hybrid\.html$ /privatleasing-kia-sportage.html [R=301,L]
+
 # Komprimera text – sidan blir flera gånger mindre att ladda ned
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json application/xml text/xml image/svg+xml text/plain
