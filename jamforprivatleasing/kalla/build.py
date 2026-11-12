@@ -14,6 +14,8 @@ HIT = Path(__file__).parent
 UT = HIT.parent / "site"
 DOMAN = "https://jamforprivatleasing.se/"
 DATUM = datetime.date.today().isoformat()
+import hashlib
+VER = hashlib.md5(b"".join((HIT / f).read_bytes() for f in ("app.js", "stil.css", "../site/foretag.js", "../site/affiliate.js", "../site/bildkalla.js"))).hexdigest()[:8]   # ny adress när koden ändras -> webbläsaren kan spara filerna länge
 _MAN = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"]
 MANAD = f"{_MAN[datetime.date.today().month - 1]} {datetime.date.today().year}"   # t.ex. "november 2026" – står i sidtitlarna
 ORIG = (HIT / "original-index.html").read_text(encoding="utf-8")
@@ -122,7 +124,8 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
-  <link rel="stylesheet" href="stil.css">
+  <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stil.css?v={VER}">
   {f'<script type="application/ld+json">{ldtext}</script>' if ldtext else ''}
 </head>
 <body{data}>
@@ -152,12 +155,11 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   </section>
   <footer>Jämföra Privatleasing · priser kontrollerade {KONTROLL} · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
-  <script src="foretag.js"></script>
-  <script src="konfig.js"></script>
-  <script src="affiliate.js"></script>
-  <script src="bildkalla.js"></script>
-  <script src="prishistorik.js"></script>
-  <script src="app.js"></script>
+  <script src="foretag.js?v={VER}"></script>
+  <script src="affiliate.js?v={VER}"></script>
+  <script src="bildkalla.js?v={VER}"></script>
+  <script src="prishistorik.js?v={VER}"></script>
+  <script src="app.js?v={VER}"></script>
 </body>
 </html>
 """
@@ -651,6 +653,17 @@ for key, lst in MOD.items():
 HISTFIL.write_text(json.dumps(HIST, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 (UT / "prishistorik.js").write_text("// Genereras av kalla/build.py – lägsta faktiska månadskostnad per modell och dag\nconst PRISHIST = "
     + json.dumps({k: [[d, v] for d, v, *_ in h] for k, h in HIST.items() if k in MOD}, separators=(",", ":")) + ";\n", encoding="utf-8")
+
+# ---------- Snabbare bilder: WebP i två storlekar skapas för varje jpg som saknar dem ----------
+try:
+    from PIL import Image
+    for jpg in sorted((UT / "bilder").glob("*.jpg")):
+        for bredd, kval in ((480, 72), (960, 76)):
+            mal = UT / "bilder" / f"{jpg.stem}-{bredd}.webp"
+            if not mal.exists() or mal.stat().st_mtime < jpg.stat().st_mtime:
+                im = Image.open(jpg).convert("RGB"); im.thumbnail((bredd, bredd)); im.save(mal, "WEBP", quality=kval, method=6)
+except ImportError:
+    print("OBS: Pillow saknas – WebP-bilder skapades inte (pip install pillow)")
 
 # ---------- Skriv ut ----------
 for fil, text in sidor.items():

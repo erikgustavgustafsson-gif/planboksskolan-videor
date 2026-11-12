@@ -60,6 +60,10 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - "Faktisk månadskostnad" = (hyra + avgifter + obligatorisk försäkring) × 36 + uppläggning + insats, delat på 36. Det är den som rangordnar. Ändra inte det.
 - Efter bygget: publicera alla ändrade filer i `site/` (även nya html-sidor och `prishistorik.js`) och pusha zip till `strato-paket`.
 
+## Hastighet (12 nov 2026)
+- build.py skapar WebP-bilder (`bilder/<namn>-480.webp` och `-960.webp`) av varje jpg, och sätter `?v=<version>` på js/css. Kräver Pillow. Publicera även nya .webp-filer.
+- `site/.htaccess` slår på komprimering och lång cache för js/css/bilder – ändra den inte. `konfig.js` laddas inte längre.
+
 ## Regler
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.

@@ -20,7 +20,7 @@ const BILDKALLA = {
 
 function bildUrl(bil, farg, bredd) {
   const m = BILDKALLA.KUND && bil.foto && BILDKALLA.MODELL[bil.foto];
-  if (!m) return bil.foto ? "bilder/" + bil.foto + ".jpg" : "";
+  if (!m) return bil.foto ? "bilder/" + bil.foto + (bredd && bredd <= 600 ? "-480" : "-960") + ".webp" : "";   // WebP i två storlekar skapas av kalla/build.py
   const p = new URLSearchParams({ customer: BILDKALLA.KUND, zoomtype: "fullscreen", angle: "23", width: String(bredd || 800) });
   Object.entries(m).forEach(([k, v]) => p.set(k, String(v)));
   if (farg) {

@@ -8,12 +8,26 @@ RewriteCond %{HTTPS} !=on
 RewriteCond %{HTTP:X-Forwarded-Proto} !=https
 RewriteRule ^(.*)$ https://jamforprivatleasing.se/$1 [R=301,L]
 
-# Besökare får nya versioner direkt efter en uppdatering
+# Komprimera text – sidan blir flera gånger mindre att ladda ned
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json application/xml text/xml image/svg+xml text/plain
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript text/javascript application/json application/xml image/svg+xml
+</IfModule>
+AddType image/webp .webp
+AddType font/woff2 .woff2
+
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html|js|css|php)$">
+  # Sidorna hämtas alltid färska, så besökare får nya priser direkt
+  <FilesMatch "\.(html|php|xml)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  <FilesMatch "\.(jpg|png|svg|woff2)$">
-    Header set Cache-Control "max-age=604800"
+  # Kod och stil har versionsnummer i adressen (?v=...) och kan sparas länge
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|png|svg|webp|woff2)$">
+    Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 </IfModule>

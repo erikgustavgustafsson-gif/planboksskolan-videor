@@ -1,3 +1,5 @@
+// Konfiguratorns data (konfig.js) laddas inte längre – sidan är en ren jämförelsesajt.
+if (typeof KONFIG === "undefined") var KONFIG = {};
     // Besöksstatistik utan kakor (stat.php på servern räknar bara antal)
     function stat(t, bil) {
       try {
