@@ -55,7 +55,7 @@ def kr(n):
 ICON = re.search(r'<link rel="icon"[^>]*>', ORIG).group(0)
 HERO = block('<header class="hero">', "</header>")
 TOPP = block('<section class="topp" id="kampanjer"', "</section>")
-TOPP = TOPP.replace('<div class="topplista" id="topp"></div>', '<div class="topplista" id="topp"></div><p class="sveptips">Svep för att se alla fem →</p>')
+TOPP = TOPP.replace('<div class="topp10" id="topp"></div>', '<div class="topp10" id="topp"></div><p class="sveptips">Svep för att se alla fem →</p>')
 STEG = block('<section class="steg2" id="sa-funkar-det">', "</section>")
 INGAR = block('<section class="ingar" id="vad-ingar">', "</section>")
 VILLKOR = block('<p class="villkor" id="villkor">', "</p>")
@@ -335,6 +335,30 @@ GUIDE_CHECK = """
     </div>
   </section>"""
 
+# Orter och jämförelsepar räknas fram först – flera sidor länkar till dem
+ORTSIDOR = [("stockholm", "Stockholm", "Stockholm", "Stockholms län"), ("goteborg", "Göteborg", "Västra Götaland", "Göteborg och Västra Götaland"), ("malmo", "Malmö", "Skåne", "Malmö och Skåne"),
+    ("halmstad", "Halmstad", "Halland", "Halmstad och Halland"), ("jonkoping", "Jönköping", "Jönköping", "Jönköpings län"), ("uppsala", "Uppsala", "Uppsala", "Uppsala län"),
+    ("linkoping", "Linköping", "Östergötland", "Linköping, Norrköping och Östergötland"), ("vasteras", "Västerås", "Västmanland", "Västerås och Västmanland"), ("vaxjo", "Växjö", "Kronoberg", "Växjö och Kronoberg"),
+    ("eskilstuna", "Eskilstuna", "Södermanland", "Eskilstuna, Nyköping och Södermanland"), ("gavle", "Gävle", "Gävleborg", "Gävle och Gävleborg"), ("dalarna", "Dalarna", "Dalarna", "Falun, Borlänge och Dalarna"),
+    ("karlstad", "Karlstad", "Värmland", "Karlstad och Värmland"), ("karlskrona", "Karlskrona", "Blekinge", "Karlskrona och Blekinge"), ("kalmar", "Kalmar", "Kalmar", "Kalmar län")]
+ORTLANKAR = []
+for oslug, ort, lan, omrade in ORTSIDOR:
+    lokala = [b for b in BILAR if b["lokal"] and lan in b.get("lan", [])]
+    if len(lokala) < 10: continue
+    ORTLANKAR.append((f"privatleasing-{oslug}.html", ort, len(lokala)))
+ORTBLOCK = '<div class="katlankar">' + "".join(f'<a href="{f}">{html.escape(o)} <small>{n}</small></a>' for f, o, n in ORTLANKAR) + "</div>"
+def _popular(k): return len(MOD[k]) >= 4 and any(b["foto"] for b in MOD[k])
+PAR, JMFMED = [], {}
+for k in sorted(MOD):
+    if not _popular(k) or not KAROSS_AV.get(k): continue
+    sk = stats(MOD[k])
+    narmast = sorted((k2 for k2 in MOD if k2 != k and _popular(k2) and MOD[k2][0]["marke"] != MOD[k][0]["marke"] and KAROSS_AV.get(k2) == KAROSS_AV[k]
+                      and stats(MOD[k2])["bast"]["drivmedel"] == sk["bast"]["drivmedel"]), key=lambda k2: abs(stats(MOD[k2])["min"] - sk["min"]))[:2]
+    for k2 in narmast:
+        par = tuple(sorted((k, k2)))
+        if par not in PAR: PAR.append(par)
+        JMFMED.setdefault(k, []).append(par); JMFMED.setdefault(k2, []).append(par)
+def parfil(par): return f"jamfor-{par[0]}-eller-{par[1]}.html"
 sidor = {}
 antal_bilar = sum(m["n"] for m in MARKEN.values())
 
@@ -408,7 +432,7 @@ sidor["alla-bilar.html"] = sida(
     sidhuvud("Jämför alla bilar",
              f"<span data-antal>{antal_bilar}</span> erbjudanden från {len(MARKEN)} märken. Filtrera på pris och drivmedel – vi räknar med alla avgifter.",
              brod((None, "Alla bilar")))
-    + f'\n  <div class="wrap" style="padding:0 16px">{KATLANKAR}</div>'
+    + f'\n  <div class="wrap" style="padding:0 16px">{KATLANKAR}<h2 class="ortrub">Privatleasing nära dig</h2>{ORTBLOCK}</div>'
     + lista_html("Bilar som matchar") + f"\n  <div class=\"wrap\" style=\"padding:0 16px\">{INFOKORT}</div>",
     aktiv="alla-bilar.html", sida_typ="alla", ld=[brod_ld(("alla-bilar.html", "Alla bilar"))])
 
@@ -462,10 +486,22 @@ for marke, m in sorted(MARKEN.items(), key=lambda x: x[0]):
         aktiv="marken.html", sida_typ="marke", marke=marke,
         ld=[brod_ld(("marken.html", "Märken"), (fil, f"Privatleasing {marke}"))])
 
+def topptabell(urval, n=10):
+    """Billigaste erbjudandet per modell (känd körsträcka), de n billigaste modellerna."""
+    per = {}
+    for b in sorted(kanda(urval), key=lambda b: b["eff"]): per.setdefault(b["mkey"], b)
+    rader = "".join(f'<tr><td>{i + 1}</td><td><a href="privatleasing-{b["mkey"]}.html">{html.escape(b["marke"])} {html.escape(b["mnamn"])}</a></td><td>{html.escape(SALJARE(b))}</td><td>{kr(b["eff"])}/mån</td></tr>' for i, b in enumerate(list(per.values())[:n]))
+    return f'<div class="svrull"><table class="topptab"><thead><tr><th>#</th><th>Bil</th><th>Säljare</th><th>Faktisk kostnad</th></tr></thead><tbody>{rader}</tbody></table></div>'
+
 for fil, h1, ord_, forval, villkor_f, intro in KATEGORIER:
     urval = [b for b in BILAR if villkor_f(b)]
     if not urval:
         continue
+    extra = f'<section class="topp10"><h2>Topp 10: billigaste {ord_} att privatleasa i {MANAD}</h2>{topptabell(urval)}</section>'
+    if fil == "billigaste-privatleasing.html":
+        extra = "".join(f'<section class="topp10"><h2>{rub} – {MANAD}</h2>{topptabell([b for b in BILAR if f(b)])}</section>' for rub, f in [
+            ("Topp 10: billigaste privatleasingen", lambda b: True), ("Topp 10: billigaste elbilarna", lambda b: b["drivmedel"] == "El"),
+            ("Topp 10: billigaste SUV:arna", lambda b: b.get("kaross") == "SUV"), ("Topp 10: billigaste kombibilarna", lambda b: b.get("kaross") == "Kombi")])
     st = stats(urval); bb = st["bast"]
     svar = (f'<b>{st["modeller"]} modeller och {st["n"]} erbjudanden</b> just nu. Billigast är <a href="privatleasing-{bb["mkey"]}.html">{html.escape(bb["marke"])} {html.escape(bb["mnamn"])}</a> '
             f'för <b>{kr(bb["eff"])}/mån</b> i faktisk kostnad hos {html.escape(SALJARE(bb))}. Kontrollerat {KONTROLL}.')
@@ -474,7 +510,7 @@ for fil, h1, ord_, forval, villkor_f, intro in KATEGORIER:
         f"{h1} – {st['modeller']} modeller från {kr(st['min'])}/mån ({MANAD}) | Jämföra Privatleasing",
         f"Jämför {ord_} med privatleasing: {st['n']} erbjudanden på {st['modeller']} modeller, billigast {bb['marke']} {bb['mnamn']} från {kr(st['min'])}/mån med alla avgifter inräknade. Kontrollerat {KONTROLL}.",
         sidhuvud(html.escape(h1), intro, brod(("alla-bilar.html", "Alla bilar"), (None, html.escape(h1))))
-        + f'\n  <div class="wrap" style="padding:0 16px"><p class="direktsvar">{svar}</p>{KATLANKAR}</div>'
+        + f'\n  <div class="wrap" style="padding:0 16px"><p class="direktsvar">{svar}</p>{KATLANKAR}{extra}</div>'
         + lista_html(f"{html.escape(h1)} – billigast först", ejbil=False)
         + f'\n  <div class="wrap" style="padding:0 16px">{CHECKLISTA}</div>',
         aktiv="alla-bilar.html", sida_typ="kategori", forval=forval,
@@ -486,7 +522,8 @@ sidor["jamfor-bilar.html"] = sida(
     "Jämför bilar sida vid sida – privatleasing | Jämföra Privatleasing",
     "Ställ två till fyra bilar bredvid varandra och jämför faktisk månadskostnad, totalpris, pris per mil, körsträcka och vad som ingår.",
     sidhuvud("Jämför bilar sida vid sida", "Välj två till fyra modeller. Vi ställer det billigaste erbjudandet på varje bil bredvid varandra och markerar vilken som är bäst på varje rad.", brod((None, "Jämför bilar")))
-    + '\n  <main class="wrap" style="padding: 0 16px;"><section id="sidavid"></section></main>',
+    + '\n  <main class="wrap" style="padding: 0 16px;"><section id="sidavid"></section><h2 class="ortrub">Färdiga jämförelser</h2><div class="katlankar radbryt">'
+    + "".join(f'<a href="{parfil(p)}">{html.escape(MOD[p[0]][0]["marke"])} {html.escape(MOD[p[0]][0]["mnamn"])} eller {html.escape(MOD[p[1]][0]["marke"])} {html.escape(MOD[p[1]][0]["mnamn"])}</a>' for p in PAR) + "</div></main>",
     aktiv="jamfor-bilar.html", sida_typ="jamforbilar", ld=[brod_ld(("jamfor-bilar.html", "Jämför bilar"))])
 
 # ---------- Räkna: hela kostnaden + leasa eller köpa ----------
@@ -565,6 +602,83 @@ sidor["sa-jamfor-vi.html"] = sida(
   </main>""",
     sida_typ="metod", ld=[brod_ld(("sa-jamfor-vi.html", "Så jämför vi"))])
 
+# ---------- Ortssidor: privatleasing nära dig (ett län per sida, döpt efter största orten) ----------
+for oslug, ort, lan, omrade in ORTSIDOR:
+    fil = f"privatleasing-{oslug}.html"
+    lokala = [b for b in BILAR if b["lokal"] and lan in b.get("lan", [])]
+    if len(lokala) < 10: continue
+    assert fil not in sidor, fil
+    st = stats(lokala); bb = st["bast"]
+    saljare = sorted({SALJARE(b): 0 for b in lokala}.keys(), key=lambda s2: -sum(1 for b in lokala if SALJARE(b) == s2))
+    orter = [o for o, _ in __import__("collections").Counter(b["ort"] for b in lokala if b["ort"]).most_common(8)]
+    topp = sorted({b["mkey"]: b for b in sorted(kanda(lokala), key=lambda b: -b["eff"])}.values(), key=lambda b: b["eff"])[:10]
+    svar = (f'<b>{st["n"]} lokala erbjudanden</b> på {st["modeller"]} modeller från {st["saljare"]} handlare i {html.escape(omrade)}. '
+            f'Billigast är <a href="privatleasing-{bb["mkey"]}.html">{html.escape(bb["marke"])} {html.escape(bb["mnamn"])}</a> för <b>{kr(bb["eff"])}/mån</b> i faktisk kostnad hos {html.escape(SALJARE(bb))}. '
+            f'Märkenas rikstäckande kampanjer visas också – de hämtas hos närmaste märkeshandlare. Kontrollerat {KONTROLL}.')
+    tabell = "".join(f'<tr><td>{i + 1}</td><td><a href="privatleasing-{b["mkey"]}.html">{html.escape(b["marke"])} {html.escape(b["mnamn"])}</a></td><td>{html.escape(SALJARE(b))}{", " + html.escape(b["ort"]) if b["ort"] else ""}</td><td>{kr(b["eff"])}/mån</td></tr>' for i, b in enumerate(topp))
+    sidor[fil] = sida(
+        fil,
+        f"Privatleasing {ort} – {st['n']} erbjudanden från {kr(st['min'])}/mån ({MANAD}) | Jämföra Privatleasing",
+        f"Jämför privatleasing i {omrade}: {st['n']} erbjudanden från {st['saljare']} lokala handlare, billigast {bb['marke']} {bb['mnamn']} från {kr(st['min'])}/mån med insats och avgifter inräknade. Kontrollerat {KONTROLL}.",
+        sidhuvud(f"Privatleasing i {html.escape(ort)}", f"Alla privatleasingerbjudanden hos handlare i {html.escape(omrade)} – billigast överst, med alla avgifter inräknade.",
+                 brod(("alla-bilar.html", "Alla bilar"), (None, html.escape(ort))))
+        + f'''
+  <div class="wrap" style="padding:0 16px">
+    <p class="direktsvar">{svar}</p>
+    <section class="topp10"><h2>De 10 billigaste bilarna hos handlare i {html.escape(omrade)}</h2>
+      <div class="svrull"><table class="topptab"><thead><tr><th>#</th><th>Bil</th><th>Handlare</th><th>Faktisk kostnad</th></tr></thead><tbody>{tabell}</tbody></table></div></section>
+    <p class="ortinfo"><b>Handlare vi jämför här:</b> {html.escape(", ".join(saljare[:25]))}{" m.fl." if len(saljare) > 25 else ""}.{" <b>Orter:</b> " + html.escape(", ".join(orter)) + "." if orter else ""}</p>
+    <h2 class="ortrub">Privatleasing på fler orter</h2>{ORTBLOCK}
+  </div>'''
+        + lista_html(f"Alla erbjudanden i {html.escape(omrade)}", ejbil=False)
+        + f'\n  <div class="wrap" style="padding:0 16px">{CHECKLISTA}</div>',
+        aktiv="alla-bilar.html", sida_typ="ort", forval={"lan": lan, "sort": "total"},
+        ld=[brod_ld(("alla-bilar.html", "Alla bilar"), (fil, f"Privatleasing {ort}"))])
+
+# ---------- Jämförelsesidor: "X eller Y" för bilar i samma klass och prisläge ----------
+for par in PAR:
+    a, b = (stats(MOD[k]) for k in par); A, B = a["bast"], b["bast"]
+    na, nb = f'{A["marke"]} {A["mnamn"]}', f'{B["marke"]} {B["mnamn"]}'
+    diff = a["min"] - b["min"]
+    billig, dyr = (nb, na) if diff > 0 else (na, nb)
+    slut = (f"{html.escape(na)} och {html.escape(nb)} kostar lika mycket per månad just nu." if diff == 0 else
+            f"<b>{html.escape(billig)} är {kr(abs(diff))} billigare per månad</b> än {html.escape(dyr)} just nu – {kr(abs(diff) * 36)} på tre år.")
+    def cell(x, y, f, lagre=True):
+        vx, vy = f(x), f(y)
+        return "".join(f'<td class="{"bast" if (v is not None and o is not None and v != o and ((v < o) == lagre)) else ""}">{t}</td>' for v, o, t in ((vx[0], vy[0], vx[1]), (vy[0], vx[0], vy[1])))
+    def mil(s2): return (None, "Fråga handlaren") if s2["bast"]["milokand"] else (s2["bast"]["mil"], f'{s2["bast"]["mil"]:,} mil/år'.replace(",", " "))
+    rader = [("Faktisk kostnad per månad", cell(a, b, lambda s2: (s2["min"], f"<b>{kr(s2['min'])}</b>"))),
+             ("Månadshyra", cell(a, b, lambda s2: (None, kr(s2["bast"]["m"])))),
+             ("Betalas vid start", cell(a, b, lambda s2: (s2["bast"]["start"] + s2["bast"]["forhojd"], kr(s2["bast"]["start"] + s2["bast"]["forhojd"])))),
+             ("Totalt på 36 månader", cell(a, b, lambda s2: (s2["bast"]["total"], kr(s2["bast"]["total"])))),
+             ("Körsträcka som ingår", cell(a, b, mil, lagre=False)),
+             ("Drivmedel", cell(a, b, lambda s2: (None, html.escape(s2["bast"]["drivmedel"])))),
+             ("Service", cell(a, b, lambda s2: (None, "Ingår" if s2["bast"]["service"] else "Ingår inte" if s2["bast"]["service"] is False else "Fråga säljaren"))),
+             ("Billigaste säljare", cell(a, b, lambda s2: (None, html.escape(SALJARE(s2["bast"]))))),
+             ("Dyraste erbjudandet", cell(a, b, lambda s2: (None, kr(s2["max"]) + "/mån"))),
+             ("Erbjudanden hos oss", cell(a, b, lambda s2: (s2["n"], f'{s2["n"]} st från {s2["saljare"]} säljare'), lagre=False))]
+    huvud = "".join(f'<th scope="col"><a href="privatleasing-{k}.html">{f"""<img src="bilder/{s2["bast"]["foto"]}-480.webp" alt="{html.escape(n)}" width="480" height="300" loading="lazy">""" if s2["bast"]["foto"] else ""}<span>{html.escape(s2["bast"]["marke"])}</span><b>{html.escape(s2["bast"]["mnamn"])}</b></a></th>' for k, s2, n in ((par[0], a, na), (par[1], b, nb)))
+    fil = parfil(par)
+    andra = [p for k in par for p in JMFMED.get(k, []) if p != par][:6]
+    sidor[fil] = sida(
+        fil,
+        f"{na} eller {nb}? Privatleasing jämförd ({MANAD}) | Jämföra Privatleasing",
+        f"{na} från {kr(a['min'])}/mån eller {nb} från {kr(b['min'])}/mån? Vi jämför faktisk månadskostnad, startavgifter, körsträcka och vad som ingår i privatleasingen. Kontrollerat {KONTROLL}.",
+        sidhuvud(f"{html.escape(na)} eller {html.escape(nb)}?", "Vilken är billigast att privatleasa just nu? Vi ställer det billigaste erbjudandet på varje bil bredvid varandra.",
+                 brod(("jamfor-bilar.html", "Jämför bilar"), (None, f"{html.escape(A['mnamn'])} eller {html.escape(B['mnamn'])}")))
+        + f'''
+  <main class="wrap" style="padding: 0 16px;">
+    <p class="direktsvar">{slut} Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell, med insats och avgifter inräknade. Kontrollerat {KONTROLL}.</p>
+    <div class="svrull"><table class="svtab par"><thead><tr><td></td>{huvud}</tr></thead><tbody>
+      {"".join(f'<tr><th scope="row">{r}</th>{c}</tr>' for r, c in rader)}
+      <tr><th scope="row"></th><td><a class="cta" href="privatleasing-{par[0]}.html">Se alla {a["n"]} →</a></td><td><a class="cta" href="privatleasing-{par[1]}.html">Se alla {b["n"]} →</a></td></tr>
+    </tbody></table></div>
+    <p class="jmffot">Grönt = bäst i raden. Priset säger inte allt: jämför också utrustning, räckvidd och bagage hos tillverkaren, och provkör båda. <a href="jamfor-bilar.html?m={par[0]},{par[1]}">Lägg till fler bilar i jämförelsen →</a></p>
+    {('<h2 class="ortrub">Fler jämförelser</h2><div class="katlankar">' + "".join(f'<a href="{parfil(p)}">{html.escape(MOD[p[0]][0]["mnamn"])} eller {html.escape(MOD[p[1]][0]["mnamn"])}</a>' for p in andra) + "</div>") if andra else ""}
+    {CHECKLISTA}
+  </main>''',
+        aktiv="jamfor-bilar.html", sida_typ="par", ld=[brod_ld(("jamfor-bilar.html", "Jämför bilar"), (fil, f"{na} eller {nb}"))])
+
 # ---------- En sida per modell: jämför handlare ----------
 def lista_ord(n, en, fl):
     return f"{n} {en if n == 1 else fl}"
@@ -614,6 +728,9 @@ for key, lst in sorted(MOD.items()):
     kar = KAROSS_AV.get(key)
     lika = sorted((k for k in MOD if k != key and MOD[k][0]["marke"] != marke and kar and KAROSS_AV.get(k) == kar), key=lambda k: abs(stats(MOD[k])["min"] - st["min"]))[:6]
     relaterat = ""
+    if JMFMED.get(key):
+        relaterat += '<section class="block"><div class="wrap"><h2>Jämför ' + hel + ' med</h2><div class="katlankar">' + "".join(
+            f'<a href="{parfil(p)}">{html.escape(MOD[p[0] if p[1] == key else p[1]][0]["marke"])} {html.escape(MOD[p[0] if p[1] == key else p[1]][0]["mnamn"])}</a>' for p in JMFMED[key][:6]) + "</div></div></section>"
     if lika:
         relaterat += f'<section class="block"><div class="wrap"><h2>Liknande bilar i samma prisklass</h2><div class="markegrid">{"".join(kortlank(k) for k in lika)}</div></div></section>'
     if samma:

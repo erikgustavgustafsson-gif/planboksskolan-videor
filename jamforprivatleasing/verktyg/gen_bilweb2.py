@@ -254,7 +254,8 @@ for mal, annonser in sorted(modeller.items()):
         if nyckel in sedda: stat["dubblett"] += 1; continue
         sedda.add(nyckel)
         lan_namn, lan_pos = LAN.get(a["lan"], ("", None))
-        ort = a["ort"] or lan_namn
+        ort = a["ort"] if not re.match(r"^(\d{1,2} [A-Za-zåäö]{3,4}|Idag|Igår)$", a["ort"] or "") else ""   # ibland står datumet där orten ska stå
+        ort = ort or lan_namn
         pos = STAD.get(ort) or lan_pos
         if ort and pos: orter[ort] = [pos, lan_namn]
         saljare = re.sub(r" - [Nn]ya (person)?bilar$", "", a["saljare"]).strip()

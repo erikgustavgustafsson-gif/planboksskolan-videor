@@ -15,7 +15,7 @@ const ut = d.BILAR.map(x => {
   const mnamn = x.mnamn || d.MODELLNAMN[x.foto] || x.modell.split(" ")[0];
   return { marke: x.marke, modell: x.modell, foto: x.foto, drivmedel: x.drivmedel, manad: x.manad, mil: x.mil, nypris: x.nypris,
     start: x.start || 0, adm: x.adm || 0, forhojd: x.forhojd || 0, forsakring: x.forsakring || 0, service: x.service, typ: x.typ,
-    kaross: x.kaross || "", kalla: x.kalla, url: x.url, ort: x.orttext || x.ort || "", lokal: x.typ !== "Märket", milokand: !!x.milokand, milharledd: !!x.milharledd,
+    lan: x.lan || [], kaross: x.kaross || "", kalla: x.kalla, url: x.url, ort: x.orttext || x.ort || "", lokal: x.typ !== "Märket", milokand: !!x.milokand, milharledd: !!x.milharledd,
     bilweb: !!x.bilweb, mnamn, mkey: slug(x.marke + " " + mnamn), m, total, eff: Math.round(total / 36) };
 });
 process.stdout.write(JSON.stringify({ kontroll: d.KONTROLL, bilar: ut }));

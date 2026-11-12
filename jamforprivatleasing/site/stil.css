@@ -938,3 +938,28 @@
     .textsida p, .textsida li { color: #C3CFDC; font-size: 16px; line-height: 1.6; }
     .textsida b { color: #fff; }
     .textsida ul { padding-left: 20px; display: grid; gap: 6px; }
+
+    /* ===== Ortssidor, topplistor och jämförelsesidor ===== */
+    .katlankar a small { opacity: .65; font-weight: 500; margin-left: 2px; }
+    .katlankar.radbryt { flex-wrap: wrap; overflow: visible; }
+    .ortrub { color: #fff; font-size: 19px; margin: 22px 0 6px; }
+    .ortinfo { color: var(--mutedljus) !important; font-size: 14px; line-height: 1.55; margin: 14px 0; }
+    .ortinfo b { color: var(--textljus); }
+    .topp10 h2 { color: #fff; font-size: 19px; margin: 20px 0 0; }
+    .topp10 .svrull { margin-top: 10px; }
+    .topptab { width: 100%; border-collapse: collapse; background: #fff; color: var(--text); border-radius: 14px; overflow: hidden; font-size: 14px; }
+    .topptab th, .topptab td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+    .topptab th { background: #F5F7FA; color: var(--muted); font-size: 12.5px; }
+    .topptab td:first-child { width: 22px; color: var(--muted); }
+    .topptab td:last-child { white-space: nowrap; font-weight: 800; text-align: right; }
+    .topptab th:last-child { text-align: right; }
+    .topptab a { color: var(--navy) !important; font-weight: 700; }
+    .svtab thead img { height: auto; }
+    .direktsvar a { color: #8FE3DA !important; font-weight: 700; }
+    .svtab.par { min-width: 0; table-layout: fixed; }
+    .svtab.par tbody th { width: 88px; min-width: 0; font-size: 12px; padding: 9px 8px; }
+    .svtab.par thead td { width: 88px; }
+    .svtab.par thead th { min-width: 0; padding: 10px 8px; }
+    .svtab.par td { padding: 9px 8px; font-size: 13.5px; overflow-wrap: anywhere; }
+    .svtab.par a.cta { display: block; text-align: center; padding: 9px 4px; font-size: 13px; }
+    .svtab.par thead b { font-size: 15px; }
