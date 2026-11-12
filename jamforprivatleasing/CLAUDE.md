@@ -62,6 +62,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 
 ## Hastighet (12 nov 2026)
 - build.py skapar WebP-bilder (`bilder/<namn>-480.webp` och `-960.webp`) av varje jpg, och sätter `?v=<version>` på js/css. Kräver Pillow. Publicera även nya .webp-filer.
+- build.py slår ihop all kod till `site/paket.js` (en fil i stället för fem). Sidorna laddar bara den – publicera alltid `paket.js` tillsammans med html-filerna.
 - `site/.htaccess` slår på komprimering och lång cache för js/css/bilder – ändra den inte. `konfig.js` laddas inte längre.
 
 ## Regler

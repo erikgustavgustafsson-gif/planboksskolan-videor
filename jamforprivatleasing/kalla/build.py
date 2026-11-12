@@ -125,7 +125,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v={VER}">
+  <link rel="stylesheet" href="stil.css?v=__VER__">
   {f'<script type="application/ld+json">{ldtext}</script>' if ldtext else ''}
 </head>
 <body{data}>
@@ -155,11 +155,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   </section>
   <footer>Jämföra Privatleasing · priser kontrollerade {KONTROLL} · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
-  <script src="foretag.js?v={VER}"></script>
-  <script src="affiliate.js?v={VER}"></script>
-  <script src="bildkalla.js?v={VER}"></script>
-  <script src="prishistorik.js?v={VER}"></script>
-  <script src="app.js?v={VER}"></script>
+  <script src="paket.js?v=__VER__"></script>
 </body>
 </html>
 """
@@ -799,8 +795,14 @@ TEXTFIX = {
     'och körsträckan går normalt inte att ändra under avtalet.': 'och det är inte säkert att körsträckan går att ändra under avtalet.',
     'och du kan normalt inte ändra körsträckan under avtalet.': 'och det är inte säkert att du kan ändra körsträckan under avtalet.',
 }
+# All kod i EN fil (paket.js): sidan hämtar en fil i stället för fem – snabbare och topplistan ritas direkt.
+# De enskilda filerna finns kvar (foretag.js används av villkorssidorna, prishistorik.js av prisbevakningen).
+PAKET = "\n;\n".join((UT / f).read_text(encoding="utf-8") for f in ("foretag.js", "affiliate.js", "bildkalla.js", "prishistorik.js")) + "\n;\n" + (HIT / "app.js").read_text(encoding="utf-8")
+(UT / "paket.js").write_text(PAKET, encoding="utf-8")
+PVER = hashlib.md5((PAKET + (HIT / "stil.css").read_text(encoding="utf-8")).encode("utf-8")).hexdigest()[:8]
 _traff = {k: 0 for k in TEXTFIX}
 for fil, text in sidor.items():
+    text = text.replace("__VER__", PVER)
     for gammal, ny in TEXTFIX.items():
         if gammal in text: _traff[gammal] += 1; text = text.replace(gammal, ny)
     (UT / fil).write_text(text, encoding="utf-8")
