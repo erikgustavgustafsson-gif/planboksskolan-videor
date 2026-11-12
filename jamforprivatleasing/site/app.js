@@ -76,11 +76,32 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     // Elvarianter med samma kaross som en modell vi redan har bild på
     const FOTOALIAS = {"Peugeot|e-3008": "p3008", "Peugeot|e-5008": "p5008", "Renault|5 E-Tech": "r5", "Opel|Frontera": "frontera", "Opel|Grandland": "grandland", "Kia|K4": "k4", "Citroën|C5 AirCross": "c5aircross", "Mitsubishi|Outlander": "outlander", "Hyundai|Santa Fe": "santafe", "Citroën|C3 Aircross": "c3aircross", "Renault|Scenic E-Tech": "scenic", "Hyundai|IONIQ 9": "ioniq9", "Ford|Explorer": "explorer", "Opel|Mokka": "mokka", "Leapmotor|B10": "b10", "Leapmotor|T03": "t03", "MG|S5": "mgs5", "Ford|Capri": "capri", "MINI|Aceman": "aceman", "Dacia|Duster": "duster", "BMW|iX1": "ix1", "Mercedes-Benz|GLA": "gla", "Peugeot|408": "p408", "Opel|Mokka-e": "mokka", "Citroën|e-C3 Aircross": "c3aircross"};
     const _alias = (marke, mnamn) => MODELLALIAS[marke + "|" + mnamn] || mnamn;
+    // Säljarnas rubriker innehåller ofta reklam ("2,99%", "PRIVATLEASA…", "Beställningsbil") och VERSALER – här blir det ett rent variantnamn
+    const _BEHALL = new Set(["PHEV", "HEV", "MHEV", "BEV", "AWD", "FWD", "RWD", "4WD", "2WD", "TSI", "TDI", "TFSI", "GTI", "GTX", "GTE", "GT", "GTS", "RS", "EV", "DCT", "DSG", "CVT", "TCE", "GDI", "T-GDI", "DM-I", "XC", "EX", "ID", "II", "III", "IV", "SE", "SEL", "XLE", "GS", "SUV", "SW", "ST", "N", "X", "S", "R", "E", "M", "LR", "SR", "AMG", "EQ", "JCW", "MG", "BYD", "BMW", "DS"]);
+    function snyggNamn(marke, mnamn, modell) {
+      let t = String(modell || "").split("*")[0].split(" / ")[0]
+        .replace(/\s*[-–|,]?\s*\d{1,2}([.,]\d{1,2})?\s?%.*$/, "")                          // "2,99% ränta …", "0%"
+        .replace(/\b(europas mest sålda bil|priv\w{0,3}\s?leas\w*|\w*kampanj\w*|leasing fr\.?|erbjudande\w*|beställningsbil\w*|lagerbil\w*|omgående\b.*|snabb leverans.*|NYA!?)/gi, " ")
+        .replace(/\s*(inkl\.?|ink\.?|&|och|med)?\s*(fria\s+)?(drag\s*(&|och)\s*)?(service\w*\s*(&|och)\s*)?vinterhjul.*$/i, "")
+        .replace(/\s*\b(serviceavtal|service)\b.*$/i, "").replace(/\s\d[\d ]*\s?kr\b.*$/i, "")
+        .replace(/[\s/.\-–]*\b(lager|leasing)\b\.?\s*(fr\.?)?$/i, "")
+        .replace(/^(citroen|mercedes-benz|mercedes|vw)\s+/i, "")
+        .replace(/\s+(fr\.?|från|i|nu|pris|fr\.?\s*\d.*)$/i, "").replace(/\s+/g, " ").replace(/^[\s\-–|,*!/.:&]+|[\s\-–|,*!/.:&]+$/g, "");
+      const egna = (marke + " " + mnamn).split(/\s+/);
+      t = t.split(" ").map(o => {
+        const eget = egna.find(x => x.toLowerCase() === o.toLowerCase()); if (eget) return eget;
+        if (/^\d+HK$/i.test(o)) return o.toLowerCase(); if (/^\d+KWH$/i.test(o)) return o.replace(/kwh/i, "kWh");
+        if (_BEHALL.has(o) || !/^[A-ZÅÄÖ\d-]+$/.test(o) || o.replace(/[^A-ZÅÄÖ]/g, "").length < 4) return o;      // bara ord helt i VERSALER med minst 4 bokstäver ändras
+        return o.split("-").map(d => _BEHALL.has(d) || /\d/.test(d) && d.length <= 3 ? d : d.charAt(0) + d.slice(1).toLowerCase()).join("-");
+      }).join(" ");
+      if (!egna.some(x => t.toLowerCase().startsWith(mnamn.toLowerCase().split(" ")[0])) && !t.toLowerCase().startsWith(mnamn.toLowerCase())) t = t;
+      return t && t.length > 1 ? t : mnamn;
+    }
     // En handlarannons från Bilweb. Kort form för att hålla filen liten:
     // BW(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år (0 = står inte i annonsen), säljare, ort, sökväg hos Bilweb, annonsens datum, insats, karosstyp)
     function BW(marke, mnamn, modell, foto, drivmedel, manad, mil, saljare, ort, vag, dat, forhojd, kaross) {
       const o = BWORT[ort] || [];
-      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null;
+      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null; modell = snyggNamn(marke, mnamn, modell);
       const noter = [`Annons hos ${saljare}, uppdaterad ${dat}`];
       if (!mil) noter.push("Körsträckan framgår inte av annonsen – fråga handlaren");
       if (forhojd) noter.push(`Priset förutsätter ${forhojd.toLocaleString("sv-SE")} kr i insats/förhöjd första hyra`);
@@ -91,7 +112,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     // En lagerbil hos Hedin Automotive med Hedins egna privatleasinguppgifter (pris, avgifter, körsträcka):
     // HD(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år, uppläggning, avi/mån, ort, [lat, lon], id/slug, service ingår (1/0), karosstyp)
     function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross, premie) {
-      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null;
+      mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null; modell = snyggNamn(marke, mnamn, modell);
       return B(marke, modell, foto, drivmedel, manad, mil, null, { mnamn, kaross: kaross || "", kalla: "Hedin Automotive " + ort, url: "https://hedinautomotive.se/bilar/kop-bil/" + vag,
         start, adm, ort, ortpos: pos || (BWORT[ort] || [])[0] || null, ortlan: (BWORT[ort] || [])[1] || "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer" + (premie ? ". Bilen kan ge rätt till elbilspremie – fråga Hedin om den påverkar priset" : ""), tillval: "inga", hedin: true });
     }
@@ -3521,12 +3542,12 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       // 4) Sammanfattningen överst
       const minst = (lista, falt) => lista.filter(r => r[falt] != null).sort((a, b) => a[falt] - b[falt])[0];
       const bast = minst(rader, "andel");
-      const billigast = minst(rader, "total");
+      const billigast = minst(rader.filter(r => !r.milokand), "total") || minst(rader, "total");
       const billigastEl = minst(rader.filter(r => r.drivmedel === "El"), "total");
       const namn = b => b ? b.marke + " " + b.modell : "";
       if (summary) summary.innerHTML = `
-        <div class="stat"><small>Bästa erbjudande</small><b>${bast ? pct(bast.andel) + " av nypriset" : "–"}</b><small>${namn(bast)}</small></div>
-        <div class="stat"><small>Billigast totalt</small><b>${billigast ? kr(billigast.total) : "–"}</b><small>${namn(billigast)}</small></div>
+        <div class="stat"><small>Lägst faktisk kostnad</small><b>${billigast ? kr(Math.round(billigast.total / 36)) + "/mån" : "–"}</b><small>${namn(billigast)}</small></div>
+        <div class="stat"><small>Bäst pris mot nypris</small><b>${bast ? pct(bast.andel) + " av nypriset" : "–"}</b><small>${namn(bast)}</small></div>
         <div class="stat"><small>Billigaste elbil totalt</small><b>${billigastEl ? kr(billigastEl.total) : "–"}</b><small>${namn(billigastEl)}</small></div>
         <div class="stat"><small>Modeller · erbjudanden</small><b>${modellRader.length} · ${rader.length}</b></div>`;
 
@@ -3560,9 +3581,9 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
             <button type="button" class="jmfval ${JMF.har(b.mkey) ? "vald" : ""}" data-jmf="${b.mkey}" aria-pressed="${JMF.har(b.mkey)}">${JMF.har(b.mkey) ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar"}</button>
           </div>
           <div class="tags">
-            ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : `<span class="tag">Andel av nypris: –</span>`}
+            ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : ""}
             <span class="tag ${b.drivmedel === "El" ? "el" : ""}">${b.drivmedel}</span>
-            ${b.tillval === "alla" ? `<span class="tag bygg">🛠 Välj alla tillval</span>` : b.tillval === "vissa" ? `<span class="tag">Några tillval</span>` : `<span class="tag">Färdig bil</span>`}
+
             ${platstagg(b)}
             ${b.forhojd ? `<span class="tag warn">${kr(b.forhojd)} vid start</span>` : ""}
           </div>

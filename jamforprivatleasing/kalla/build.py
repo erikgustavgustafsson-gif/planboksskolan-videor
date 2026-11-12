@@ -70,7 +70,7 @@ STEG = (STEG.replace("<h2><b>Beställ</b> steg för steg</h2>", "<h2><b>Så funk
   .replace("<li><span>2</span><div><b>Välj färg och tillval</b>Lägg till vinterhjul, dragkrok eller paket och se det nya priset direkt.</div></li>",
            "<li><span>2</span><div><b>Jämför säljarna</b>Samma bil kan kosta olika hos märket och hos olika handlare. Vi listar alla erbjudanden på modellen, billigast överst.</div></li>")
   .replace("<li><span>3</span><div><b>Skicka beställningen</b>Fyll i dina uppgifter, så skickar vi beställningen till handlaren åt dig.</div></li>",
-           "<li><span>3</span><div><b>Gå till erbjudandet</b>Klicka dig vidare till märket eller handlaren och välj färg, tillval och leverans där.</div></li>")
+           "<li><span>3</span><div><b>Gå till erbjudandet</b>Klicka dig vidare till märket eller handlaren och se hela erbjudandet och välj färg och leverans där.</div></li>")
   .replace("<li><span>4</span><div><b>Signera avtalet</b>Handlaren skickar avtalet till dig. Du godkänner det med BankID, och inget är bindande innan dess.</div></li>",
            "<li><span>4</span><div><b>Leasa hos säljaren</b>Avtalet tecknar du direkt med handlaren eller leasingbolaget. Inget är bindande förrän du har signerat.</div></li>"))
 assert "Gå till erbjudandet" in STEG and "Leasa hos säljaren" in STEG
@@ -193,15 +193,12 @@ def filter_html(med_marke=True):
       {marke}
       <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option>{tak}</select></div>
       <div class="sorterafalt"><label for="sortera">Sortera</label><select id="sortera">
-        <option value="andel">Bästa erbjudande</option><option value="total">Billigast totalt</option>
-        <option value="manad">Lägst månadspris</option><option value="marke">Märke A–Ö</option></select></div>
+        <option value="total">Lägst faktisk kostnad</option><option value="manad">Lägst månadshyra</option>
+        <option value="andel">Bäst pris mot nypris</option><option value="marke">Märke A–Ö</option></select></div>
       <div class="hel"><label>Drivmedel</label>
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button><button type="button" data-v="Diesel">Diesel</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
-      <div class="hel"><label>Tillval</label>
-        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Bygg din bil <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
-        <small class="hjalp">🛠 = märkets egen konfigurator, där du väljer färg och tillval. Färdiga erbjudanden = bilen som handlaren har den i lager eller på kampanj.</small>
-        <input type="hidden" id="tillval" value="alla"></div>
+      <input type="hidden" id="tillval" value="alla">
       <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
         <div class="rad">
           <div><label for="mil">Körsträcka per år</label><select id="mil"><option value="1000">1 000 mil</option><option value="1500">1 500 mil</option><option value="2000">2 000 mil</option></select></div>
@@ -783,8 +780,31 @@ except ImportError:
     print("OBS: Pillow saknas – WebP-bilder skapades inte (pip install pillow)")
 
 # ---------- Skriv ut ----------
+# Texter från den ursprungliga sidan som inte stämmer för en ren jämförelsesajt rättas här (gammal text -> ny text)
+TEXTFIX = {
+    '<span class="tagg oft">Ingår ofta</span></b><small>Kan läggas till som tillval.</small>': '<span class="tagg nej">Tillkommer oftast</span></b><small>Fråga säljaren vad de kostar.</small>',
+    'Vinterhjul ingår sällan i grundpriset men finns ofta som tillval. Väljer du dem i vår konfigurator ser du det nya priset direkt.': 'Vinterhjul ingår sällan i månadshyran. Säljaren kan oftast lägga till dem mot en engångskostnad eller ett tillägg per månad – be om priset innan du skriver på. Ingår de står det på erbjudandet.',
+    'Priser, avgifter och tillval hämtas från märkenas och handlarnas egna sidor och kontrolleras dagligen.': 'Priser, avgifter och villkor hämtas från märkenas och handlarnas egna sidor och kontrolleras dagligen.',
+    'vinterhjul om du inte väljer dem som tillval, och kostnader': 'vinterhjul (om de inte ingår), din bilförsäkring, och kostnader',
+    'boka en provkörning innan du skickar din beställning. Länken': 'boka en provkörning innan du skriver på avtalet. Länken',
+    'Där väljer du färg och tillval, och leasingbolaget': 'Där väljer du färg och utrustning, och leasingbolaget',
+    'Vi jämför i dag bara nya bilar. Fyll gärna i "Hittar du inte din bil?" så hör vi av oss.': 'Vi jämför i dag bara nya bilar.',
+    'Vi jämför i dag bara nya bilar. Fyll gärna i &quot;Hittar du inte din bil?&quot; så hör vi av oss.': 'Vi jämför i dag bara nya bilar.',
+    '<summary>Hur räknar ni ut bästa erbjudande?</summary><p>Vi delar det du betalar till leasingbolaget under 36 månader med bilens nypris. Exempel: betalar du 100 000 kr för en bil som kostar 250 000 kr blir det 40 %. Nypriset är märkets eller handlarens ordinarie pris (inkl. moms) för samma version.</p>':
+        '<summary>Hur rangordnar ni erbjudandena?</summary><p>Efter faktisk månadskostnad: allt du betalar till säljaren på 36 månader – hyra, insats eller förhöjd första hyra, uppläggningsavgift, aviavgift och obligatorisk försäkring – delat på 36. Billigast hamnar överst. Ingen kan betala för en bättre plats. För erbjudanden där vi vet bilens nypris visar vi också hur stor del av nypriset du betalar: under 40 % är mycket bra, under 45 % bra.</p>',
+    'Märker du att du kör mer kan du ofta ändra körsträckan under avtalstiden – det blir oftast billigare än att betala övermil i efterhand.': 'Vissa leasingbolag låter dig ändra körsträckan under avtalstiden, andra inte – fråga innan du skriver på. Att välja rätt körsträcka från början är oftast billigare än att betala övermil i efterhand.',
+    'Privatleasing kräver ingen kontantinsats. Vissa kampanjer bygger på en förhöjd första hyra – den räknar vi alltid in i totalkostnaden och visar tydligt.': 'De flesta erbjudanden kräver ingen kontantinsats. Vissa bygger på en insats eller förhöjd första hyra – den räknar vi alltid in i den faktiska kostnaden och visar tydligt på erbjudandet.',
+    'Ny bil utan kontantinsats': 'Ny bil, oftast utan kontantinsats',
+    '<small>Du betalar en fast månadskostnad.</small>': '<small>Du betalar en månadshyra i stället för att köpa bilen.</small>',
+    'och körsträckan går normalt inte att ändra under avtalet.': 'och det är inte säkert att körsträckan går att ändra under avtalet.',
+    'och du kan normalt inte ändra körsträckan under avtalet.': 'och det är inte säkert att du kan ändra körsträckan under avtalet.',
+}
+_traff = {k: 0 for k in TEXTFIX}
 for fil, text in sidor.items():
+    for gammal, ny in TEXTFIX.items():
+        if gammal in text: _traff[gammal] += 1; text = text.replace(gammal, ny)
     (UT / fil).write_text(text, encoding="utf-8")
+print("Texträttningar utan träff:", [k[:50] for k, v in _traff.items() if not v])
 shutil.copy(HIT / "stil.css", UT / "stil.css")
 shutil.copy(HIT / "app.js", UT / "app.js")
 

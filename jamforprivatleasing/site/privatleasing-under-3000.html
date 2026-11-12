@@ -20,7 +20,7 @@
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=0d77cddb">
+  <link rel="stylesheet" href="stil.css?v=61658ee9">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Start", "item": "https://jamforprivatleasing.se/"}, {"@type": "ListItem", "position": 2, "name": "Alla bilar", "item": "https://jamforprivatleasing.se/alla-bilar.html"}, {"@type": "ListItem", "position": 3, "name": "Privatleasing under 3 000 kr/mån", "item": "https://jamforprivatleasing.se/privatleasing-under-3000.html"}]}]}</script>
 </head>
 <body data-sida="kategori" data-tak="3000" data-sort="total">
@@ -54,15 +54,12 @@
       <div><label for="marke">Märke</label><select id="marke"><option value="alla">Alla märken</option></select></div>
       <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option><option value="3000">3 000 kr</option><option value="3500">3 500 kr</option><option value="4000">4 000 kr</option><option value="5000">5 000 kr</option><option value="6000">6 000 kr</option><option value="8000">8 000 kr</option></select></div>
       <div class="sorterafalt"><label for="sortera">Sortera</label><select id="sortera">
-        <option value="andel">Bästa erbjudande</option><option value="total">Billigast totalt</option>
-        <option value="manad">Lägst månadspris</option><option value="marke">Märke A–Ö</option></select></div>
+        <option value="total">Lägst faktisk kostnad</option><option value="manad">Lägst månadshyra</option>
+        <option value="andel">Bäst pris mot nypris</option><option value="marke">Märke A–Ö</option></select></div>
       <div class="hel"><label>Drivmedel</label>
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button><button type="button" data-v="Diesel">Diesel</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
-      <div class="hel"><label>Tillval</label>
-        <div class="chips" id="tillvalchips"><button type="button" class="vald" data-v="alla">Alla <small></small></button><button type="button" data-v="bygg">🛠 Bygg din bil <small></small></button><button type="button" data-v="fardig">Färdiga erbjudanden <small></small></button></div>
-        <small class="hjalp">🛠 = märkets egen konfigurator, där du väljer färg och tillval. Färdiga erbjudanden = bilen som handlaren har den i lager eller på kampanj.</small>
-        <input type="hidden" id="tillval" value="alla"></div>
+      <input type="hidden" id="tillval" value="alla">
       <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
         <div class="rad">
           <div><label for="mil">Körsträcka per år</label><select id="mil"><option value="1000">1 000 mil</option><option value="1500">1 500 mil</option><option value="2000">2 000 mil</option></select></div>
@@ -81,7 +78,7 @@
     <section class="kollruta">
       <h2>Kolla det här innan du skriver på</h2>
       <ul>
-        <li><b>Körsträckan.</b> Räkna på hur långt du faktiskt kör. Övermil betalas per mil när bilen lämnas tillbaka, och du kan normalt inte ändra körsträckan under avtalet.</li>
+        <li><b>Körsträckan.</b> Räkna på hur långt du faktiskt kör. Övermil betalas per mil när bilen lämnas tillbaka, och det är inte säkert att du kan ändra körsträckan under avtalet.</li>
         <li><b>Fast eller rörlig avgift.</b> Fråga om månadskostnaden kan höjas om räntan stiger, och be om ett räkneexempel.</li>
         <li><b>Vad som ingår.</b> Service ingår ofta. Försäkring, vinterhjul och fordonsskatt tillkommer oftast – be om pris på dem.</li>
         <li><b>Avgifter vid start.</b> Uppläggningsavgift, aviavgift och förhöjd första hyra syns inte alltid i annonspriset. Hos oss är de inräknade i den faktiska kostnaden.</li>
@@ -120,10 +117,10 @@
   </section>
   <footer>Jämföra Privatleasing · priser kontrollerade 12 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
-  <script src="foretag.js?v=0d77cddb"></script>
-  <script src="affiliate.js?v=0d77cddb"></script>
-  <script src="bildkalla.js?v=0d77cddb"></script>
-  <script src="prishistorik.js?v=0d77cddb"></script>
-  <script src="app.js?v=0d77cddb"></script>
+  <script src="foretag.js?v=61658ee9"></script>
+  <script src="affiliate.js?v=61658ee9"></script>
+  <script src="bildkalla.js?v=61658ee9"></script>
+  <script src="prishistorik.js?v=61658ee9"></script>
+  <script src="app.js?v=61658ee9"></script>
 </body>
 </html>
