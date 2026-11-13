@@ -1,0 +1,35 @@
+{
+  "slug": "2026-11-13_rantan-hojd-bolanet-dyrare",
+  "title": "Räntan är höjd – så mycket dyrare blir ditt bolån",
+  "caption": "Riksbanken höjde styrräntan från 1,75 till 2 % – och flera storbanker höjde den rörliga bolåneräntan med 0,25 procentenheter direkt 🏠 På 2 miljoner kr i lån blir det ca 5 000 kr mer om året, före ränteavdrag. Jämför din ränta med bankens snittränta och förhandla!\n\nHar du rörligt eller bundet bolån? 👇\n\n#bolån #ränta #riksbanken #privatekonomi #boendekostnad #plånboksskolan",
+  "pinned_comment": "Rörligt 🔄 eller bundet 🔒 bolån – vad har du? Och har du förhandlat räntan i år? 👇",
+  "sources": [
+    "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-hojs-till-2-procent/ (Riksbanken 4 nov 2026: styrräntan höjs från 1,75 till 2 %, gäller från 11 nov)",
+    "https://www.borskollen.se/nyheter/27/flera-banker-hojer-bolanerantan-sa-mycket-dyrare-blir-ditt-lan (Börskollen 6 nov 2026: Handelsbanken, SEB, Swedbank, Länsförsäkringar höjer 3-månadersräntan +0,25 p.e.; 2 milj. kr = +5 000 kr/år, 417 kr/mån före ränteavdrag)",
+    "https://www.konsumenternas.se/arkiv---nyheter-bloggar-och-poddar/nyheter/2021/mars/borantor/ (Konsumenternas: bankerna redovisar genomsnittsräntor – jämför och förhandla)",
+    "Eget räkneexempel: 2 000 000 kr × 0,25 % = 5 000 kr/år ≈ 417 kr/mån före ränteavdrag"
+  ],
+  "cover": {
+    "title": ["RÄNTAN ÄR HÖJD", "SÅ MYCKET DYRARE", "BLIR DITT BOLÅN"],
+    "pill": "Styrräntan nu 2 %",
+    "label": "2 miljoner i lån:",
+    "big": "+5 000 kr/år",
+    "big_color": "red"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Riksbanken höjde räntan. Har du rörligt bolån blir det dyrare nu.",
+     "kicker": "HAR DU RÖRLIGT BOLÅN?", "big": "RÄNTAN HÖJD", "sub": "styrräntan nu 2 %",
+     "punch": ["Dyrare", "redan nu."]},
+    {"type": "statement", "say": "Styrräntan gick från en och sjuttiofem till två procent. Flera storbanker höjde direkt.",
+     "title": "VAD HÄNDE?", "lines": ["Styrräntan: 1,75 % → 2 %", "Storbankerna följde"],
+     "highlight": "+0,25 % på bolånet", "chip": "Källa: Riksbanken"},
+    {"type": "number", "say": "Två miljoner i lån: femtusen kronor mer om året. Över fyrahundra i månaden, före ränteavdrag.",
+     "top": "Bolån: 2 000 000 kr", "prefix": "+", "value": 5000, "suffix": " kr", "color": "red", "sub": "per år",
+     "prefix2": "+", "value2": 417, "suffix2": " kr", "color2": "yellow", "sub2": "per månad, före avdrag"},
+    {"type": "cards", "say": "Jämför din ränta med bankens snittränta. Ligger du över, förhandla.",
+     "title": "GÖR DET HÄR",
+     "cards": [["Kolla din ränta", "i bankappen"], ["Jämför snitträntan", "banken redovisar den"], ["Förhandla", "eller byt bank"]]},
+    {"type": "cta", "say": "Kolla din ränta i dag och följ Plånboksskolan.",
+     "line1": "Kolla din ränta", "big": "I DAG", "line2": "Följ Plånboksskolan"}
+  ]
+}
