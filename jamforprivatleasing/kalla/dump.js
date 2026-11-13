@@ -7,12 +7,12 @@ let b = src.indexOf(slutMark); if (b < 0) b = src.indexOf("const POSTNR");
 if (a < 0 || b < 0) { console.error("Hittar inte datadelen i app.js"); process.exit(1); }
 const slug = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const kod = src.slice(a, b) + `
-;return { KONTROLL, BILAR, MODELLNAMN: typeof MODELLNAMN !== "undefined" ? MODELLNAMN : {} };`;
+;return { KONTROLL, BILAR, MA: typeof MODELLALIAS !== "undefined" ? MODELLALIAS : {}, FA: typeof FOTOALIAS !== "undefined" ? FOTOALIAS : {}, MODELLNAMN: typeof MODELLNAMN !== "undefined" ? MODELLNAMN : {} };`;
 const d = new Function("slug", "KONFIG", kod)(slug, {});
 const ut = d.BILAR.map(x => {
   const m = x.manad + (x.adm || 0) + (x.forsakring || 0);
   const total = m * 36 + (x.start || 0) + (x.forhojd || 0);
-  const mnamn = x.mnamn || d.MODELLNAMN[x.foto] || x.modell.split(" ")[0];
+  let mnamn = x.mnamn || d.MODELLNAMN[x.foto] || x.modell.split(" ")[0]; mnamn = d.MA[x.marke + "|" + mnamn] || mnamn; if (!x.foto) x.foto = d.FA[x.marke + "|" + mnamn] || null;
   return { marke: x.marke, modell: x.modell, foto: x.foto, drivmedel: x.drivmedel, manad: x.manad, mil: x.mil, nypris: x.nypris,
     start: x.start || 0, adm: x.adm || 0, forhojd: x.forhojd || 0, forsakring: x.forsakring || 0, service: x.service, typ: x.typ,
     lan: x.lan || [], kaross: x.kaross || "", kalla: x.kalla, url: x.url, ort: x.orttext || x.ort || "", lokal: x.typ !== "Märket", milokand: !!x.milokand, milharledd: !!x.milharledd,

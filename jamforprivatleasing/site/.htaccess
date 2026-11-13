@@ -9,6 +9,7 @@ RewriteCond %{HTTP:X-Forwarded-Proto} !=https
 RewriteRule ^(.*)$ https://jamforprivatleasing.se/$1 [R=301,L]
 
 # Sammanslagna modellsidor: gamla adresser skickas till den nya sidan
+RewriteRule ^privatleasing-audi-a2\.html$ /privatleasing-audi-a2-e-tron.html [R=301,L]
 RewriteRule ^privatleasing-renault-4\.html$ /privatleasing-renault-4-e-tech.html [R=301,L]
 RewriteRule ^privatleasing-citroen-e-c3-aircross\.html$ /privatleasing-citroen-c3-aircross.html [R=301,L]
 RewriteRule ^privatleasing-byd-seal-u-dm-i\.html$ /privatleasing-byd-seal-u.html [R=301,L]

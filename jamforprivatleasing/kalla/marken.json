@@ -19,7 +19,7 @@
   ]
  },
  "Dacia": {
-  "n": 30,
+  "n": 27,
   "min": 1990,
   "mod": "Sandero",
   "driv": [
@@ -46,7 +46,7 @@
   ]
  },
  "Hyundai": {
-  "n": 221,
+  "n": 220,
   "min": 2395,
   "mod": "i20",
   "driv": [
@@ -57,7 +57,7 @@
   ]
  },
  "Kia": {
-  "n": 376,
+  "n": 375,
   "min": 2896,
   "mod": "EV2",
   "driv": [
@@ -68,24 +68,15 @@
   ]
  },
  "MG": {
-  "n": 44,
+  "n": 47,
   "min": 2995,
   "mod": "4 EV Urban",
   "driv": [
    "El"
   ]
  },
- "MINI": {
-  "n": 22,
-  "min": 3795,
-  "mod": "Cooper",
-  "driv": [
-   "El",
-   "Bensin"
-  ]
- },
  "Mercedes-Benz": {
-  "n": 75,
+  "n": 74,
   "min": 4995,
   "mod": "A-Klass",
   "driv": [
@@ -107,7 +98,7 @@
   ]
  },
  "Renault": {
-  "n": 105,
+  "n": 104,
   "min": 3290,
   "mod": "5 E-Tech",
   "driv": [
@@ -137,7 +128,7 @@
  "Audi": {
   "n": 132,
   "min": 2795,
-  "mod": "A3",
+  "mod": "A3 Sportback",
   "driv": [
    "El",
    "Bensin",
@@ -158,7 +149,7 @@
   ]
  },
  "Cupra": {
-  "n": 52,
+  "n": 55,
   "min": 2495,
   "mod": "Formentor",
   "driv": [
@@ -202,6 +193,15 @@
    "Hybrid"
   ]
  },
+ "MINI": {
+  "n": 20,
+  "min": 3795,
+  "mod": "Cooper",
+  "driv": [
+   "El",
+   "Bensin"
+  ]
+ },
  "Mazda": {
   "n": 4,
   "min": 8344,
@@ -234,7 +234,7 @@
   ]
  },
  "Peugeot": {
-  "n": 262,
+  "n": 268,
   "min": 2499,
   "mod": "2008",
   "driv": [
@@ -254,7 +254,7 @@
  },
  "Seat": {
   "n": 4,
-  "min": 2295,
+  "min": 2195,
   "mod": "Arona",
   "driv": [
    "Bensin"
@@ -293,7 +293,7 @@
   ]
  },
  "Volkswagen": {
-  "n": 236,
+  "n": 234,
   "min": 2295,
   "mod": "Polo",
   "driv": [
@@ -304,7 +304,7 @@
   ]
  },
  "Volvo": {
-  "n": 52,
+  "n": 48,
   "min": 3790,
   "mod": "EX30",
   "driv": [
