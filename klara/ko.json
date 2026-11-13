@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "file": "klara/2026-11-06_tre-ars-reklamationsratt.mp4",
+    "cover": "klara/2026-11-06_tre-ars-reklamationsratt.jpg",
+    "title": "Ett års garanti? Du har 3 års reklamationsrätt",
+    "caption": "Butiken säger ett års garanti, men enligt konsumentköplagen har du 3 års reklamationsrätt, även när garantin har gått ut. Gäller fel som fanns från början, inte om du tappat grejen.\n\nHar en butik sagt nej till dig för att garantin gått ut? 👇\n\n#konsumenträtt #reklamation #garanti #privatekonomi #plånboksskolan",
+    "pinned_comment": "Gäller när du köpt av ett företag, nytt som begagnat. Felet ska ha funnits från början. Klaga så fort du märker felet, gärna via mejl. Källa: Konsumentverket / Hallå konsument 🧾",
+    "topic": "Reklamationsrätt 3 år vs 1 års garanti (konsumentköplagen)",
+    "sources": [
+      "https://www.konsumentverket.se/lagar/konsumentkoplagen-konsument/",
+      "https://www.hallakonsument.se/varor-och-tjanster-rattigheter/reklamera-fel-pa-vara-eller-tjanst/"
+    ]
+  },
+  {
+    "file": "klara/2026-11-06_noll-procent-ranta.mp4",
+    "cover": "klara/2026-11-06_noll-procent-ranta.jpg",
+    "title": "0 % ränta – men inte gratis",
+    "caption": "Lån och delbetalningar med 0 % ränta kan ändå ha avgifter. Den effektiva räntan visar vad det faktiskt kostar, och den måste stå i reklamen.\n\nHar du gått på en 0 %-ränta? 👇\n\n#lån #ränta #spartips #privatekonomi #plånboksskolan",
+    "pinned_comment": "Leta efter \"effektiv ränta\" i det finstilta. Där ingår avgifterna. Har du köpt något på 0 % ränta? Ja 🙋 / Nej 🙅",
+    "topic": "0 % ränta kan ändå kosta: effektiv ränta inkluderar avgifter (konsumentkreditlagen)",
+    "sources": [
+      "https://www.konsumentverket.se/ekonomi/lana-pengar/",
+      "https://www.konsumentverket.se/lagar/konsumentkreditlagen-konsument/"
+    ]
+  }
+]

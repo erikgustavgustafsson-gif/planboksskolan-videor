@@ -20,7 +20,7 @@ TikTok-kontot **@planboksskolan** ("Skolan du aldrig fick om pengar – ny lekti
    - All `say`-text tillsammans **300–360 tecken** (≈ 25–29 s). Siffror skrivs med ord i `say` ("tiotusen kronor") men med siffror i bild.
    - **Kroken** (första meningen) ska vara skarp från första ordet: ett påstående, en fråga tittaren känner igen sig i, eller en siffra. Aldrig "Om du …" eller vaga "förmodligen".
    - Texter i bild: korta (max ~22 tecken per rad i `big`/`highlight`, ~28 i `lines`).
-   - Fyll i `title` (krävs av TikTok), `caption` (kort text + fråga till tittarna + 5–7 hashtags inkl. #plånboksskolan), `pinned_comment`, `sources` (URL:er) och `cover`.
+   - Fyll i `title` (krävs av TikTok), `caption` (kort text + fråga till tittarna + högst 5 hashtags inkl. #plånboksskolan), `pinned_comment`, `sources` (URL:er) och `cover`.
    - Avsluta `cta`-scenens `say` med "…och följ Plånboksskolan." när det ryms.
 5. **Röst:** skapa ett ElevenLabs-flow "Plånboksskolan – <titel>", kör `creative_generate_speech` med alla `say`-stycken separerade av en tom rad, vänta ~25 s, hämta `full_res_url` med `creative_get_generations` och ladda ner med curl till `/tmp/voice.mp3`. Generera inte om i onödan (kostar credits) – högst en gång om rösten blir längre än 29,5 s, då med kortare manus.
 6. **Rendera:** `python3 mall/engine.py specs/<fil>.json /tmp/voice.mp3 /tmp/out` (kräver Pillow, numpy, ffmpeg och typsnittet Inter Display; installera vid behov). Titta på 3 bildrutor (krok, mitten, slut) med ffmpeg + Read och rätta text som går utanför bild.
