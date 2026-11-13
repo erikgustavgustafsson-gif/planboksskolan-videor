@@ -10,7 +10,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       } catch (e) {}
     }
     stat("visa");
-    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) stat("utlank"); });
+    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank"); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
 
     // Gör ett märkesnamn till en adress: "Mercedes-Benz" -> "mercedes-benz", "Škoda" -> "skoda"
     function slug(t) { return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }

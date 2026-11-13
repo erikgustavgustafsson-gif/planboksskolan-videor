@@ -40,7 +40,7 @@
       <span class="valfri">Adress: <span data-f="adress"></span><br></span>
       <span class="valfri">E-post: <span data-f="epost"></span></span></div>
     <h2>Vilka uppgifter vi behandlar</h2>
-    <p>När du jämför bilar hos oss behandlar vi inga personuppgifter. Det finns inga formulär där du lämnar namn, e-post eller telefonnummer, och du kan inte beställa något på sidan. Sidan använder inga kakor (cookies) för spårning eller annonser, och typsnitt och bilder ligger på vår egen server.</p>
+    <p>När du jämför bilar hos oss behandlar vi inga personuppgifter. Det finns inga formulär där du lämnar namn, e-post eller telefonnummer, och du kan inte beställa något på sidan. Typsnitt och bilder ligger på vår egen server. Kakor för statistik används bara om du säger ja i kakrutan – se <a href="#kakor">Kakor och statistik</a>. Sidan visar inga annonser och använder inga kakor för reklam.</p>
     <p>Mejlar du oss behandlar vi din e-postadress och det du skriver för att kunna svara. Rättslig grund: berättigat intresse av att besvara din fråga (artikel 6.1 f i GDPR). Vi raderar mejlen när ärendet är klart, senast efter 12 månader.</p>
     <h2>När du går vidare till en säljare</h2>
     <p>Trycker du på "Till erbjudandet" lämnar du vår sida och kommer till märkets eller handlarens egen sida. Det du fyller i där behandlas av dem enligt deras integritetspolicy, inte av oss. Är länken märkt Annonslänk kan säljaren eller annonsnätverket se att besöket kom från oss.</p>
@@ -52,14 +52,18 @@
       <li><b>Försäkringsbeloppet</b> du fyller i på en modellsida, så att priserna kan räknas om.</li>
     </ul>
     <p>Du tar bort allt genom att rensa webbplatsdata för sidan i webbläsaren.</p>
-    <h2>Besöksstatistik</h2>
-    <p>Vi räknar hur många som besöker sidorna och klickar vidare till en säljare. Vi sparar bara antal per dag, vilken sida och vilken bil det gäller. Vi använder inga kakor och sparar inte din IP-adress eller något annat som kan kopplas till dig.</p>
+    <h2>Besöksstatistik utan kakor</h2>
+    <p>Vi räknar alltid hur många som besöker sidorna och klickar vidare till en säljare. Där sparar vi bara antal per dag, vilken sida och vilken bil det gäller – inga kakor, ingen IP-adress och inget som kan kopplas till dig.</p>
+    <h2 id="kakor">Kakor och statistik</h2>
+    <p>Utöver det använder vi Google Analytics (Google Ireland Ltd) för att se hur sidan används, till exempel vilka sidor som besöks, vilka säljare besökarna klickar vidare till och var besökarna kommer ifrån. Tjänsten sätter kakor på din enhet och Google får veta att du har besökt oss. <b>Den laddas bara om du har sagt ja i kakrutan</b>, och du kan ändra dig när du vill under <a href="#" data-kakor>Kakinställningar</a>. Säger du nej fungerar sidan precis som vanligt.</p>
+    <p>Google är självt ansvarigt för hur det använder uppgifterna, och uppgifter kan föras över till länder utanför EU, till exempel USA, enligt Googles villkor. Rättslig grund hos oss: ditt samtycke (artikel 6.1 a i GDPR och 9 kap. lagen om elektronisk kommunikation). Ditt val sparas i din webbläsare i 12 månader, sedan frågar vi igen.</p>
     <h2>Vem som får uppgifterna</h2>
-    <p>Sidan och vår e-post ligger hos webbhotellet STRATO (STRATO GmbH, Tyskland). Uppgifterna behandlas inom EU. Vi säljer aldrig uppgifter och använder dem inte för reklam.</p>
+    <p>Sidan och vår e-post ligger hos webbhotellet STRATO (STRATO GmbH, Tyskland). Uppgifterna behandlas inom EU. Har du sagt ja till kakor får Google uppgifter om ditt besök, se <a href="#kakor">Kakor och statistik</a>. Vi säljer aldrig uppgifter och använder dem inte för reklam.</p>
     <h2>Dina rättigheter</h2>
     <p>Du har rätt att få veta vilka uppgifter vi har om dig, få dem rättade eller raderade och invända mot behandlingen. Kontakta oss på e-postadressen ovan. Är du missnöjd kan du klaga hos Integritetsskyddsmyndigheten (IMY), <a href="https://www.imy.se">imy.se</a>.</p>
   </main>
-  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="villkor.html">Villkor</a></footer>
+  <footer><a href="./">Tillbaka till jämförelsen</a> · <a href="om-oss.html">Om oss</a> · <a href="integritetspolicy.html">Integritetspolicy</a> · <a href="#" data-kakor>Kakinställningar</a> · <a href="villkor.html">Villkor</a></footer>
+  <script src="samtycke.js"></script>
   <script>
     // Fyller i företagsuppgifterna från foretag.js där det står data-f="..."
     document.querySelectorAll("[data-f]").forEach(el => {
