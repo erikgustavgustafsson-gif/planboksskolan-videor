@@ -22,3 +22,4 @@
 | 2026-11-12 | 1 december: bensin och diesel blir 3 kr dyrare per liter | Tillfälligt sänkt skatt på bensin/diesel (2,40 kr/l) upphör 30 nov → ca +3 kr/l inkl. moms; 50 l = +150 kr, 4 tankningar = +600 kr/mån | Skatteverket, TT via Carup/Vi Bilägare (2026-10-13), Börskollen (2026-11-04) |
 | 2026-11-13 | Min lön smsade mig: vi måste prata | Sms-sketch: lönen skriver om hyran och prenumerationer man glömt (gym) – säg upp det du inte använder. Gjord i chatten, röst från 12 nov | Humor, inga siffror som kräver källa |
 | 2026-11-14 | Ett års garanti? Du har 3 års reklamationsrätt | Reklamationsrätt 3 år vs 1 års garanti, konsumentköplagen (från kön) | Konsumentverket, Hallå konsument |
+| 2026-11-15 | 0 % ränta – men inte gratis | 0 % ränta kan ändå kosta: effektiv ränta inkluderar avgifter, konsumentkreditlagen (från kön) | Konsumentverket |
