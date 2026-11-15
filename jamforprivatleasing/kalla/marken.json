@@ -11,9 +11,9 @@
   ]
  },
  "BYD": {
-  "n": 20,
-  "min": 3490,
-  "mod": "Atto 2",
+  "n": 24,
+  "min": 3290,
+  "mod": "Dolphin G",
   "driv": [
    "El",
    "Laddhybrid"
@@ -47,7 +47,7 @@
   ]
  },
  "Hyundai": {
-  "n": 222,
+  "n": 220,
   "min": 2395,
   "mod": "i20",
   "driv": [
@@ -119,7 +119,7 @@
   ]
  },
  "Subaru": {
-  "n": 4,
+  "n": 3,
   "min": 4495,
   "mod": "Forester",
   "driv": [
@@ -294,7 +294,7 @@
   ]
  },
  "Volkswagen": {
-  "n": 238,
+  "n": 244,
   "min": 1995,
   "mod": "Polo",
   "driv": [
@@ -305,7 +305,7 @@
   ]
  },
  "Volvo": {
-  "n": 53,
+  "n": 52,
   "min": 3790,
   "mod": "EX30",
   "driv": [
