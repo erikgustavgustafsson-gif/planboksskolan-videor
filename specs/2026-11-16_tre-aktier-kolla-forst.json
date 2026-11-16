@@ -1,0 +1,33 @@
+{
+  "slug": "2026-11-16_tre-aktier-kolla-forst",
+  "title": "Ska du köpa Nvidia, Amazon eller Investor? Kolla det här först",
+  "caption": "Tre aktier alla pratar om – och vad du ska tänka på innan du köper. Inga köptips, bara läget 👀\n\nVilken av dem äger du? 👇\n\n#aktier #nvidia #amazon #investor #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Nvidia: ner nära 30 % sedan oktober (Börskollen). Amazon: capex ca 220 mdr USD 2026, -7,3 % efter Q3 (Placera). Investor: mest ägd hos Avanza (Placera). Vilken äger du? 🟢 Nvidia / 📦 Amazon / 🇸🇪 Investor",
+  "sources": [
+    "https://www.borskollen.se/nyheter/27/infor-rapporten-nvidias-rekordsiffror-moter-vd-skandal-och-valchock (Nvidia nära -30 % från toppen i oktober, rapport 17 nov)",
+    "https://www.placera.se/telegram/amazon-com-amazons-resultat-samre-an-vantat-aktien-foll-tungt-i-efterhandeln-20261030 (Amazon capex ca 220 mdr USD 2026, aktien -7,3 % i efterhandeln)",
+    "https://placera.se/nyheter/investor-ohotad-som-svenskarnas-favoritaktie-2026-07-31 (Investor överlägset mest ägd hos Avanza)"
+  ],
+  "cover": {
+    "title": ["NVIDIA, AMAZON", "ELLER INVESTOR?"],
+    "pill": "Inga köptips",
+    "label": "Kolla det här",
+    "big": "först",
+    "big_color": "red"
+  },
+  "scenes": [
+    {"type": "cards", "bg": "navy", "say": "Ska du köpa Nvidia, Amazon eller Investor? Kolla det här först.",
+     "title": "SKA DU KÖPA…", "cards": [["Nvidia", "AI-chip"], ["Amazon", "e-handel & moln"], ["Investor", "svenskarnas favorit"]]},
+    {"type": "statement", "bg": "mint", "say": "Nvidia: ner nära trettio procent, rapport i morgon. Den kan svänga hårt åt båda hållen.",
+     "title": "NVIDIA", "highlight": "NÄRA -30 %", "chip": "rapport i morgon",
+     "image": "media/nv_ras.png", "image_width": 760, "image_y": 1380},
+    {"type": "statement", "bg": "navy", "say": "Amazon: lägger tvåhundratjugo miljarder dollar på AI, och föll sju procent på rapporten. Tror du på satsningen?",
+     "title": "AMAZON", "highlight": "220 MDR $ PÅ AI", "chip": "tror du på satsningen?",
+     "image": "media/amzn_ai.png", "image_width": 700, "image_y": 1380},
+    {"type": "statement", "bg": "mint", "say": "Investor: svenskarnas favorit. Den äger många bolag, så du får spridning i en enda aktie.",
+     "title": "INVESTOR", "highlight": "SPRIDNING", "chip": "många bolag i en aktie",
+     "image": "media/investor_korg.png", "image_width": 700, "image_y": 1380},
+    {"type": "cta", "bg": "navy", "say": "Satsa aldrig mer än du klarar att förlora. Följ Plånboksskolan!",
+     "line1": "Satsa aldrig mer", "big": "ÄN DU TÅL", "line2": "att förlora."}
+  ]
+}

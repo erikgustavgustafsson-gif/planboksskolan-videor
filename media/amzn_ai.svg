@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560">
+<rect x="40" y="30" width="680" height="500" rx="32" fill="#000" opacity="0.2" transform="translate(8,12)"/>
+<rect x="40" y="30" width="680" height="500" rx="32" fill="#FFFFFF"/>
+<text x="90" y="105" font-family="Inter Display" font-weight="900" font-size="40" fill="#1B2238">Amazon 2026</text>
+<g>
+<rect x='90' y='140' width='300' height='72' rx='14' fill='#1B2238'/><circle cx='125' cy='176' r='10' fill='#7CCDA6'/><circle cx='160' cy='176' r='10' fill='#7CCDA6'/><rect x='200' y='168' width='160' height='16' rx='8' fill='#2C3A5E'/>
+<rect x='90' y='232' width='300' height='72' rx='14' fill='#1B2238'/><circle cx='125' cy='268' r='10' fill='#7CCDA6'/><circle cx='160' cy='268' r='10' fill='#7CCDA6'/><rect x='200' y='260' width='160' height='16' rx='8' fill='#2C3A5E'/>
+<rect x='90' y='324' width='300' height='72' rx='14' fill='#1B2238'/><circle cx='125' cy='360' r='10' fill='#7CCDA6'/><circle cx='160' cy='360' r='10' fill='#7CCDA6'/><rect x='200' y='352' width='160' height='16' rx='8' fill='#2C3A5E'/>
+</g>
+<text x="560" y="250" font-family="Inter Display" font-weight="900" font-size="88" fill="#1B2238" text-anchor="middle">AI</text>
+<text x="560" y="310" font-family="Inter Display" font-weight="800" font-size="30" fill="#5A6478" text-anchor="middle">serverhallar</text>
+<rect x="90" y="430" width="580" height="60" rx="16" fill="#FDE3E3"/>
+<text x="380" y="470" font-family="Inter Display" font-weight="900" font-size="32" fill="#E24C4C" text-anchor="middle">-7 % efter rapporten</text>
+</svg>
