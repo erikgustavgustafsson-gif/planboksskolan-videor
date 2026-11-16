@@ -10,7 +10,5 @@ for k in namn:
     m = re.search(r"const FRILAGDA = new Set\(\[(.*?)\]\);", s)
     if f'"{k}"' not in m.group(1): s = s.replace(m.group(1), m.group(1) + f', "{k}"')
     shutil.copy(f"studio/{k}.jpg", f"/home/claude/site/bilder/{k}.jpg")
-    for b in (480, 960):
-        import os; f = f"/home/claude/site/bilder/{k}-{b}.webp"
-        if os.path.exists(f): os.remove(f)          # byggs om av build.py
+    import genomskinlig; genomskinlig.gor(k, f"ut/{k}_{v['i']}.png")   # genomskinlig bil i -480/-960.webp (scenen och skuggan ritas av sidan)
 open(p, "w", encoding="utf-8").write(s); print(len(namn), "inlagda")

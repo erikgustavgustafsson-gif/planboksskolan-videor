@@ -3713,7 +3713,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
             <div class="kortpiller"><span class="antalerb">${b.antal} ${b.antal === 1 ? "erbjudande" : "erbjudanden"}${b.handlare > 1 ? ` · ${b.handlare} säljare` : ""}</span><span>36 mån</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : (b.m != null ? valdMil : b.mil).toLocaleString("sv-SE") + " mil/år"}</span></div>
             ${flera
-              ? `<a class="cta" href="${b.msida}">Se alla ${b.antal} erbjudanden →</a>`
+              ? `<a class="cta" href="${b.msida}">Se alla ${b.antal} erbjudanden</a>`
               : `<a class="cta" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till erbjudandet ↗</a><a class="ext" href="${b.msida}">Om ${esc(b.mnamn)} →</a>`}${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
             <button type="button" class="jmfval ${JMF.har(b.mkey) ? "vald" : ""}" data-jmf="${b.mkey}" aria-pressed="${JMF.har(b.mkey)}">${JMF.har(b.mkey) ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen"}</button>
           </div>
@@ -4179,7 +4179,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
             </div>
             <div class="tchips"><span>36 månader</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : b.mil.toLocaleString("sv-SE") + " mil/år"}</span>${b.forhojd ? `<span>${kr(b.forhojd)} vid start</span>` : ""}</div>
             <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "hos "}${esc(b.kalla.split(/ \(|,/)[0])}${antal > 1 ? ` · billigast av ${antal}` : ""}</div>
-            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Se alla " + antal + " →" : "Se erbjudandet →"}</a></div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Se alla " + antal : "Se erbjudandet"}</a></div>
           </div>
         </article>`;
       }).join("");
@@ -4254,22 +4254,30 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           const plats = !r.lokal ? "Hela Sverige – hämtas hos närmaste märkeshandlare" : r.orter ? r.orter.slice(0, 3).join(", ") + (r.orter.length > 3 ? " m.fl." : "") + (r.lan.length === 1 && !r.orter.includes(r.lan[0]) ? ", " + r.lan[0] : "") : "Lokal handlare – fråga var bilen hämtas";
           const extra = r.forhojd || r.start || r.adm || r.forsakring || (jmfFors && r.total != null);
           const milrad = r.milokand ? `<b class="jmfokand">Körsträcka: fråga handlaren</b>` : milTxt(r.ingar) + (r.milharledd ? " (som märkets kampanj)" : "") + (jmfMil && r.ingar > jmfMil ? ` – mer än du behöver` : "");
+          const hogstEff = kanda.length ? Math.max(...kanda.map(x => x.eff)) : null;
+          const pos = r.eff != null && !r.milokand && hogstEff > lagst ? Math.round((r.eff - lagst) / (hogstEff - lagst) * 100) : null;
+          const ort = !r.lokal ? "Hela Sverige" : r.orter ? r.orter[0] + (r.orter.length > 1 ? " m.fl." : "") : "";
           return `<article class="jmfkort ${billigast ? "bast" : ""}">
-            <div class="jmftopp">
-              <span class="jmfbadge ${billigast ? "bast" : ""}">${billigast ? "Billigast" : r.typ === "Märket" ? "Märkets pris" : "Handlare"}</span>
-              <div class="jmfpris">${r.m == null ? `<b class="jmfsaknas">Pris saknas</b><span>för ${milTxt(jmfMil)} – fråga säljaren</span>` : `<b>${kr(r.m)}</b><small>/mån</small>${r.krmil == null ? "" : `<span>${tal(r.krmil)} kr/mil</span>`}${r.forhojd ? `<span class="jmfins">+ ${kr(r.forhojd)} vid start</span>` : ""}`}</div>
+            <div class="jk-huvud">
+              <div class="jk-pris">${r.m == null ? `<b class="jmfsaknas">Pris saknas</b><span>för ${milTxt(jmfMil)} – fråga säljaren</span>` : `<b>${r.m.toLocaleString("sv-SE")}</b><small>kr/mån</small>`}</div>
+              <div class="jk-vem">
+                ${billigast ? `<span class="jk-skylt">Billigast</span>` : r.typ === "Märket" ? `<span class="jk-markets">Märkets eget pris</span>` : ""}
+                <h3>${esc(r.marke)} ${esc(r.modell)}</h3>
+                <p class="jmfhandlare">${handlare}${ort && !handlare.includes(ort) ? `<span>${esc(ort)}</span>` : ""}${r.avst != null ? `<span>${tillMil(r.avst)} mil bort</span>` : ""}</p>
+              </div>
             </div>
-            <h3>${esc(r.marke)} ${esc(r.modell)}</h3>
-            <p class="jmfhandlare">${handlare}</p>
-            <p class="jmfplats">📍 ${esc(plats)}${r.avst != null ? ` · ${tillMil(r.avst)} mil från dig` : ""}</p>
-            <p class="jmfinfo">36 mån · ${milrad} · ${esc(r.drivmedel)}</p>
-            ${r.total != null && extra ? `<p class="jmfeff"><b>${kr(Math.round(r.eff))}/mån</b> i faktisk kostnad – ${[r.forhojd && "insats", (r.start || r.adm) && "avgifter", (r.forsakring || jmfFors) && "försäkring"].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " och $1")} inräknat</p>` : ""}
-            <div class="jmfchips">
-              ${r.forhojd ? "" : `<span class="ja">✓ Ingen insats</span>`}
-              ${r.service ? `<span class="ja">✓ Service ingår</span>` : ""}
-              ${r.forsakring ? `<span class="ja">✓ Försäkring ingår</span>` : ""}
+            <p class="jk-fakta"><span>36 mån</span><span>${milrad}</span><span>${esc(r.drivmedel)}</span>${r.krmil == null ? "" : `<span>${tal(r.krmil)} kr/mil</span>`}</p>
+            ${r.forhojd ? `<p class="jk-insats">+ ${kr(r.forhojd)} i insats vid start${r.total != null ? ` – ${kr(Math.round(r.eff))}/mån med insatsen utslagen` : ""}</p>` : r.total != null && extra && Math.round(r.eff) !== r.m ? `<p class="jk-insats neutral">${kr(Math.round(r.eff))}/mån med ${[(r.start || r.adm) && "avgifter", (r.forsakring || jmfFors) && "försäkring"].filter(Boolean).join(" och ")} inräknat</p>` : ""}
+            ${pos != null ? `<div class="jk-skala" role="img" aria-label="${billigast ? "Billigast" : pos >= 100 ? "Dyrast" : "Prisläge " + pos + " av 100"} bland erbjudandena på modellen"><i style="left:${pos}%"></i></div><p class="jk-skalatext"><span>Billigast</span><span>Dyrast</span></p>` : ""}
+            ${(!r.forhojd || r.service || r.forsakring) ? `<div class="jmfchips">
+              ${r.forhojd ? "" : `<span class="ja">Ingen insats</span>`}
+              ${r.service ? `<span class="ja">Service ingår</span>` : ""}
+              ${r.forsakring ? `<span class="ja">Försäkring ingår</span>` : ""}
+            </div>` : ""}
+            <div class="jmfknappar">
+              ${saljarKontakt(r) ? `<button type="button" class="cta" data-kontakt="${kontaktId(r)}">Kontakta säljaren</button><a class="annonslank" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Annonsen ↗</a>` : `<a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet ↗</a>`}${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
             </div>
-            <details class="jmfmerinfo"><summary>Hela kostnaden och villkor</summary>
+            <details class="jmfmerinfo"><summary>Hela kostnaden och villkoren</summary>
               <table>
                 <tr><td>Månadshyra${jmfMil && !r.milokand && r.m != null && r.ingar === jmfMil && jmfMil > r.mil ? ` (${milTxt(jmfMil)})` : ""}</td><td>${r.m == null ? "–" : kr(r.m - r.adm - (r.forsakring || 0)) + " × 36"}</td></tr>
                 ${r.adm ? `<tr><td>Avi-/administrationsavgift</td><td>${kr(r.adm)} × 36</td></tr>` : ""}
@@ -4285,9 +4293,6 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
               <p class="jmftillk">Tillkommer normalt: ${r.forsakring ? "" : "helförsäkring, "}vinterhjul, fordonsskatt (om inget annat står), drivmedel/el och eventuella övermil. Kontrollera alltid hos säljaren.</p>
               ${r.nypris && r.total != null ? `<p><a href="rakna.html?pris=${r.nypris}&leasing=${r.m}&start=${r.start + r.forhojd}&bil=${encodeURIComponent(r.marke + " " + r.mnamn)}#kopa">Räkna: leasa eller köpa den här bilen? →</a></p>` : ""}
             </details>
-            <div class="jmfknappar">
-              ${saljarKontakt(r) ? `<button type="button" class="cta" data-kontakt="${kontaktId(r)}">Kontakta säljaren</button><a class="annonslank" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Se annonsen ↗</a>` : `<a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet →</a>`}${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
-            </div>
           </article>`;
         }).join("") || "<p>Inga erbjudanden i den regionen.</p>"}</div>
         ${rader.length > jmfVisa ? `<button type="button" class="visamer" id="jmfmer">Visa fler erbjudanden (${rader.length - jmfVisa} till)</button>` : ""}
@@ -4594,17 +4599,46 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         <textarea id="kText" rows="8"></textarea>
         <div class="kkval">
           ${k.tel ? `<a class="kkknapp ring" data-satt="ring" href="tel:${k.tel}">📞 Ring ${esc(k.visa || k.tel)}</a>` : ""}
-          ${k.epost ? `<a class="kkknapp mejl" data-satt="mejl" href="#">✉️ Mejla säljaren</a>` : ""}
+          ${k.epost ? `<button type="button" class="kkknapp skicka" id="kSkicka">${KONTO.inloggad || !KAN_KONTO ? "✉️ Skicka till säljaren" : "✉️ Logga in och skicka"}</button>` : ""}
           ${arMobil(k.tel) ? `<a class="kkknapp sms" data-satt="sms" href="#">💬 Skicka sms</a>` : ""}
           <a class="kkknapp kkannons" data-satt="annons" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Se annonsen ↗</a>
         </div>
-        <p class="kkinfo">Samtalet eller mejlet går från din egen telefon eller e-post direkt till säljaren. Vi skickar inget åt dig och ser inte vad du skriver.
-        ${KONTO.inloggad ? "Kontakten sparas på <a href=\"mina-sidor.html\">Mina sidor</a>." : "<a href=\"mina-sidor.html\">Logga in</a> om du vill spara bilen och se vilka säljare du har kontaktat."}</p>
+        <p class="kkfel" id="kFel" hidden></p>
+        ${k.epost ? `<p class="kkinfo">${KONTO.inloggad || !KAN_KONTO ? "<b>Skicka</b> mejlar ditt meddelande till säljaren med din e-post" + (KONTO.epost ? " (" + esc(KONTO.epost) + ")" : "") + " som svarsadress – säljaren svarar direkt till dig, och du får en kopia." : "För att skicka direkt härifrån behöver du vara inloggad, så att säljaren vet att förfrågan kommer från en riktig person. Det tar en halv minut med Google eller e-post."} <a href="#" id="kMejlapp">Eller öppna i din egen mejlapp</a>.</p>` : ""}
+        <p class="kkinfo">Ring och sms går från din egen telefon direkt till säljaren. ${KONTO.inloggad ? "Kontakten sparas på <a href=\"mina-sidor.html\">Mina sidor</a>." : ""}</p>
       </div>`;
       const txt = d.querySelector("#kText"), nm = d.querySelector("#kNamn"), tl = d.querySelector("#kTel");
       const fyll = () => { txt.value = kontaktText(r, nm.value.trim(), tl.value.trim()); };
       fyll(); let andrad = false; txt.addEventListener("input", () => andrad = true);
       [nm, tl].forEach(f => f.addEventListener("input", () => { if (!andrad) fyll(); }));
+      const sk = d.querySelector("#kSkicka"), fel = d.querySelector("#kFel"), handlNamn = r.kalla.replace(/ \(via Bilweb\)$/, "");
+      const mejlapp = d.querySelector("#kMejlapp");
+      if (mejlapp) mejlapp.addEventListener("click", ev => { ev.preventDefault(); location.href = `mailto:${k.epost}?subject=${encodeURIComponent("Privatleasing " + r.marke + " " + r.modell)}&body=${encodeURIComponent(txt.value)}`;
+        stat("kontakt-mejl", r); if (KONTO.inloggad) kontoAnrop("kontakt", { mkey: r.mkey, bil: r.marke + " " + r.modell, saljare: handlNamn, satt: "mejl", pris: r.manad, url: r.url }); });
+      if (sk) sk.addEventListener("click", async () => {
+        fel.hidden = true;
+        if (KAN_KONTO && !KONTO.inloggad) {
+          try { localStorage.setItem("jp_tillbaka", JSON.stringify({ url: location.pathname + location.search, bil: r.marke + " " + r.modell, t: Date.now() })); } catch (e) {}
+          location.href = "mina-sidor.html"; return;
+        }
+        if (!nm.value.trim()) { fel.hidden = false; fel.textContent = "Skriv ditt namn så att säljaren vet vem du är."; nm.focus(); return; }
+        if (!KAN_KONTO) { fel.hidden = false; fel.textContent = "Förhandsvisning – här skickas inget. På jamforprivatleasing.se går förfrågan iväg till säljaren."; return; }
+        sk.disabled = true; sk.textContent = "Skickar…";
+        try {
+          const j = await kontoAnrop("skicka", { saljare: saljarNyckel(r), mkey: r.mkey, bil: r.marke + " " + r.modell, pris: r.manad, url: r.url, text: txt.value, namn: nm.value.trim(), telefon: tl.value.trim() });
+          if (j.ok) {
+            stat("kontakt-skickat", r); if (window.jpHandelse) jpHandelse("kontakt", { satt: "skickat", saljare: handl, bil: r.marke + " " + r.mnamn });
+            KONTO.namn = KONTO.namn || nm.value.trim(); KONTO.telefon = KONTO.telefon || tl.value.trim();
+            d.querySelector(".kinner").innerHTML = `<button type="button" class="kstang" data-stang aria-label="Stäng">✕</button><h2>Skickat ✓</h2>
+              <p>Din förfrågan om ${esc(r.marke)} ${esc(r.modell)} har skickats till <b>${esc(j.till || handlNamn)}</b>. Svaret kommer till <b>${esc(KONTO.epost)}</b> – du har också fått en kopia.</p>
+              <p class="kkinfo">Förfrågan finns under <a href="mina-sidor.html">Mina sidor</a>.</p><button type="button" class="kkknapp" data-stang>Stäng</button>`;
+            return;
+          }
+          fel.hidden = false; fel.textContent = j.fel || "Det gick inte att skicka just nu. Försök igen om en stund.";
+          if (j.inloggad === false) { KONTO.inloggad = false; }
+        } catch (e) { fel.hidden = false; fel.textContent = "Det gick inte att skicka just nu. Försök igen om en stund."; }
+        sk.disabled = false; sk.textContent = "✉️ Skicka till säljaren";
+      });
       d.querySelectorAll("[data-satt]").forEach(a => a.addEventListener("click", ev => {
         const satt = a.dataset.satt, amne = `Privatleasing ${r.marke} ${r.modell}`;
         if (satt === "mejl") { ev.preventDefault(); location.href = `mailto:${k.epost}?subject=${encodeURIComponent(amne)}&body=${encodeURIComponent(txt.value)}`; }
@@ -4654,8 +4688,10 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         return;
       }
       const datum = t => new Date(t * 1000).toLocaleDateString("sv-SE", { day: "numeric", month: "short", year: "numeric" });
-      const sattTxt = { ring: "📞 Ringde", sms: "💬 Sms", mejl: "✉️ Mejlade", annons: "↗ Öppnade annonsen" };
-      el.innerHTML = `<section class="mskort"><h2>Hej${KONTO.namn ? " " + esc(KONTO.namn.split(" ")[0]) : ""}!</h2><p>Du är inloggad som <b>${esc(KONTO.epost)}</b>.</p></section>`
+      const sattTxt = { ring: "📞 Ringde", sms: "💬 Sms", mejl: "✉️ Mejlade", skickat: "✉️ Skickade förfrågan", annons: "↗ Öppnade annonsen" };
+      let tillbaka = null; try { tillbaka = JSON.parse(localStorage.getItem("jp_tillbaka") || "null"); localStorage.removeItem("jp_tillbaka"); } catch (e) {}
+      const tbHtml = tillbaka && Date.now() - tillbaka.t < 3600000 && /^\/[\w\-\/.]*$/.test(tillbaka.url) ? `<a class="mstillbaka" href="${esc(tillbaka.url)}">← Tillbaka till ${esc(tillbaka.bil)} och skicka din förfrågan</a>` : "";
+      el.innerHTML = tbHtml + `<section class="mskort"><h2>Hej${KONTO.namn ? " " + esc(KONTO.namn.split(" ")[0]) : ""}!</h2><p>Du är inloggad som <b>${esc(KONTO.epost)}</b>.</p></section>`
         + msSparade(KONTO.sparade)
         + `<section class="mskort"><h2>Mina kontakter</h2>${KONTO.kontakter.length ? `<ul class="mskontakter">${KONTO.kontakter.map(k => `<li><div><b>${esc(k.bil)}</b><span>${esc(k.saljare)}${k.pris ? " · " + kr(k.pris) + "/mån" : ""}</span></div><div class="mskmeta">${sattTxt[k.satt] || ""} · ${datum(k.t)}${k.url ? ` · <a href="${esc(k.url)}" target="_blank" rel="noopener">Annonsen ↗</a>` : ""}${MODELLER[k.mkey] ? ` · <a href="privatleasing-${k.mkey}.html">Jämför igen →</a>` : ""}</div></li>`).join("")}</ul>` : "<p>Du har inte kontaktat någon säljare än. Tryck på <b>Kontakta säljaren</b> på ett erbjudande.</p>"}</section>`
         + `<section class="mskort"><h2>Mina uppgifter</h2><p class="msliten">Fylls i när du kontaktar en säljare. Valfritt.</p>
@@ -4682,3 +4718,19 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     }
     if (new URLSearchParams(location.search).get("inloggad") === "1") { try { history.replaceState(null, "", location.pathname); } catch (e) {} }
 
+
+// ---------- Ljust/mörkt läge (ljust är standard, valet sparas i webbläsaren) ----------
+(function () {
+  const k = document.getElementById("temaKnapp"); if (!k) return;
+  const uppd = () => {
+    const mork = document.documentElement.dataset.tema === "mork", txt = mork ? "Byt till ljust läge" : "Byt till mörkt läge";
+    k.setAttribute("aria-label", txt); k.title = txt;
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = mork ? "#07121D" : "#FFFFFF";
+  };
+  k.addEventListener("click", () => {
+    const ny = document.documentElement.dataset.tema === "mork" ? "ljus" : "mork";
+    document.documentElement.dataset.tema = ny; try { localStorage.setItem("jp_tema", ny); } catch (e) {}
+    uppd();
+  });
+  uppd();
+})();

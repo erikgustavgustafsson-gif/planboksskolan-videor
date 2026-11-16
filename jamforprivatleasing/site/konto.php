@@ -6,6 +6,7 @@
 //  GET  a=jag                       -> {inloggad, epost, namn, telefon, sparade, kontakter}
 //  GET  a=med&p=google|facebook    -> skickar till Google/Facebook för inloggning, som skickar tillbaka till konto.php?code=…&state=…
 //  GET/POST a=installning&nyckel=   -> sida där ägaren klistrar in nycklarna från Google och Facebook (samma nyckel som statistiksidan)
+//  POST a=skicka {saljare, mkey, bil, pris, url, text, namn, telefon} -> mejlar förfrågan till säljaren (bara inloggad, adressen hämtas från saljare.js här på servern)
 //  POST a=uppgifter {namn, telefon} · a=spara {mkey, av} · a=sparalista {mkeys} · a=kontakt {...} · a=ut · a=radera
 // Allt sparas i data/konto/ (mappen är stängd för besökare). Inget av detta finns i det publika GitHub-repot förutom den här koden.
 header('X-Robots-Tag: noindex');
@@ -18,6 +19,9 @@ const SESSION_DAGAR = 180;
 const INAKTIV_DAGAR = 730;        // konton som inte använts på två år raderas
 const MAX_KONTAKTER = 200;
 const MAX_SPARADE = 100;
+const SKICKA_PER_DYGN = 10;       // förfrågningar per konto och dygn
+const SKICKA_SAMMA_SALJARE = 3;   // till samma säljare per dygn
+const SKICKA_ALLA_PER_DYGN = 400; // totalt för hela sajten
 
 // Mappen får ett slumpat namn första gången (extra skydd om .htaccess någon gång inte skulle gälla)
 $mapp = (glob(__DIR__ . '/data/konto-*', GLOB_ONLYDIR) ?: [null])[0] ?? (__DIR__ . '/data/konto-' . bin2hex(random_bytes(12)));
@@ -49,8 +53,8 @@ function b64url_av($s) { return base64_decode(strtr($s, '-_', '+/') . str_repeat
 function b64url($s) { return rtrim(strtr(base64_encode($s), '+/', '-_'), '='); }
 
 function svar($d, $kod = 200) { http_response_code($kod); header('Content-Type: application/json; charset=utf-8'); echo json_encode($d, JSON_UNESCAPED_UNICODE); exit; }
-function mejl($till, $amne, $text) {
-  $h = ['From: =?UTF-8?B?' . base64_encode('Jämföra Privatleasing') . '?= <' . FRAN . '>', 'Reply-To: ' . FRAN, 'MIME-Version: 1.0',
+function mejl($till, $amne, $text, $franNamn = 'Jämföra Privatleasing', $svara = FRAN) {
+  $h = ['From: =?UTF-8?B?' . base64_encode($franNamn) . '?= <' . FRAN . '>', 'Reply-To: ' . $svara, 'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=UTF-8', 'Content-Transfer-Encoding: 8bit', 'Auto-Submitted: auto-generated'];
   if (getenv('JP_TEST')) { file_put_contents(getenv('JP_TEST'), "TILL: $till\nÄMNE: $amne\n$text\n-----\n", FILE_APPEND); return true; }
   return @mail($till, '=?UTF-8?B?' . base64_encode($amne) . '?=', $text, implode("\r\n", $h), '-f' . FRAN);
@@ -279,6 +283,42 @@ if ($a === 'kontakt') {         // anteckning i kontakthistoriken (själva samta
         'url' => preg_match('#^https://#', $in['url'] ?? '') ? ren($in['url'], 400) : ''];
   andra_anv($s['id'], function (&$d) use ($k) { $d['kontakter'][] = $k; $d['kontakter'] = array_slice($d['kontakter'], -MAX_KONTAKTER); });
   svar(['ok' => true]);
+}
+if ($a === 'skicka') {          // förfrågan till säljaren, skickas härifrån med kundens adress som svarsadress
+  $nyckel = ren($in['saljare'] ?? '', 160);
+  $js = (string)@file_get_contents(__DIR__ . '/saljare.js');
+  $lista = json_decode(rtrim(trim(substr($js, (int)strpos($js, '{'))), ';'), true);
+  $till = is_array($lista) ? strtolower(trim($lista[$nyckel]['epost'] ?? '')) : '';
+  if (!filter_var($till, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $till)) svar(['ok' => false, 'fel' => 'Den här säljaren har ingen e-postadress hos oss. Ring eller öppna annonsen i stället.'], 400);
+  $u = las_anv($s['id']);
+  $namn = ren($in['namn'] ?? '', 80); $tel = preg_replace('/[^\d+\- ]/', '', ren($in['telefon'] ?? '', 20));
+  $text = trim(str_replace("\r", '', mb_substr((string)($in['text'] ?? ''), 0, 3000)));
+  $bil = ren($in['bil'] ?? '', 120); $pris = (int)($in['pris'] ?? 0);
+  $url = preg_match('#^https://[^\s]+$#', $in['url'] ?? '') ? ren($in['url'], 400) : '';
+  if ($namn === '') svar(['ok' => false, 'fel' => 'Skriv ditt namn så att säljaren vet vem du är.'], 400);
+  if (mb_strlen($text) < 10) svar(['ok' => false, 'fel' => 'Skriv ett meddelande till säljaren.'], 400);
+  $nu = time(); $dygn = $nu - 86400; $id = $s['id'];
+  $ok = med_fil($mapp . '/skickat.json', function (&$d) use ($id, $till, $nu, $dygn) {
+    $d = array_values(array_filter($d, fn($x) => $x['t'] > $dygn));
+    $mina = array_filter($d, fn($x) => $x['id'] === $id);
+    if (count($d) >= SKICKA_ALLA_PER_DYGN) return 'Vi har skickat väldigt många förfrågningar i dag. Försök igen i morgon, eller ring säljaren.';
+    if (count($mina) >= SKICKA_PER_DYGN) return 'Du har skickat ' . SKICKA_PER_DYGN . ' förfrågningar det senaste dygnet. Vänta lite, eller ring säljaren.';
+    if (count(array_filter($mina, fn($x) => $x['till'] === hash('sha256', $till))) >= SKICKA_SAMMA_SALJARE) return 'Du har redan skickat flera förfrågningar till den här säljaren i dag.';
+    $d[] = ['id' => $id, 'till' => hash('sha256', $till), 't' => $nu]; return true;
+  }, []);
+  if ($ok !== true) svar(['ok' => false, 'fel' => $ok], 429);
+  $kund = $u['epost'];
+  $amne = 'Förfrågan om privatleasing: ' . ($bil !== '' ? $bil : 'bil i er annons');
+  $fot = "\n\n---\nKontaktuppgifter\nNamn: $namn\nE-post: $kund" . ($tel !== '' ? "\nTelefon: $tel" : '')
+       . "\n\nFörfrågan skickades av $namn via Jämföra Privatleasing (" . SAJT . "), en jämförelsesida för privatleasing. "
+       . "Svara direkt på det här mejlet så går svaret till $namn. Vi tar inte del av svaret.";
+  $skickat = mejl($till, $amne, $text . $fot, $namn . ' via Jämföra Privatleasing', $kund);
+  if (!$skickat) svar(['ok' => false, 'fel' => 'Mejlet gick inte att skicka just nu. Försök igen om en stund, eller ring säljaren.'], 500);
+  mejl($kund, 'Kopia: ' . $amne, "Hej!\n\nDin förfrågan har skickats till " . preg_replace('/\|.*$/', '', $nyckel) . ". Svaret kommer direkt till den här adressen ($kund).\n\nDet här skickade du:\n\n" . $text . $fot);
+  $k = ['t' => $nu, 'mkey' => preg_replace('/[^a-z0-9-]/', '', strtolower($in['mkey'] ?? '')), 'bil' => $bil, 'saljare' => preg_replace('/\|.*$/', '', $nyckel), 'satt' => 'skickat', 'pris' => $pris, 'url' => $url];
+  andra_anv($id, function (&$d) use ($k, $namn, $tel) { $d['kontakter'][] = $k; $d['kontakter'] = array_slice($d['kontakter'], -MAX_KONTAKTER);
+    if (($d['namn'] ?? '') === '') $d['namn'] = $namn; if (($d['telefon'] ?? '') === '' && $tel !== '') $d['telefon'] = $tel; });
+  svar(['ok' => true, 'till' => preg_replace('/\|.*$/', '', $nyckel)]);
 }
 if ($a === 'ut') {
   med_fil($mapp . '/sessioner.json', function (&$d) use ($s) { unset($d[$s['h']]); });
