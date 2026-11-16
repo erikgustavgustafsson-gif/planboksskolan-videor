@@ -23,3 +23,4 @@
 | 2026-11-13 | Min lön smsade mig: vi måste prata | Sms-sketch: lönen skriver om hyran och prenumerationer man glömt (gym) – säg upp det du inte använder. Gjord i chatten, röst från 12 nov | Humor, inga siffror som kräver källa |
 | 2026-11-14 | Ett års garanti? Du har 3 års reklamationsrätt | Reklamationsrätt 3 år vs 1 års garanti, konsumentköplagen (från kön) | Konsumentverket, Hallå konsument |
 | 2026-11-15 | 0 % ränta – men inte gratis | 0 % ränta kan ändå kosta: effektiv ränta inkluderar avgifter, konsumentkreditlagen (från kön) | Konsumentverket |
+| 2026-11-16 | I morgon kväll: Nvidias rapport – och du äger aktien | Nvidia rapporterar 17 nov, första utan Jensen Huang; aktien nära -30 % sedan oktober; största innehavet i AP7 Såfa (4,6 %), stort ras ≈ 1,5 % för fonden. Röst: Higgsfield (Dylan) – ElevenLabs-credits slut. Ersatte friskvårdsbidraget | Hurbra (2026-11-15), Börskollen (2026-11-11), Realtid/TT (2026-08-04) |

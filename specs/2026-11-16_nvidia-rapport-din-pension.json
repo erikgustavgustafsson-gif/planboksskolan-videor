@@ -1,0 +1,35 @@
+{
+  "slug": "2026-11-16_nvidia-rapport-din-pension",
+  "title": "I morgon kväll: Nvidias rapport – och du äger aktien",
+  "caption": "Nvidia rapporterar i morgon kväll, för första gången utan grundaren Jensen Huang. Och har du aldrig valt pensionsfond äger du aktien via AP7 Såfa 👀\n\nVisste du att din pension äger Nvidia? 👇\n\n#nvidia #pension #ap7 #privatekonomi #plånboksskolan",
+  "pinned_comment": "Nvidia var 4,6 % av AP7 Aktiefond (TT, aug 2026). 1,5 % är ett räkneexempel om aktien faller en tredjedel. Inget köp- eller säljråd. Visste du vad din pension äger? Ja 😎 / Ingen aning 😳",
+  "sources": [
+    "https://hurbra.se/nvidia-rapport-17-november-2026/ (rapport 17 nov 2026, sex dagar efter att Huang lämnat vd-posten)",
+    "https://www.borskollen.se/nyheter/27/infor-rapporten-nvidias-rekordsiffror-moter-vd-skandal-och-valchock (aktien rasat nära 30 % från toppen i oktober)",
+    "https://www.realtid.se/it-tech/sa-viktigt-ar-nvidia-for-svenska-soffliggare/ (TT aug 2026: Nvidia största innehavet i AP7 Aktiefond, 4,6 %)",
+    "Eget räkneexempel: 4,6 % x ca 1/3 fall ≈ 1,5 % av aktiefonden"
+  ],
+  "cover": {
+    "title": ["I MORGON KVÄLL:", "NVIDIAS RAPPORT"],
+    "pill": "Första utan grundaren",
+    "label": "Och du äger",
+    "big": "aktien",
+    "big_color": "red"
+  },
+  "scenes": [
+    {"type": "hook", "say": "I morgon kväll kommer årets viktigaste rapport. Och du äger aktien!",
+     "kicker": "I MORGON KVÄLL", "big": "NVIDIAS RAPPORT", "sub": "och du äger aktien",
+     "image": "media/nv_ras.png", "image_width": 760, "image_y": 1450},
+    {"type": "statement", "bg": "mint", "say": "Nvidia rapporterar utan sin grundare. Aktien har fallit nära trettio procent sedan oktober.",
+     "title": "UTAN GRUNDAREN", "highlight": "NÄRA -30 %", "chip": "sedan toppen i oktober",
+     "image": "media/nv_ras.png", "image_width": 760, "image_y": 1380},
+    {"type": "statement", "bg": "navy", "say": "Nvidia är störst i AP7 Såfa, fonden du har om du aldrig valt själv.",
+     "title": "STÖRSTA INNEHAVET I", "highlight": "AP7 SÅFA", "chip": "4,6 % av aktiefonden",
+     "image": "media/nv_fond.png", "image_width": 680, "image_y": 1380},
+    {"type": "statement", "bg": "mint", "say": "Men fonden äger tusentals bolag. Ett stort ras blir runt en och en halv procent.",
+     "title": "ETT STORT RAS =", "highlight": "CA 1,5 %", "chip": "för hela aktiefonden",
+     "image": "media/nv_fond.png", "image_width": 680, "image_y": 1380},
+    {"type": "cta", "bg": "navy", "say": "Följ Plånboksskolan, så berättar vi hur det gick!",
+     "line1": "Följ för", "big": "RESULTATET", "line2": "på onsdag."}
+  ]
+}

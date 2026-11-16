@@ -228,6 +228,23 @@ def render_scene_file(path, dur, bg_img, fn, cover_first_frame=False):
     os.replace(tmp, path)
 
 
+def with_image(fn, s, dur):
+    """Optional illustration for any scene type except hook (which places its own):
+    "image", "image_width" (default 700), "image_y" (centre, default 1450),
+    "image_t" (appear time in s, default 0.35), "cutout"."""
+    if s["type"] == "hook" or not s.get("image"):
+        return fn
+    img = load_image(s["image"], s.get("image_width", 700), s.get("cutout", False))
+    st = s.get("image_t", 0.35)
+
+    def g(b, t):
+        fn(b, t)
+        p = ease_out(prog(t, st, 0.5))
+        if p > 0:
+            paste(b, img, W / 2, s.get("image_y", 1450) + 70 * (1 - p), alpha=p)
+    return g
+
+
 def build(spec, audio, out_dir, max_len=30.0):
     os.makedirs(out_dir, exist_ok=True)
     scenes = spec["scenes"]
@@ -241,7 +258,7 @@ def build(spec, audio, out_dir, max_len=30.0):
     for i, (s, a, b) in enumerate(zip(scenes, bounds, bounds[1:])):
         bg = s.get("bg") or ("navy" if i % 2 == 0 else "mint")
         dur = b - a
-        fn = SCENES[s["type"]](s, bg, dur)
+        fn = with_image(SCENES[s["type"]](s, bg, dur), s, dur)
         p = os.path.join(work, f"s{i}.mp4")
         render_scene_file(p, dur, BG_NAVY if bg == "navy" else BG_MINT, fn, cover_first_frame=(i == 0))
         files.append(p)
