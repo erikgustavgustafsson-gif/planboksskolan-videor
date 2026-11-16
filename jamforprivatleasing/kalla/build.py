@@ -85,12 +85,12 @@ assert "Kan jag leasa bilen hos er?" in FAQ_LD
 EJBIL = ""   # formuläret "Hittar du inte din bil?" används inte när vi bara jämför
 
 HERO = """<header class="hero foto">
+    <img class="herobil" src="bilder/tiguan-960.webp" alt="" width="960" height="600" decoding="async">
     <div class="wrap herotext">
       <h1>Jämför privatleasing på alla nya bilar</h1>
-      <p class="heroslogan">Alla märken. Alla avgifter. Ett pris.</p>
-      <p class="heroingress">Vi jämför märkenas och handlarnas privatleasing på nya bilar – med insats och avgifter inräknade, billigast överst och kontrollerat varje dag.</p>
+      <p class="heroingress">Märkenas och handlarnas erbjudanden sida vid sida – med insats och avgifter inräknade, billigast först och kontrollerade varje dag.</p>
       <form class="startsok" id="startsok" role="search"><input name="q" type="search" list="modellforslag" placeholder="Sök bil, t.ex. Volvo EX30" aria-label="Sök bil"><datalist id="modellforslag"></datalist><button type="submit">Jämför</button></form>
-      <div class="heroknappar"><a class="knapp" href="billigaste-privatleasing.html">Billigast just nu</a><a class="knapp ljus" href="alla-bilar.html">Jämför alla bilar</a></div>
+      <nav class="herogenvagar" aria-label="Genvägar"><a href="billigaste-privatleasing.html">Billigast just nu</a><a href="privatleasing-elbil.html">Elbil</a><a href="privatleasing-suv.html">SUV</a><a href="privatleasing-kombi.html">Kombi</a><a href="privatleasing-smabil.html">Småbil</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="alla-bilar.html">Alla bilar</a></nav>
       <div class="trust" id="trust"></div>
     </div>
   </header>"""
@@ -107,8 +107,9 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
     data = f' data-sida="{sida_typ}"' + (f' data-marke="{html.escape(marke)}"' if marke else "") + (f' data-modell="{modell}"' if modell else "") + "".join(f' data-{k}="{html.escape(str(v))}"' for k, v in (forval or {}).items())
     return f"""<!DOCTYPE html>
 <!-- Jämföra Privatleasing – byggs av kalla/build.py. Stil: stil.css, logik: app.js, bilar och priser: i app.js (BILAR) och konfig.js. -->
-<html lang="sv">
+<html lang="sv" data-tema="ljus">
 <head>
+  <script>try{{var t=localStorage.getItem("jp_tema");if(t==="mork"||t==="ljus")document.documentElement.dataset.tema=t}}catch(e){{}}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(titel)}</title>
@@ -127,6 +128,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="stil.css?v=__VER__">
   {f'<script type="application/ld+json">{ldtext}</script>' if ldtext else ''}
 </head>
@@ -366,40 +368,27 @@ sidor["index.html"] = sida(
     f"Jämför {antal_bilar} privatleasingerbjudanden från märken och handlare på {len({b['mkey'] for b in BILAR})} nya bilmodeller. Insats och avgifter inräknade, billigast överst, kontrollerat varje dag.",
     f"""
   {HERO}
-  {TOPP.replace('</small>', '</small><p style="text-align:center;margin:18px 0 0"><a class="knapp" href="kampanjer.html">Mest bil för pengarna →</a></p>', 1)}
-  <section class="block">
-    <div class="wrap">
-      <h2>Vad letar du efter?</h2>
-      <div class="genvagar katkort">
-        <a href="privatleasing-elbil.html"><b>⚡ Elbil →</b><span>Alla elbilar, billigast först.</span></a>
-        <a href="privatleasing-suv.html"><b>SUV →</b><span>Hög sittställning och gott om plats.</span></a>
-        <a href="privatleasing-kombi.html"><b>Kombi →</b><span>Familjebilar med stort bagage.</span></a>
-        <a href="privatleasing-smabil.html"><b>Småbil →</b><span>Billigast att leasa.</span></a>
-        <a href="privatleasing-under-3000.html"><b>Under 3 000 kr/mån →</b><span>Faktisk kostnad, inte bara annonspris.</span></a>
-        <a href="billigaste-privatleasing.html"><b>Billigast just nu →</b><span>Alla bilar efter verklig kostnad.</span></a>
-      </div>
-    </div>
-  </section>
-  <section class="block ljus">
+  {TOPP.replace('</small>', '</small><p class="toppmer"><a class="knapp" href="kampanjer.html">Mest bil för pengarna</a></p>', 1)}
+  <section class="block lita">
     <div class="wrap">
       <h2>Därför kan du lita på jämförelsen</h2>
-      <div class="darfor">
-        <div><b>Hela kostnaden</b><p>Insats, uppläggningsavgift och aviavgift räknas in. Ett lågt annonspris kan inte gömma en dyr start.</p></div>
-        <div><b>Bara riktig privatleasing</b><p>Inga billån, ingen företagsleasing och inga begagnade bilar blandas in.</p></div>
-        <div><b>Vi gissar aldrig</b><p>Saknas en uppgift hos säljaren står det "fråga handlaren" – inte ett påhittat värde.</p></div>
-        <div><b>Ingen köper sig en plats</b><p>Ordningen bestäms bara av priset. Annonslänkar är alltid märkta.</p></div>
-      </div>
-      <p style="margin:16px 0 0"><a href="sa-jamfor-vi.html">Så jämför vi →</a></p>
+      <ul class="litalista">
+        <li><b>Hela kostnaden räknas in.</b> Insats, uppläggningsavgift och aviavgift – ett lågt annonspris kan inte gömma en dyr start.</li>
+        <li><b>Bara riktig privatleasing.</b> Inga billån, ingen företagsleasing och inga begagnade bilar.</li>
+        <li><b>Vi gissar aldrig.</b> Saknas en uppgift hos säljaren står det "fråga handlaren".</li>
+        <li><b>Ingen köper sig en plats.</b> Ordningen bestäms av priset, och annonslänkar är alltid märkta.</li>
+      </ul>
+      <p class="litamer"><a href="sa-jamfor-vi.html">Läs hur vi jämför</a></p>
     </div>
   </section>
-  <section class="block">
+  <section class="block verktyg">
     <div class="wrap">
       <h2>Verktyg som hjälper dig välja</h2>
-      <div class="genvagar">
-        <a href="jamfor-bilar.html"><b>Jämför sida vid sida →</b><span>Ställ två till fyra bilar bredvid varandra.</span></a>
-        <a href="rakna.html"><b>Räkna på hela kostnaden →</b><span>Med försäkring, vinterhjul och övermil.</span></a>
-        <a href="rakna.html#kopa"><b>Leasa eller köpa? →</b><span>Se vad som blir billigast för dig.</span></a>
-        <a href="guide.html#checklista"><b>Checklista →</b><span>Det här ska du kolla innan du skriver på.</span></a>
+      <div class="verktyglista">
+        <a href="jamfor-bilar.html"><b>Jämför sida vid sida</b><span>Ställ två till fyra bilar bredvid varandra.</span></a>
+        <a href="rakna.html"><b>Räkna på hela kostnaden</b><span>Med försäkring, vinterhjul och övermil.</span></a>
+        <a href="rakna.html#kopa"><b>Leasa eller köpa?</b><span>Se vad som blir billigast för dig.</span></a>
+        <a href="guide.html#checklista"><b>Checklista</b><span>Det här ska du kolla innan du skriver på.</span></a>
       </div>
     </div>
   </section>

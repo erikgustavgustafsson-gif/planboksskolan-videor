@@ -1141,3 +1141,273 @@
 .kontaktruta .kkknapp.skicka:disabled { opacity: .6; cursor: wait; }
 .kontaktruta .kkfel { background: #FDE8E8; color: #8A1C1C !important; padding: 10px 12px; border-radius: 10px; margin: 10px 0 0; font-size: 14px; }
 .mstillbaka { display: block; background: #2EC4B6; color: #08202B !important; font-weight: 800; padding: 14px 16px; border-radius: 12px; text-decoration: none; margin-bottom: 12px; }
+
+/* =====================================================================
+   LYFT 16 nov: två teman – ljust (data-tema="ljus") och mörkt (data-tema="mork")
+   Typsnitt: Bricolage Grotesque för rubriker och priser, Inter för brödtext.
+   Signatur: priset stort, en gul "Billigast"-skylt och en prisskala på varje erbjudande.
+   ===================================================================== */
+@font-face { font-family: "Bricolage"; font-style: normal; font-weight: 200 800; font-display: swap; src: url(fonts/bricolage.woff2) format("woff2"); }
+html[data-tema="ljus"] {
+  color-scheme: light;
+  --t-bg: #FFFFFF; --t-yta: #EEF2F6; --t-kort: #FFFFFF; --t-linje: #DAE2EA; --t-text: #0F2138; --t-dampad: #56677B;
+  --t-accent: #0B8576; --t-mint: #2EC4B6; --t-mintljus: #DDF4F0; --t-knapp: #0F2138; --t-knapptext: #FFFFFF; --t-knapp2: #FFFFFF; --t-knapp2text: #0F2138;
+  --t-gul: #F5C431; --t-gultext: #2B2100; --t-nav: rgba(255,255,255,.92); --t-navtext: #0F2138; --t-hero: #E8EEF3; --t-fot: #0F2138; --t-fottext: #C9D4DF;
+  --t-falt: #FFFFFF; --t-faltlinje: #C9D3DE; --t-skugga: 0 1px 2px rgba(15,33,56,.05), 0 8px 24px rgba(15,33,56,.07);
+  --bgmork: #FFFFFF; --bgmork2: #EEF2F6; --ytmork: #FFFFFF; --textljus: #0F2138; --mutedljus: #56677B;
+}
+html[data-tema="mork"] {
+  color-scheme: dark;
+  --t-bg: #07121D; --t-yta: #0B1928; --t-kort: #10223600; --t-kort: #112337; --t-linje: #1E3651; --t-text: #E9F0F6; --t-dampad: #93A5B9;
+  --t-accent: #46D6C8; --t-mint: #2EC4B6; --t-mintljus: #10332F; --t-knapp: #2EC4B6; --t-knapptext: #03201C; --t-knapp2: transparent; --t-knapp2text: #E9F0F6;
+  --t-gul: #F5C431; --t-gultext: #2B2100; --t-nav: rgba(7,18,29,.9); --t-navtext: #E9F0F6; --t-hero: #0B1928; --t-fot: #040B13; --t-fottext: #93A5B9;
+  --t-falt: #0B1928; --t-faltlinje: #2A4562; --t-skugga: 0 12px 32px rgba(0,0,0,.35);
+  --bgmork: #07121D; --bgmork2: #0B1928; --ytmork: #112337; --textljus: #E9F0F6; --mutedljus: #93A5B9;
+}
+html[data-tema] body { background: var(--t-bg); color: var(--t-text); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+html[data-tema] h1, html[data-tema] h2, html[data-tema] h3, html[data-tema] .sektionsrubrik { font-family: "Bricolage", "Inter", system-ui, sans-serif; letter-spacing: -0.015em; }
+html[data-tema] h1 { font-weight: 750; font-size: clamp(32px, 7.4vw, 56px); line-height: 1.02; letter-spacing: -0.03em; }
+html[data-tema] h2 { font-weight: 700; font-size: clamp(24px, 5.2vw, 34px); line-height: 1.12; }
+html[data-tema] a { color: var(--t-accent); }
+html[data-tema] :focus-visible { outline: 3px solid var(--t-mint); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- Navigering ---------- */
+html[data-tema] .topnav, html[data-tema] body[data-sida="start"] .topnav { position: sticky; top: 0; z-index: 40; background: var(--t-nav); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--t-linje); }
+html[data-tema] .logo, html[data-tema] .logo span { color: var(--t-navtext); text-decoration: none; }
+html[data-tema] .topnav .logo span { font-family: "Bricolage", sans-serif; font-size: 21px; letter-spacing: -0.02em; text-transform: none; border: 0; padding: 0; display: inline-flex; gap: 6px; align-items: baseline; }
+html[data-tema] .topnav .logo b { font-weight: 800; letter-spacing: -0.02em; text-transform: none; }
+html[data-tema] .topnav .logo i { font-style: normal; font-weight: 400; letter-spacing: -0.01em; text-transform: none; color: var(--t-dampad); }
+html[data-tema] .topnav .logo span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--t-gul); box-shadow: inset 0 0 0 2px var(--t-text); align-self: center; margin-right: 2px; }
+html[data-tema] .menyknapp { color: var(--t-navtext); background: transparent; border: 1px solid var(--t-linje); border-radius: 10px; }
+html[data-tema] .navlankar a { color: var(--t-navtext); font-weight: 600; }
+html[data-tema] .navlankar a.aktiv { color: var(--t-accent); }
+@media (max-width: 899px) { html[data-tema] body.menyoppen .navlankar { background: var(--t-bg); border-bottom: 1px solid var(--t-linje); } }
+
+/* ---------- Startsidans topp ---------- */
+html[data-tema] header.hero.foto { background: var(--t-hero); color: var(--t-text); padding: 40px 20px 34px; position: relative; overflow: hidden; }
+html[data-tema] header.hero.foto::before, html[data-tema] header.hero.foto::after { display: none !important; }
+html[data-tema] .hero.foto { background-image: none !important; }
+html[data-tema] .herotext { max-width: 760px; text-align: left; }
+html[data-tema] .hero h1 { color: var(--t-text); margin: 0 0 14px; max-width: 13ch; }
+html[data-tema] .heroingress { color: var(--t-dampad) !important; font-size: 17px; max-width: 46ch; margin: 0 0 22px !important; display: block !important; }
+html[data-tema] .startsok { display: flex; gap: 0; background: var(--t-falt); border: 2px solid var(--t-text); border-radius: 14px; padding: 4px; max-width: 560px; box-shadow: var(--t-skugga); }
+html[data-tema] .startsok input { border: 0; background: transparent; color: var(--t-text); font-size: 17px; padding: 12px 12px; box-shadow: none; outline: none; }
+html[data-tema] .startsok button { background: var(--t-knapp); color: var(--t-knapptext); border: 0; border-radius: 10px; font-weight: 800; padding: 0 20px; font-size: 16px; }
+html[data-tema] .herogenvagar { display: flex; gap: 8px; overflow-x: auto; margin: 16px -20px 0; padding: 2px 20px 6px; scrollbar-width: none; }
+html[data-tema] .herogenvagar::-webkit-scrollbar { display: none; }
+html[data-tema] .herogenvagar a { flex: none; text-decoration: none; color: var(--t-text); background: var(--t-kort); border: 1px solid var(--t-linje); border-radius: 99px; padding: 9px 15px; font-weight: 600; font-size: 15px; }
+html[data-tema] .herogenvagar a:first-child { background: var(--t-gul); color: var(--t-gultext); border-color: var(--t-gul); }
+html[data-tema] .trust { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 18px; color: var(--t-dampad); font-size: 13px; }
+html[data-tema] .trust span { background: none; border: 0; padding: 0; color: var(--t-dampad); }
+html[data-tema] .trust span::before { content: "✓ "; color: var(--t-accent); font-weight: 800; }
+@media (min-width: 900px) {
+  html[data-tema] header.hero.foto { padding: 72px 20px 60px; }
+  html[data-tema] .herogenvagar { flex-wrap: wrap; overflow: visible; margin: 18px 0 0; padding: 0; }
+}
+
+/* ---------- Sektioner ---------- */
+html[data-tema] section.block, html[data-tema] section.topp, html[data-tema] section.steg2, html[data-tema] section.ingar { background: var(--t-bg); color: var(--t-text); padding: 44px 20px; }
+html[data-tema] section.block.ljus, html[data-tema] section.topp { background: var(--t-yta); }
+html[data-tema] section.block h2, html[data-tema] section.topp h2, html[data-tema] section.steg2 h2, html[data-tema] .sektionsrubrik { color: var(--t-text) !important; text-align: left; margin: 0 0 6px; }
+html[data-tema] section.block p, html[data-tema] section.topp p, html[data-tema] .sektionsingress { color: var(--t-dampad) !important; text-align: left; }
+html[data-tema] section.block a:not(.knapp):not(.cta), html[data-tema] main a:not(.cta):not(.knapp):not(.ext) { color: var(--t-accent); }
+html[data-tema] .knapp { background: var(--t-knapp); color: var(--t-knapptext) !important; border: 0; border-radius: 12px; font-weight: 800; padding: 13px 20px; transform: none !important; clip-path: none !important; box-shadow: none; text-decoration: none; display: inline-block; }
+html[data-tema] .knapp.ljus { background: var(--t-knapp2); color: var(--t-knapp2text) !important; border: 1.5px solid var(--t-linje); }
+html[data-tema] .toppmer { margin: 20px 0 0 !important; }
+
+/* Topplistan (startsidan) */
+html[data-tema] .tkort { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); border-radius: 18px; box-shadow: var(--t-skugga); padding: 0; overflow: hidden; }
+html[data-tema] .tkort .tbild { background: var(--t-yta); border-radius: 0; display: block; }
+html[data-tema] .tkort .tplats { background: var(--t-gul); color: var(--t-gultext); border-radius: 6px; font-weight: 800; box-shadow: none; font-size: 12px; }
+html[data-tema] .tkort .tinner { padding: 14px 16px 16px; }
+html[data-tema] .tkort .tnamn { font-family: "Bricolage", sans-serif; font-weight: 750; font-size: 20px; color: var(--t-text); }
+html[data-tema] .tkort .tversion, html[data-tema] .tkort .tfran, html[data-tema] .tkort .ttotal { color: var(--t-dampad); }
+html[data-tema] .tkort .tpris { font-family: "Bricolage", sans-serif; color: var(--t-text); font-weight: 800; }
+html[data-tema] .tkort .tchips span { background: var(--t-yta); color: var(--t-dampad); border: 0; border-radius: 6px; }
+html[data-tema] .tkort .cta, html[data-tema] .cta { background: var(--t-knapp); color: var(--t-knapptext) !important; border-radius: 12px; transform: none !important; clip-path: none !important; font-weight: 800; border: 0; }
+html[data-tema] .tkort .tfot .cta { padding: 10px 16px; }
+html[data-tema] .sveptips, html[data-tema] .toppkalla, html[data-tema] .toppkalla * { color: var(--t-dampad) !important; text-align: left !important; }
+
+/* Lita-listan och verktyg */
+html[data-tema] .litalista { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; max-width: 720px; }
+html[data-tema] .litalista li { position: relative; padding-left: 34px; color: var(--t-dampad); }
+html[data-tema] .litalista li b { color: var(--t-text); }
+html[data-tema] .litalista li::before { content: "✓"; position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 6px; background: var(--t-mintljus); color: var(--t-accent); font-weight: 800; font-size: 13px; display: grid; place-content: center; }
+html[data-tema] .litamer { margin: 18px 0 0 !important; font-weight: 700; }
+html[data-tema] .verktyglista { display: grid; margin-top: 14px; border-top: 1px solid var(--t-linje); }
+html[data-tema] .verktyglista a { display: grid; grid-template-columns: 1fr auto; padding: 15px 2px; border-bottom: 1px solid var(--t-linje); text-decoration: none; color: var(--t-text) !important; }
+html[data-tema] .verktyglista a::after { content: "›"; grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 26px; color: var(--t-dampad); }
+html[data-tema] .verktyglista b { font-weight: 700; }
+html[data-tema] .verktyglista span { color: var(--t-dampad); font-size: 14px; }
+@media (min-width: 800px) { html[data-tema] .verktyglista { grid-template-columns: 1fr 1fr; column-gap: 32px; } }
+
+/* Märkesrutnät och genvägskort */
+html[data-tema] .markegrid { gap: 8px; }
+html[data-tema] .markegrid a, html[data-tema] .genvagar a { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); border-radius: 12px; box-shadow: none; padding: 12px 14px; }
+html[data-tema] .markegrid a b, html[data-tema] .genvagar a b { color: var(--t-text); font-family: "Bricolage", sans-serif; font-weight: 700; font-size: 17px; }
+html[data-tema] .markegrid a span, html[data-tema] .genvagar a span { color: var(--t-dampad); }
+html[data-tema] .markegrid a:hover, html[data-tema] .genvagar a:hover { border-color: var(--t-text); }
+@media (max-width: 600px) { html[data-tema] .markegrid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } html[data-tema] .markegrid a { padding: 10px; } html[data-tema] .markegrid a b { font-size: 15px; } html[data-tema] .markegrid a span { font-size: 12px; } }
+
+/* Så funkar det */
+html[data-tema] section.steg2 { background: var(--t-yta); }
+html[data-tema] section.steg2 * { color: var(--t-text); }
+html[data-tema] section.steg2 p, html[data-tema] section.steg2 span { color: var(--t-dampad); }
+
+/* ---------- Sidhuvud på undersidor ---------- */
+html[data-tema] header.sidhuvud { background: var(--t-hero); color: var(--t-text); padding: 30px 20px 26px; border-bottom: 1px solid var(--t-linje); }
+html[data-tema] header.sidhuvud h1 { color: var(--t-text); font-size: clamp(30px, 6.6vw, 48px); }
+html[data-tema] header.sidhuvud p { color: var(--t-dampad); font-size: 16px; max-width: 60ch; }
+html[data-tema] .brodsmula, html[data-tema] .brodsmula a { color: var(--t-dampad) !important; font-size: 13px; }
+
+/* ---------- Modellsidan: erbjudanden ---------- */
+html[data-tema] .jmfbild { background: var(--t-yta); border-radius: 18px; }
+html[data-tema] .jmfrub { color: var(--t-text); }
+html[data-tema] .jmfdin { background: var(--t-yta); border: 1px solid var(--t-linje); color: var(--t-text); border-radius: 16px; box-shadow: none; }
+html[data-tema] .jmfdin label, html[data-tema] .jmfdin small { color: var(--t-dampad) !important; }
+html[data-tema] .jmfdin input, html[data-tema] .jmfkontroll select, html[data-tema] select, html[data-tema] input:not([type=checkbox]):not([type=radio]) { background: var(--t-falt); color: var(--t-text); border: 1.5px solid var(--t-faltlinje); border-radius: 12px; }
+html[data-tema] .chips button, html[data-tema] .jmfregion button { background: var(--t-kort); color: var(--t-text); border: 1.5px solid var(--t-linje); border-radius: 99px; }
+html[data-tema] .chips button.vald, html[data-tema] .jmfregion button.vald { background: var(--t-text); color: var(--t-bg); border-color: var(--t-text); }
+html[data-tema] .jmfregion button i { color: var(--t-dampad); }
+html[data-tema] .jmfregion button.vald i { color: inherit; opacity: .7; }
+html[data-tema] .jmfregion span, html[data-tema] .jmfnot, html[data-tema] .jmffot { color: var(--t-dampad) !important; }
+html[data-tema] .jmflista { gap: 12px; }
+html[data-tema] .jmfkort { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); border-radius: 18px; padding: 16px 16px 12px; box-shadow: var(--t-skugga); }
+html[data-tema] .jmfkort.bast { background: var(--t-kort); border: 2px solid var(--t-text); }
+html[data-tema] .jk-huvud { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+html[data-tema] .jk-pris { line-height: 1; min-width: 104px; }
+html[data-tema] .jk-pris b { display: block; font-family: "Bricolage", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.035em; color: var(--t-text); font-variant-numeric: tabular-nums; }
+html[data-tema] .jk-pris small { display: block; margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--t-dampad); }
+html[data-tema] .jk-pris .jmfsaknas { font-size: 18px; }
+html[data-tema] .jk-pris span { display: block; font-size: 12px; color: var(--t-dampad); margin-top: 4px; }
+html[data-tema] .jk-vem { min-width: 0; }
+html[data-tema] .jk-vem h3 { margin: 0; font-size: 17px; line-height: 1.25; font-weight: 700; color: var(--t-text); }
+html[data-tema] .jk-vem .jmfhandlare { margin: 3px 0 0; font-size: 14px; color: var(--t-dampad); font-weight: 500; }
+html[data-tema] .jk-vem .jmfhandlare span::before { content: ", "; }
+html[data-tema] .jk-skylt { display: inline-block; background: var(--t-gul); color: var(--t-gultext); font-weight: 800; font-size: 12px; padding: 3px 8px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px var(--t-gultext); margin-bottom: 6px; }
+html[data-tema] .jk-markets { display: inline-block; font-size: 12px; font-weight: 700; color: var(--t-accent); margin-bottom: 4px; }
+html[data-tema] .jk-fakta { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 12px 0 0; font-size: 14px; color: var(--t-dampad); }
+html[data-tema] .jk-fakta span:not(:last-child)::after { content: "/"; margin: 0 8px; opacity: .45; }
+html[data-tema] .jk-fakta .jmfokand { color: #B26B00; }
+html[data-tema="mork"] .jk-fakta .jmfokand { color: #F5C431; }
+html[data-tema] .jk-insats { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: #8A5300; background: #FFF4D6; border-radius: 8px; padding: 6px 10px; }
+html[data-tema] .jk-insats.neutral { color: var(--t-dampad); background: var(--t-yta); font-weight: 500; }
+html[data-tema="mork"] .jk-insats { background: #2C2410; color: #F5C431; }
+html[data-tema] .jk-skala { position: relative; height: 6px; border-radius: 99px; margin: 14px 2px 0; background: linear-gradient(90deg, var(--t-mint), var(--t-linje) 55%, var(--t-linje)); }
+html[data-tema] .jk-skala i { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--t-text); box-shadow: 0 0 0 3px var(--t-kort); }
+html[data-tema] .jk-skalatext { display: flex; justify-content: space-between; margin: 5px 0 0; font-size: 11px; color: var(--t-dampad); }
+html[data-tema] .jmfkort .jmfchips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
+html[data-tema] .jmfkort .jmfchips span { background: var(--t-mintljus); color: var(--t-accent); font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 99px; border: 0; }
+html[data-tema] .jmfkort .jmfchips span::before { content: "✓ "; }
+html[data-tema] .jmfknappar { display: flex; align-items: center; gap: 14px; margin: 14px 0 0; flex-wrap: wrap; }
+html[data-tema] .jmfknappar .cta { flex: 1 1 auto; margin: 0; text-align: center; padding: 13px 16px; font-size: 15px; border-radius: 12px; }
+html[data-tema] .jmfknappar .annonslank { color: var(--t-text) !important; font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+html[data-tema] .jmfmerinfo { margin: 10px 0 0; border-top: 1px solid var(--t-linje); padding-top: 8px; }
+html[data-tema] .jmfmerinfo summary { color: var(--t-dampad); font-weight: 600; font-size: 14px; cursor: pointer; padding: 4px 0; }
+html[data-tema] .jmfmerinfo, html[data-tema] .jmfmerinfo td, html[data-tema] .jmfmerinfo p { color: var(--t-text); }
+html[data-tema] .jmfmerinfo td { border-color: var(--t-linje); }
+html[data-tema] .jmfmerinfo .jmftillk { color: var(--t-dampad); }
+html[data-tema] .visamer { background: transparent; color: var(--t-text); border: 1.5px solid var(--t-linje); border-radius: 12px; }
+html[data-tema] .jmfhist { background: var(--t-yta); color: var(--t-text); border: 1px solid var(--t-linje); border-radius: 16px; }
+html[data-tema] .jmfhist p { color: var(--t-dampad); }
+html[data-tema] .jmfhist svg { color: var(--t-accent); }
+html[data-tema] .jmfverktyg button, html[data-tema] .sparaknapp, html[data-tema] .jmfval { background: var(--t-kort); color: var(--t-text); border: 1.5px solid var(--t-linje); border-radius: 12px; }
+html[data-tema] .jmfverktyg button.vald, html[data-tema] .jmfval.vald { border-color: var(--t-accent); color: var(--t-accent); }
+html[data-tema] .stat { background: var(--t-yta); color: var(--t-text); border: 1px solid var(--t-linje); }
+html[data-tema] .stat b { color: var(--t-text); font-family: "Bricolage", sans-serif; }
+html[data-tema] .stat small { color: var(--t-dampad); }
+
+/* Text-/faktarutor */
+html[data-tema] .info, html[data-tema] section.info, html[data-tema] .infokort, html[data-tema] section.info details, html[data-tema] .faq details { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); box-shadow: none; }
+html[data-tema] .info *, html[data-tema] .infokort *, html[data-tema] section.info * { color: inherit; }
+html[data-tema] section.info h2, html[data-tema] section.info > p { color: var(--t-text); }
+html[data-tema] .villkor, html[data-tema] details.vill { background: transparent; color: var(--t-dampad) !important; border: 0; }
+html[data-tema] .villkor * { color: var(--t-dampad) !important; }
+html[data-tema] section.ingar details, html[data-tema] section.ingar details * { color: var(--t-text); }
+html[data-tema] section.ingar details small { color: var(--t-dampad); }
+html[data-tema] [class*="sammanf"], html[data-tema] .jmfsamm { background: var(--t-yta); color: var(--t-text); border-color: var(--t-mint); }
+
+/* ---------- Alla bilar: listkort ---------- */
+html[data-tema] .controls { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); box-shadow: var(--t-skugga); }
+html[data-tema] .controls label { color: var(--t-dampad); }
+html[data-tema] .car { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); border-radius: 18px; box-shadow: var(--t-skugga); }
+html[data-tema] .car .pic { background: var(--t-yta); }
+html[data-tema] .car .brand { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 13px; color: var(--t-dampad); }
+html[data-tema] .car .rank { background: var(--t-gul); color: var(--t-gultext); }
+html[data-tema] .car h3, html[data-tema] .car h3 a { font-family: "Bricolage", sans-serif; font-size: 20px; color: var(--t-text) !important; }
+html[data-tema] .car .kortvariant, html[data-tema] .car .total, html[data-tema] .car .effpris, html[data-tema] .car .fran { color: var(--t-dampad); }
+html[data-tema] .car .price .month { font-family: "Bricolage", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; color: var(--t-text); }
+html[data-tema] .kortpiller span, html[data-tema] .tag { background: var(--t-yta); color: var(--t-dampad); border-radius: 6px; }
+html[data-tema] .tag.el { background: var(--t-mintljus); color: var(--t-accent); }
+html[data-tema] .car a.ext { color: var(--t-accent); }
+html[data-tema] .elbadge { background: var(--t-text); color: var(--t-bg); box-shadow: none; }
+html[data-tema] .betyg.mb { background: var(--t-accent); color: #fff; }
+html[data-tema] .betyg.b { background: var(--t-mintljus); color: var(--t-accent); }
+html[data-tema] .betyg.ok { background: var(--t-yta); color: var(--t-dampad); }
+html[data-tema] .antalrad { color: var(--t-dampad) !important; }
+
+/* ---------- Sidfot ---------- */
+html[data-tema] .sidfot { background: var(--t-fot); color: var(--t-fottext); }
+html[data-tema] .sidfot a, html[data-tema] .sidfot b, html[data-tema] .sidfot .logo span, html[data-tema] .sidfot .logo b { color: #fff; }
+html[data-tema] .sidfot .logo i { color: var(--t-fottext); font-style: normal; }
+html[data-tema] .sidfot p, html[data-tema] .sidfot span { color: var(--t-fottext); }
+html[data-tema] footer:not(.sidfot), html[data-tema] .kallor { color: var(--t-dampad); background: var(--t-bg); }
+
+/* ---------- Kontaktrutan, Mina sidor ---------- */
+html[data-tema="mork"] .kontaktruta, html[data-tema="mork"] .kontaktruta .kinner { background: var(--t-kort); color: var(--t-text); }
+html[data-tema="mork"] .kontaktruta h2, html[data-tema="mork"] .kontaktruta label, html[data-tema="mork"] .kontaktruta p { color: var(--t-text) !important; }
+html[data-tema="mork"] .kontaktruta textarea, html[data-tema="mork"] .kontaktruta input { background: var(--t-falt); color: var(--t-text); border-color: var(--t-faltlinje); }
+html[data-tema="mork"] .mskort { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); }
+html[data-tema="mork"] .mskort h2, html[data-tema="mork"] .mskort b { color: var(--t-text) !important; }
+html[data-tema="mork"] .mskort p, html[data-tema="mork"] .mskort li { color: var(--t-dampad) !important; }
+html[data-tema="mork"] .mskort a { color: var(--t-accent); }
+html[data-tema] .kontaktruta .kkknapp.skicka { background: var(--t-knapp); color: var(--t-knapptext); }
+@media (prefers-reduced-motion: reduce) { html[data-tema] * { scroll-behavior: auto !important; transition: none !important; } }
+/* Lyft: rättningar efter första skärmbilderna */
+html[data-tema] .logo { border-left: 0; padding: 0; gap: 8px; }
+html[data-tema] .logo > span { display: inline-flex; flex-direction: row; align-items: baseline; gap: 5px; font-family: "Bricolage", sans-serif; font-size: 21px; letter-spacing: -0.02em; text-transform: none; line-height: 1; color: var(--t-navtext); font-weight: 400; }
+html[data-tema] .logo > span b { letter-spacing: -0.02em; font-weight: 800; color: var(--t-navtext); }
+html[data-tema] .logo > span i { color: var(--t-dampad); font-weight: 400; }
+html[data-tema] .logo > span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--t-gul); box-shadow: inset 0 0 0 2px var(--t-text); align-self: center; margin-right: 3px; flex: none; }
+html[data-tema] .sidfot .logo > span, html[data-tema] .sidfot .logo > span b { color: #fff; }
+html[data-tema] .sidfot .logo > span i { color: var(--t-fottext); }
+html[data-tema] .sidfot .logo > span::before { box-shadow: none; }
+@media (max-width: 380px) { html[data-tema] .logo > span { font-size: 19px; } }
+html[data-tema] .hero h1 { max-width: 15ch; }
+html[data-tema] .startsok button { padding: 0 16px; }
+html[data-tema] .startsok input { min-width: 0; }
+html[data-tema] .direktsvar { background: var(--t-yta); color: var(--t-text); border: 0; border-left: 4px solid var(--t-gul); border-radius: 0 14px 14px 0; }
+html[data-tema] .direktsvar b, html[data-tema] .direktsvar * { color: var(--t-text); }
+html[data-tema] .jmfstats div { background: var(--t-kort); border: 1px solid var(--t-linje); }
+html[data-tema] .jmfstats small { color: var(--t-dampad); }
+html[data-tema] .jmfstats b { color: var(--t-text); font-family: "Bricolage", sans-serif; }
+html[data-tema] .jmfkort:not(:first-child) .jk-skalatext { display: none; }
+html[data-tema] .markegrid a span { white-space: nowrap; }
+html[data-tema] .markegrid a b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html[data-tema] .antalrad b, html[data-tema] .antalrad { color: var(--t-dampad) !important; }
+html[data-tema] .antalrad b { color: var(--t-text) !important; }
+html[data-tema] .car .jmfval { font-weight: 600; }
+html[data-tema] .markegrid a small { display: block; color: var(--t-dampad); font-size: 12.5px; white-space: nowrap; }
+html[data-tema] .jmfkort p.jmfhandlare { color: var(--t-dampad) !important; font-weight: 500; }
+html[data-tema] section.steg2 .steglista li span { background: var(--t-gul); color: var(--t-gultext); box-shadow: inset 0 0 0 1.5px var(--t-gultext); border-radius: 7px; }
+html[data-tema] section.steg2 .steglista li { color: var(--t-dampad); }
+@media (max-width: 600px) {
+  html[data-tema] .markegrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  html[data-tema] .markegrid a { padding: 11px 12px; }
+  html[data-tema] .markegrid a b { font-size: 16px; }
+}
+html[data-tema] .herobil { display: none; }
+@media (min-width: 900px) {
+  html[data-tema] header.hero.foto .wrap.herotext { max-width: 1000px; }
+  html[data-tema] header.hero.foto .herotext > * { max-width: 560px; }
+  html[data-tema] .herobil { display: block; position: absolute; right: max(-40px, calc(50% - 620px)); bottom: 24px; width: min(46vw, 620px); height: auto; mix-blend-mode: multiply; pointer-events: none; }
+  html[data-tema="mork"] .herobil { mix-blend-mode: normal; filter: drop-shadow(0 24px 40px rgba(0,0,0,.5)); border-radius: 20px; }
+}
+html[data-tema] header.hero.foto h1 { text-shadow: none; color: var(--t-text); font-size: clamp(36px, 7.4vw, 60px); letter-spacing: -0.03em; }
+html[data-tema] header.hero.foto { min-height: 0; display: block; }
+@media (min-width: 900px) {
+  html[data-tema] .herobil { width: min(38vw, 500px); right: max(20px, calc(50% - 620px)); bottom: 50%; transform: translateY(50%); }
+  html[data-tema] header.hero.foto .herotext > * { max-width: 520px; }
+}
+@media (min-width: 900px) and (max-width: 1150px) { html[data-tema] .herobil { width: 34vw; } html[data-tema] header.hero.foto .herotext > * { max-width: 48vw; } }
+@media (min-width: 900px) { html[data-tema="ljus"] .herobil { mix-blend-mode: normal; border-radius: 20px; box-shadow: var(--t-skugga); } }
