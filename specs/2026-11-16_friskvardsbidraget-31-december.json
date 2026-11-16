@@ -1,0 +1,81 @@
+{
+  "slug": "2026-11-16_friskvardsbidraget-31-december",
+  "title": "Upp till 5 000 kr från jobbet försvinner på nyårsafton",
+  "caption": "Friskvårdsbidraget gäller bara innevarande år – det du inte använder före 31 december brukar vara borta 💸 Max 5 000 kr skattefritt per år (din arbetsgivare bestämmer beloppet). Hinner du inte? Ett årskort eller klippkort köpt i december kan räknas. Presentkort gör det inte.\n\nHar du kvar något av ditt friskvårdsbidrag? 👇\n\n#friskvårdsbidrag #privatekonomi #spartips #förmåner #plånboksskolan",
+  "pinned_comment": "Hur mycket friskvårdsbidrag har du kvar i år? 💪 Allt använt / 🤏 Lite kvar / 😬 Hela beloppet 👇",
+  "sources": [
+    "https://www.skatteverket.se/omoss/pressochmedia/nyheter/2025/nyheter/friskvardsbidragetskagallaforinnevarandear.5.4a54dc8b19aa6175a152630.html (Skatteverket: bidraget ska gälla innevarande år, max 5 000 kr per anställd och år, årskort/klippkort i slutet av året OK, presentkort inte skattefritt)",
+    "https://www.skatteverket.se/privat/skatter/arbeteochinkomst/formaner/personalvardmotionochfriskvard.4.7459477810df5bccdd4800014540.html (Skatteverket: max 5 000 kr/år, gym, ridlektioner, startavgift lopp, massage max 1 000 kr/tillfälle)"
+  ],
+  "cover": {
+    "title": [
+      "FRISKVÅRDS-",
+      "BIDRAGET",
+      "FÖRSVINNER"
+    ],
+    "pill": "Använd det före 31 december",
+    "label": "Skattefritt, upp till",
+    "big": "5 000 kr",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Upp till femtusen kronor från jobbet försvinner på nyårsafton. Har du använt friskvårdsbidraget?",
+      "kicker": "HAR DU ANVÄNT DET?",
+      "big": "5 000 KR",
+      "sub": "försvinner 31 december",
+      "punch": [
+        "Friskvårds-",
+        "bidraget."
+      ]
+    },
+    {
+      "type": "cards",
+      "say": "Det gäller bara i år. Gym, simhall, ridlektioner och lopp kan räknas.",
+      "title": "DET HÄR KAN RÄKNAS",
+      "cards": [
+        [
+          "Gym & simhall",
+          "kort och avgifter"
+        ],
+        [
+          "Ridlektioner",
+          "och andra sporter"
+        ],
+        [
+          "Lopp",
+          "startavgiften"
+        ]
+      ]
+    },
+    {
+      "type": "statement",
+      "say": "Hinner du inte? Köp ett årskort före årsskiftet. Presentkort räknas inte, då blir det skatt.",
+      "title": "HINNER DU INTE?",
+      "lines": [
+        "Årskort eller klippkort",
+        "före 31 december"
+      ],
+      "highlight": "Presentkort = skatt",
+      "chip": "Källa: Skatteverket"
+    },
+    {
+      "type": "number",
+      "say": "Max femtusen kronor per år, skattefritt.",
+      "top": "Skattefritt per år",
+      "prefix": "max ",
+      "value": 5000,
+      "suffix": " kr",
+      "color": "green",
+      "sub": "arbetsgivaren bestämmer"
+    },
+    {
+      "type": "cta",
+      "say": "Kolla ditt saldo i dag, och följ Plånboksskolan.",
+      "line1": "Kolla ditt saldo",
+      "big": "I DAG.",
+      "line2": "Inte 31 december."
+    }
+  ]
+}
