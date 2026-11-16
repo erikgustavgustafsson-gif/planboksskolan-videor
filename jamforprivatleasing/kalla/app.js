@@ -4540,6 +4540,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     const kontoKlar = (async () => {
       if (KAN_KONTO) try {
         const j = await (await fetch("konto.php?a=jag", { credentials: "same-origin", cache: "no-store" })).json();
+        KONTO.metoder = j.metoder || [];
         if (j.inloggad) {
           Object.assign(KONTO, j);
           const lok = lokalaSparade();
@@ -4626,20 +4627,23 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     let msLage = "", msEpost = "";
     function ritaMinaSidor() {
       const el = document.getElementById("minasidor"); if (!el) return;
-      if (!KAN_KONTO) { el.innerHTML = `<section class="mskort"><h2>Mina sidor</h2><p>Inloggningen fungerar på jamforprivatleasing.se – det här är en förhandsvisning.</p></section>` + msSparade(lokalaSparade()); return; }
       if (!KONTO.inloggad) {
+        const met = KAN_KONTO ? (KONTO.metoder || []) : ["google"], metNamn = { google: "Google", facebook: "Facebook" };
+        const metHtml = met.length ? `<div class="msmed">${met.map(p => `<a class="msmedknapp ms-${p}" href="konto.php?a=med&p=${p}" rel="nofollow">Fortsätt med ${metNamn[p]}</a>`).join("")}</div><p class="mseller"><span>eller med e-post</span></p>` : "";
         el.innerHTML = msLage === "skickat"
           ? `<section class="mskort"><h2>Kolla din e-post</h2><p>Vi har skickat en inloggningslänk till <b>${esc(msEpost)}</b>. Den gäller i 20 minuter. Hittar du den inte – titta i skräpposten.</p><button type="button" class="lank" id="msIgen">Skicka till en annan adress</button></section>`
           : `<section class="mskort"><h2>Logga in eller skapa konto</h2>
-              <p>Skriv din e-post så mejlar vi en inloggningslänk. Inget lösenord behövs – finns det inget konto skapas ett.</p>
+              ${metHtml}<p>Skriv din e-post så mejlar vi en inloggningslänk. Inget lösenord behövs – finns det inget konto skapas ett.</p>
               <form id="msForm" class="msform" novalidate><input type="email" id="msEpost" required autocomplete="email" placeholder="din@epost.se" aria-label="Din e-postadress"><button type="submit">Skicka länk</button></form>
               <p class="msfel" id="msFel" hidden></p>
               <ul class="msfordelar"><li><b>Spara bilar</b> och se det lägsta priset varje gång du kommer tillbaka</li><li><b>Kontakta säljare</b> med dina uppgifter ifyllda</li><li><b>Se vilka säljare</b> du har ringt eller mejlat, och om vilken bil</li></ul>
-              <p class="msliten">Vi sparar bara din e-post och det du själv lägger in. Du kan radera kontot när du vill. <a href="integritetspolicy.html#konto">Så hanterar vi dina uppgifter</a>.</p>
+              <p class="msliten">Vi sparar bara din e-post${met.length ? " (och ditt namn om du loggar in med " + met.map(p => metNamn[p]).join(" eller ") + ")" : ""} och det du själv lägger in. Du kan radera kontot när du vill. <a href="integritetspolicy.html#konto">Så hanterar vi dina uppgifter</a>.</p>
             </section>` + msSparade(lokalaSparade());
+        if (!KAN_KONTO) el.insertAdjacentHTML("afterbegin", `<p class="msforhand">Förhandsvisning – inloggningen fungerar först på jamforprivatleasing.se.</p>`);
+        el.querySelectorAll(".msmedknapp").forEach(a => a.addEventListener("click", ev => { if (!KAN_KONTO) ev.preventDefault(); }));
         const f = document.getElementById("msForm");
         if (f) f.addEventListener("submit", async ev => {
-          ev.preventDefault(); const ep = document.getElementById("msEpost").value.trim(), fel = document.getElementById("msFel"), kn = f.querySelector("button");
+          ev.preventDefault(); if (!KAN_KONTO) return; const ep = document.getElementById("msEpost").value.trim(), fel = document.getElementById("msFel"), kn = f.querySelector("button");
           if (!/^\S+@\S+\.\S+$/.test(ep)) { fel.hidden = false; fel.textContent = "Skriv din e-postadress."; return; }
           kn.disabled = true; kn.textContent = "Skickar…";
           try { const j = await kontoAnrop("lank", { epost: ep }); if (j.ok) { msLage = "skickat"; msEpost = ep; ritaMinaSidor(); return; } fel.hidden = false; fel.textContent = j.fel || "Det gick inte just nu. Försök igen om en stund."; }

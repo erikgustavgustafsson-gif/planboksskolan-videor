@@ -1126,3 +1126,12 @@
     .mssparade a b { color: #0E2A47 !important; }
     .mskmeta a { color: #0E2A47 !important; }
     .kontaktruta .kkknapp.kkannons { margin: 0; display: block; font-size: 16px; }
+
+/* Inloggning med Google/Facebook (16 nov) */
+.msmed { display: grid; gap: 10px; margin: 14px 0 6px; }
+.msmedknapp { display: block; text-align: center; font-weight: 800; font-size: 16px; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #CBD3DE; background: #fff; color: #1A2433 !important; text-decoration: none; }
+.msmedknapp:hover { border-color: #0E2A47; }
+.ms-facebook { background: #1877F2; border-color: #1877F2; color: #fff !important; }
+.mseller { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px; font-size: 13px; color: #6B7686 !important; }
+.mseller::before, .mseller::after { content: ""; flex: 1; height: 1px; background: #DDE3EA; }
+.msforhand { background: #FFF4D6; color: #5A4300 !important; padding: 10px 12px; border-radius: 10px; font-size: 14px; margin: 0 0 12px; }
