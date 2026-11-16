@@ -4594,17 +4594,46 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         <textarea id="kText" rows="8"></textarea>
         <div class="kkval">
           ${k.tel ? `<a class="kkknapp ring" data-satt="ring" href="tel:${k.tel}">📞 Ring ${esc(k.visa || k.tel)}</a>` : ""}
-          ${k.epost ? `<a class="kkknapp mejl" data-satt="mejl" href="#">✉️ Mejla säljaren</a>` : ""}
+          ${k.epost ? `<button type="button" class="kkknapp skicka" id="kSkicka">${KONTO.inloggad || !KAN_KONTO ? "✉️ Skicka till säljaren" : "✉️ Logga in och skicka"}</button>` : ""}
           ${arMobil(k.tel) ? `<a class="kkknapp sms" data-satt="sms" href="#">💬 Skicka sms</a>` : ""}
           <a class="kkknapp kkannons" data-satt="annons" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Se annonsen ↗</a>
         </div>
-        <p class="kkinfo">Samtalet eller mejlet går från din egen telefon eller e-post direkt till säljaren. Vi skickar inget åt dig och ser inte vad du skriver.
-        ${KONTO.inloggad ? "Kontakten sparas på <a href=\"mina-sidor.html\">Mina sidor</a>." : "<a href=\"mina-sidor.html\">Logga in</a> om du vill spara bilen och se vilka säljare du har kontaktat."}</p>
+        <p class="kkfel" id="kFel" hidden></p>
+        ${k.epost ? `<p class="kkinfo">${KONTO.inloggad || !KAN_KONTO ? "<b>Skicka</b> mejlar ditt meddelande till säljaren med din e-post" + (KONTO.epost ? " (" + esc(KONTO.epost) + ")" : "") + " som svarsadress – säljaren svarar direkt till dig, och du får en kopia." : "För att skicka direkt härifrån behöver du vara inloggad, så att säljaren vet att förfrågan kommer från en riktig person. Det tar en halv minut med Google eller e-post."} <a href="#" id="kMejlapp">Eller öppna i din egen mejlapp</a>.</p>` : ""}
+        <p class="kkinfo">Ring och sms går från din egen telefon direkt till säljaren. ${KONTO.inloggad ? "Kontakten sparas på <a href=\"mina-sidor.html\">Mina sidor</a>." : ""}</p>
       </div>`;
       const txt = d.querySelector("#kText"), nm = d.querySelector("#kNamn"), tl = d.querySelector("#kTel");
       const fyll = () => { txt.value = kontaktText(r, nm.value.trim(), tl.value.trim()); };
       fyll(); let andrad = false; txt.addEventListener("input", () => andrad = true);
       [nm, tl].forEach(f => f.addEventListener("input", () => { if (!andrad) fyll(); }));
+      const sk = d.querySelector("#kSkicka"), fel = d.querySelector("#kFel"), handlNamn = r.kalla.replace(/ \(via Bilweb\)$/, "");
+      const mejlapp = d.querySelector("#kMejlapp");
+      if (mejlapp) mejlapp.addEventListener("click", ev => { ev.preventDefault(); location.href = `mailto:${k.epost}?subject=${encodeURIComponent("Privatleasing " + r.marke + " " + r.modell)}&body=${encodeURIComponent(txt.value)}`;
+        stat("kontakt-mejl", r); if (KONTO.inloggad) kontoAnrop("kontakt", { mkey: r.mkey, bil: r.marke + " " + r.modell, saljare: handlNamn, satt: "mejl", pris: r.manad, url: r.url }); });
+      if (sk) sk.addEventListener("click", async () => {
+        fel.hidden = true;
+        if (KAN_KONTO && !KONTO.inloggad) {
+          try { localStorage.setItem("jp_tillbaka", JSON.stringify({ url: location.pathname + location.search, bil: r.marke + " " + r.modell, t: Date.now() })); } catch (e) {}
+          location.href = "mina-sidor.html"; return;
+        }
+        if (!nm.value.trim()) { fel.hidden = false; fel.textContent = "Skriv ditt namn så att säljaren vet vem du är."; nm.focus(); return; }
+        if (!KAN_KONTO) { fel.hidden = false; fel.textContent = "Förhandsvisning – här skickas inget. På jamforprivatleasing.se går förfrågan iväg till säljaren."; return; }
+        sk.disabled = true; sk.textContent = "Skickar…";
+        try {
+          const j = await kontoAnrop("skicka", { saljare: saljarNyckel(r), mkey: r.mkey, bil: r.marke + " " + r.modell, pris: r.manad, url: r.url, text: txt.value, namn: nm.value.trim(), telefon: tl.value.trim() });
+          if (j.ok) {
+            stat("kontakt-skickat", r); if (window.jpHandelse) jpHandelse("kontakt", { satt: "skickat", saljare: handl, bil: r.marke + " " + r.mnamn });
+            KONTO.namn = KONTO.namn || nm.value.trim(); KONTO.telefon = KONTO.telefon || tl.value.trim();
+            d.querySelector(".kinner").innerHTML = `<button type="button" class="kstang" data-stang aria-label="Stäng">✕</button><h2>Skickat ✓</h2>
+              <p>Din förfrågan om ${esc(r.marke)} ${esc(r.modell)} har skickats till <b>${esc(j.till || handlNamn)}</b>. Svaret kommer till <b>${esc(KONTO.epost)}</b> – du har också fått en kopia.</p>
+              <p class="kkinfo">Förfrågan finns under <a href="mina-sidor.html">Mina sidor</a>.</p><button type="button" class="kkknapp" data-stang>Stäng</button>`;
+            return;
+          }
+          fel.hidden = false; fel.textContent = j.fel || "Det gick inte att skicka just nu. Försök igen om en stund.";
+          if (j.inloggad === false) { KONTO.inloggad = false; }
+        } catch (e) { fel.hidden = false; fel.textContent = "Det gick inte att skicka just nu. Försök igen om en stund."; }
+        sk.disabled = false; sk.textContent = "✉️ Skicka till säljaren";
+      });
       d.querySelectorAll("[data-satt]").forEach(a => a.addEventListener("click", ev => {
         const satt = a.dataset.satt, amne = `Privatleasing ${r.marke} ${r.modell}`;
         if (satt === "mejl") { ev.preventDefault(); location.href = `mailto:${k.epost}?subject=${encodeURIComponent(amne)}&body=${encodeURIComponent(txt.value)}`; }
@@ -4654,8 +4683,10 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         return;
       }
       const datum = t => new Date(t * 1000).toLocaleDateString("sv-SE", { day: "numeric", month: "short", year: "numeric" });
-      const sattTxt = { ring: "📞 Ringde", sms: "💬 Sms", mejl: "✉️ Mejlade", annons: "↗ Öppnade annonsen" };
-      el.innerHTML = `<section class="mskort"><h2>Hej${KONTO.namn ? " " + esc(KONTO.namn.split(" ")[0]) : ""}!</h2><p>Du är inloggad som <b>${esc(KONTO.epost)}</b>.</p></section>`
+      const sattTxt = { ring: "📞 Ringde", sms: "💬 Sms", mejl: "✉️ Mejlade", skickat: "✉️ Skickade förfrågan", annons: "↗ Öppnade annonsen" };
+      let tillbaka = null; try { tillbaka = JSON.parse(localStorage.getItem("jp_tillbaka") || "null"); localStorage.removeItem("jp_tillbaka"); } catch (e) {}
+      const tbHtml = tillbaka && Date.now() - tillbaka.t < 3600000 && /^\/[\w\-\/.]*$/.test(tillbaka.url) ? `<a class="mstillbaka" href="${esc(tillbaka.url)}">← Tillbaka till ${esc(tillbaka.bil)} och skicka din förfrågan</a>` : "";
+      el.innerHTML = tbHtml + `<section class="mskort"><h2>Hej${KONTO.namn ? " " + esc(KONTO.namn.split(" ")[0]) : ""}!</h2><p>Du är inloggad som <b>${esc(KONTO.epost)}</b>.</p></section>`
         + msSparade(KONTO.sparade)
         + `<section class="mskort"><h2>Mina kontakter</h2>${KONTO.kontakter.length ? `<ul class="mskontakter">${KONTO.kontakter.map(k => `<li><div><b>${esc(k.bil)}</b><span>${esc(k.saljare)}${k.pris ? " · " + kr(k.pris) + "/mån" : ""}</span></div><div class="mskmeta">${sattTxt[k.satt] || ""} · ${datum(k.t)}${k.url ? ` · <a href="${esc(k.url)}" target="_blank" rel="noopener">Annonsen ↗</a>` : ""}${MODELLER[k.mkey] ? ` · <a href="privatleasing-${k.mkey}.html">Jämför igen →</a>` : ""}</div></li>`).join("")}</ul>` : "<p>Du har inte kontaktat någon säljare än. Tryck på <b>Kontakta säljaren</b> på ett erbjudande.</p>"}</section>`
         + `<section class="mskort"><h2>Mina uppgifter</h2><p class="msliten">Fylls i när du kontaktar en säljare. Valfritt.</p>
