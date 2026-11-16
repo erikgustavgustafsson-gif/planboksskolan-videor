@@ -4,6 +4,8 @@
 //  GET  a=in&t=  (länken i mejlet)  -> sida med knappen "Logga in" (så att e-postprogram som förhandsgranskar länkar inte förbrukar den)
 //  POST a=in     {t}                -> loggar in: sätter kakan jp_sess och skickar vidare till Mina sidor
 //  GET  a=jag                       -> {inloggad, epost, namn, telefon, sparade, kontakter}
+//  GET  a=med&p=google|facebook    -> skickar till Google/Facebook för inloggning, som skickar tillbaka till konto.php?code=…&state=…
+//  GET/POST a=installning&nyckel=   -> sida där ägaren klistrar in nycklarna från Google och Facebook (samma nyckel som statistiksidan)
 //  POST a=uppgifter {namn, telefon} · a=spara {mkey, av} · a=sparalista {mkeys} · a=kontakt {...} · a=ut · a=radera
 // Allt sparas i data/konto/ (mappen är stängd för besökare). Inget av detta finns i det publika GitHub-repot förutom den här koden.
 header('X-Robots-Tag: noindex');
@@ -24,6 +26,27 @@ foreach ([__DIR__ . '/data', $mapp] as $m) if (!file_exists($m . '/.htaccess')) 
 $hemlig_fil = $mapp . '/hemlig.txt';
 if (!file_exists($hemlig_fil)) @file_put_contents($hemlig_fil, bin2hex(random_bytes(32)));
 define('HEMLIG', trim((string)@file_get_contents($hemlig_fil)));
+
+// Inloggning med Google/Facebook: nycklarna ligger i data-mappen (aldrig i GitHub) och läggs in via a=installning
+$inl_fil = $mapp . '/inloggning.json';
+function inl() { static $c = null; if ($c === null) { $c = json_decode((string)@file_get_contents($GLOBALS['inl_fil']), true); if (!is_array($c)) $c = []; } return $c; }
+function metoder() { $c = inl(); return array_values(array_filter(['google', 'facebook'], fn($p) => !empty($c[$p]['id']) && !empty($c[$p]['hemlig']))); }
+const RETUR = SAJT . 'konto.php';
+function http_anrop($url, $post = null) {   // svar som array (JSON) eller null
+  if (function_exists('curl_init')) {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15, CURLOPT_HTTPHEADER => ['Accept: application/json']]);
+    if ($post !== null) { curl_setopt($ch, CURLOPT_POST, true); curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post)); }
+    $r = curl_exec($ch); curl_close($ch);
+  } else {
+    $o = ['http' => ['timeout' => 15, 'ignore_errors' => true, 'header' => "Accept: application/json\r\n"]];
+    if ($post !== null) { $o['http']['method'] = 'POST'; $o['http']['header'] .= "Content-Type: application/x-www-form-urlencoded\r\n"; $o['http']['content'] = http_build_query($post); }
+    $r = @file_get_contents($url, false, stream_context_create($o));
+  }
+  $d = json_decode((string)$r, true); return is_array($d) ? $d : null;
+}
+function b64url_av($s) { return base64_decode(strtr($s, '-_', '+/') . str_repeat('=', (4 - strlen($s) % 4) % 4)); }
+function b64url($s) { return rtrim(strtr(base64_encode($s), '+/', '-_'), '='); }
 
 function svar($d, $kod = 200) { http_response_code($kod); header('Content-Type: application/json; charset=utf-8'); echo json_encode($d, JSON_UNESCAPED_UNICODE); exit; }
 function mejl($till, $amne, $text) {
@@ -83,7 +106,104 @@ if ($metod === 'POST') {
   $in = json_decode(file_get_contents('php://input') ?: '', true); if (!is_array($in)) $in = $_POST;
   $a = $in['a'] ?? $a;
   // Skydd mot förfalskade anrop från andra sajter: alla POST utom inloggningsknappen måste ha vårt eget huvud
-  if ($a !== 'in' && ($_SERVER['HTTP_X_JP'] ?? '') !== '1') svar(['ok' => false, 'fel' => 'Ogiltigt anrop.'], 403);
+  if ($a !== 'in' && $a !== 'installning' && ($_SERVER['HTTP_X_JP'] ?? '') !== '1') svar(['ok' => false, 'fel' => 'Ogiltigt anrop.'], 403);
+}
+
+// Skapar kontot vid behov (samma konto oavsett om man loggar in med e-post, Google eller Facebook – det styrs av e-postadressen)
+function logga_in($epost, $namn, $satt) {
+  $nu = time(); $id = anv_id($epost);
+  med_fil(anv_fil($id), function (&$d) use ($epost, $namn, $nu, $satt) {
+    $d += ['epost' => strtolower($epost), 'skapad' => $nu, 'namn' => '', 'telefon' => '', 'sparade' => [], 'kontakter' => []];
+    if ($d['namn'] === '' && $namn !== '') $d['namn'] = $namn;
+    $d['senast'] = $nu; $d['via'] = $satt;
+  });
+  $s = bin2hex(random_bytes(32));
+  med_fil($GLOBALS['mapp'] . '/sessioner.json', function (&$d) use ($s, $id, $nu) { $d[hash('sha256', $s)] = ['id' => $id, 'skapad' => $nu, 'ut' => $nu + 86400 * SESSION_DAGAR]; });
+  satt_kaka($s, 86400 * SESSION_DAGAR);
+  header('Location: ' . (getenv('JP_TEST') ? 'mina-sidor.html' : SAJT . 'mina-sidor.html') . '?inloggad=1', true, 303);
+  exit;
+}
+function inl_fel($txt) { sida('Inloggningen avbröts', '<p>' . $txt . '</p><p><a href="' . SAJT . 'mina-sidor.html">Försök igen</a> – eller logga in med en länk till din e-post.</p>'); }
+
+// ---------- Inställningar för Google/Facebook (bara ägaren, med statistiknyckeln) ----------
+if ($a === 'installning') {
+  preg_match("/NYCKEL\s*=\s*'([A-Za-z0-9]+)'/", (string)@file_get_contents(__DIR__ . '/statistik.php'), $m);
+  $nyckel = $m[1] ?? '';
+  if ($nyckel === '' || !hash_equals($nyckel, (string)($_GET['nyckel'] ?? $in['nyckel'] ?? ''))) { http_response_code(404); exit('Sidan finns inte.'); }
+  $c = inl(); $sparat = false;
+  if ($metod === 'POST') {
+    foreach (['google', 'facebook'] as $p) {
+      $id = trim(ren($in[$p . '_id'] ?? '', 200)); $hm = trim(ren($in[$p . '_hemlig'] ?? '', 200));
+      if (!empty($in[$p . '_bort'])) { unset($c[$p]); continue; }
+      if ($id !== '') $c[$p]['id'] = $id;
+      if ($hm !== '') $c[$p]['hemlig'] = $hm;
+    }
+    file_put_contents($inl_fil, json_encode($c, JSON_PRETTY_PRINT)); $sparat = true;
+  }
+  $e = fn($s) => htmlspecialchars((string)$s);
+  $rad = function ($p, $namn, $idnamn, $hmnamn) use ($c, $e) {
+    $har = !empty($c[$p]['id']) && !empty($c[$p]['hemlig']);
+    return '<h2 style="font-size:19px;margin:22px 0 6px">' . $namn . ' ' . ($har ? '✅ påslaget' : '⬜ inte påslaget') . '</h2>'
+      . '<label>' . $idnamn . '<input name="' . $p . '_id" value="' . $e($c[$p]['id'] ?? '') . '" autocomplete="off"></label>'
+      . '<label>' . $hmnamn . ($har ? ' (sparad – lämna tomt för att behålla)' : '') . '<input name="' . $p . '_hemlig" type="password" autocomplete="off"></label>'
+      . ($har ? '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="' . $p . '_bort" value="1" style="width:auto"> Stäng av ' . $namn . '</label>' : '');
+  };
+  sida('Inloggning med Google och Facebook',
+    ($sparat ? '<p style="background:#1E4D3A;padding:10px 12px;border-radius:10px">Sparat ✓</p>' : '')
+    . '<p>Adress att klistra in hos Google och Facebook (omdirigerings-URI / Valid OAuth Redirect URI):<br><code style="user-select:all;background:#0B1522;padding:4px 6px;border-radius:6px">' . RETUR . '</code></p>'
+    . '<form method="post" action="konto.php?a=installning"><input type="hidden" name="a" value="installning"><input type="hidden" name="nyckel" value="' . $e($nyckel) . '">'
+    . '<style>label{display:block;margin:8px 0;font-size:14px;color:#B8C6D6}input{display:block;width:100%;box-sizing:border-box;font:inherit;padding:11px;border-radius:10px;border:1px solid #2A3D52;background:#0B1522;color:#fff;margin-top:4px}</style>'
+    . $rad('google', 'Google', 'Klient-ID (Client ID)', 'Klienthemlighet (Client secret)')
+    . $rad('facebook', 'Facebook', 'Appens ID (App ID)', 'Apphemlighet (App secret)')
+    . '<button type="submit">Spara</button></form>'
+    . '<p style="font-size:14px;color:#9FB0C3">Nycklarna sparas i den stängda data-mappen på servern, inte i GitHub. Knapparna på Mina sidor visas automatiskt för det som är påslaget.</p>');
+}
+
+// ---------- Logga in med Google/Facebook: skicka iväg ----------
+if ($a === 'med' && $metod === 'GET') {
+  $p = $_GET['p'] ?? ''; $c = inl();
+  if (!in_array($p, metoder(), true)) inl_fel('Den inloggningen är inte påslagen.');
+  $state = $p . '.' . bin2hex(random_bytes(16)); $verif = b64url(random_bytes(32)); $nonce = bin2hex(random_bytes(12));
+  setcookie('jp_oauth', $state . '.' . $verif . '.' . $nonce, ['expires' => time() + 900, 'path' => '/', 'secure' => https(), 'httponly' => true, 'samesite' => 'Lax']);
+  if ($p === 'google') {
+    $url = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query(['client_id' => $c['google']['id'], 'redirect_uri' => RETUR, 'response_type' => 'code',
+      'scope' => 'openid email profile', 'state' => $state, 'nonce' => $nonce, 'prompt' => 'select_account',
+      'code_challenge' => b64url(hash('sha256', $verif, true)), 'code_challenge_method' => 'S256']);
+  } else {
+    $url = 'https://www.facebook.com/v19.0/dialog/oauth?' . http_build_query(['client_id' => $c['facebook']['id'], 'redirect_uri' => RETUR, 'response_type' => 'code',
+      'scope' => 'email,public_profile', 'state' => $state]);
+  }
+  header('Location: ' . $url, true, 302); exit;
+}
+
+// ---------- Tillbaka från Google/Facebook ----------
+if ($a === '' && $metod === 'GET' && isset($_GET['state'])) {
+  $kaka = explode('.', (string)($_COOKIE['jp_oauth'] ?? ''));
+  setcookie('jp_oauth', '', ['expires' => time() - 3600, 'path' => '/', 'secure' => https(), 'httponly' => true, 'samesite' => 'Lax']);
+  $state = (string)$_GET['state']; $p = explode('.', $state)[0];
+  if (count($kaka) !== 4 || !hash_equals($kaka[0] . '.' . $kaka[1], $state) || !in_array($p, metoder(), true)) inl_fel('Inloggningen hann bli för gammal eller startades i en annan webbläsare.');
+  if (isset($_GET['error']) || empty($_GET['code'])) inl_fel('Du avbröt inloggningen.');
+  $c = inl()[$p]; $kod = (string)$_GET['code']; $epost = ''; $namn = '';
+  if ($p === 'google') {
+    $t = http_anrop('https://oauth2.googleapis.com/token', ['code' => $kod, 'client_id' => $c['id'], 'client_secret' => $c['hemlig'], 'redirect_uri' => RETUR,
+      'grant_type' => 'authorization_code', 'code_verifier' => $kaka[2]]);
+    $delar = explode('.', (string)($t['id_token'] ?? ''));
+    $idt = count($delar) === 3 ? json_decode((string)b64url_av($delar[1]), true) : null;   // hämtad direkt från Google över https
+    if (!is_array($idt) || ($idt['aud'] ?? '') !== $c['id'] || !in_array($idt['iss'] ?? '', ['https://accounts.google.com', 'accounts.google.com'], true)
+        || ($idt['exp'] ?? 0) < time() || ($idt['nonce'] ?? '') !== $kaka[3]) inl_fel('Google kunde inte bekräfta inloggningen.');
+    if (empty($idt['email']) || empty($idt['email_verified'])) inl_fel('Ditt Google-konto har ingen bekräftad e-postadress.');
+    $epost = $idt['email']; $namn = $idt['name'] ?? '';
+  } else {
+    $t = http_anrop('https://graph.facebook.com/v19.0/oauth/access_token?' . http_build_query(['client_id' => $c['id'], 'client_secret' => $c['hemlig'], 'redirect_uri' => RETUR, 'code' => $kod]));
+    if (empty($t['access_token'])) inl_fel('Facebook kunde inte bekräfta inloggningen.');
+    $bevis = hash_hmac('sha256', $t['access_token'], $c['hemlig']);
+    $me = http_anrop('https://graph.facebook.com/v19.0/me?' . http_build_query(['fields' => 'id,name,email', 'access_token' => $t['access_token'], 'appsecret_proof' => $bevis]));
+    if (empty($me['email'])) inl_fel('Facebook gav oss ingen e-postadress (det händer om ditt Facebook-konto är skapat med telefonnummer). Logga in med en länk till din e-post i stället.');
+    $epost = $me['email']; $namn = $me['name'] ?? '';
+  }
+  $epost = strtolower(ren($epost, 120));
+  if (!filter_var($epost, FILTER_VALIDATE_EMAIL)) inl_fel('Vi fick ingen giltig e-postadress.');
+  logga_in($epost, ren($namn, 80), $p);
 }
 
 // ---------- Mejla en inloggningslänk ----------
@@ -121,26 +241,17 @@ if ($a === 'in' && $metod === 'POST') {
     return ($x && $x['ut'] >= $nu) ? $x : null;
   }) : null;
   if (!$l) sida('Länken gäller inte längre', '<p>Inloggningslänken har redan använts eller hunnit bli för gammal. <a href="' . SAJT . 'mina-sidor.html">Be om en ny länk</a>.</p>');
-  $id = anv_id($l['epost']);
-  med_fil(anv_fil($id), function (&$d) use ($l, $nu) {
-    $d += ['epost' => $l['epost'], 'skapad' => $nu, 'namn' => '', 'telefon' => '', 'sparade' => [], 'kontakter' => []];
-    $d['senast'] = $nu;
-  });
-  $s = bin2hex(random_bytes(32));
-  med_fil($mapp . '/sessioner.json', function (&$d) use ($s, $id, $nu) { $d[hash('sha256', $s)] = ['id' => $id, 'skapad' => $nu, 'ut' => $nu + 86400 * SESSION_DAGAR]; });
-  satt_kaka($s, 86400 * SESSION_DAGAR);
-  header('Location: ' . (getenv('JP_TEST') ? 'mina-sidor.html' : SAJT . 'mina-sidor.html') . '?inloggad=1', true, 303);
-  exit;
+  logga_in($l['epost'], '', 'epost');
 }
 
 // ---------- Allt nedan kräver inloggning ----------
 $s = session();
 if ($a === 'jag') {
-  if (!$s) svar(['inloggad' => false]);
+  if (!$s) svar(['inloggad' => false, 'metoder' => metoder()]);
   $u = las_anv($s['id']);
   svar(['inloggad' => true, 'epost' => $u['epost'], 'namn' => $u['namn'] ?? '', 'telefon' => $u['telefon'] ?? '', 'sparade' => $u['sparade'] ?? [], 'kontakter' => array_reverse($u['kontakter'] ?? [])]);
 }
-if ($metod !== 'POST') svar(['ok' => false, 'fel' => 'Okänt anrop.'], 400);
+if ($metod !== 'POST') { if ($a === '') { header('Location: ' . SAJT . 'mina-sidor.html', true, 302); exit; } svar(['ok' => false, 'fel' => 'Okänt anrop.'], 400); }
 if (!$s) svar(['ok' => false, 'inloggad' => false, 'fel' => 'Du är inte inloggad.'], 401);
 
 if ($a === 'uppgifter') {
