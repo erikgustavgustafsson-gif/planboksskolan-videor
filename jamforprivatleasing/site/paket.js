@@ -4809,3 +4809,19 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     }
     if (new URLSearchParams(location.search).get("inloggad") === "1") { try { history.replaceState(null, "", location.pathname); } catch (e) {} }
 
+
+// ---------- Ljust/mörkt läge (ljust är standard, valet sparas i webbläsaren) ----------
+(function () {
+  const k = document.getElementById("temaKnapp"); if (!k) return;
+  const uppd = () => {
+    const mork = document.documentElement.dataset.tema === "mork", txt = mork ? "Byt till ljust läge" : "Byt till mörkt läge";
+    k.setAttribute("aria-label", txt); k.title = txt;
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = mork ? "#07121D" : "#FFFFFF";
+  };
+  k.addEventListener("click", () => {
+    const ny = document.documentElement.dataset.tema === "mork" ? "ljus" : "mork";
+    document.documentElement.dataset.tema = ny; try { localStorage.setItem("jp_tema", ny); } catch (e) {}
+    uppd();
+  });
+  uppd();
+})();

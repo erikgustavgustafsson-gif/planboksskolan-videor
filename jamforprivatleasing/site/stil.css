@@ -1411,3 +1411,29 @@ html[data-tema] header.hero.foto { min-height: 0; display: block; }
 }
 @media (min-width: 900px) and (max-width: 1150px) { html[data-tema] .herobil { width: 34vw; } html[data-tema] header.hero.foto .herotext > * { max-width: 48vw; } }
 @media (min-width: 900px) { html[data-tema="ljus"] .herobil { mix-blend-mode: normal; border-radius: 20px; box-shadow: var(--t-skugga); } }
+
+/* Lägesknappen i menyn */
+.temaknapp { display: none; }
+html[data-tema] .temaknapp { display: inline-grid; place-content: center; width: 40px; height: 40px; margin-left: auto; margin-right: 8px; border-radius: 10px; border: 1px solid var(--t-linje); background: transparent; color: var(--t-navtext); cursor: pointer; padding: 0; }
+html[data-tema] .temaknapp:hover { border-color: var(--t-navtext); }
+html[data-tema="ljus"] .temaknapp .ikon-sol, html[data-tema="mork"] .temaknapp .ikon-mane { display: none; }
+@media (min-width: 900px) { html[data-tema] .temaknapp { order: 3; margin: 0 0 0 14px; } html[data-tema] .navrad { display: flex; align-items: center; } html[data-tema] .navlankar { margin-left: auto; } }
+
+/* Bilbilder: frilagda bilar (genomskinlig bakgrund) på en gemensam "scen" med mjuk markskugga */
+html[data-tema] { --t-scen: radial-gradient(58% 16% at 50% 90%, rgba(15,33,56,.22), rgba(15,33,56,0) 70%), linear-gradient(180deg, #F4F7FA 0%, #E6ECF2 100%); }
+html[data-tema="mork"] { --t-scen: radial-gradient(58% 16% at 50% 90%, rgba(0,0,0,.55), rgba(0,0,0,0) 70%), radial-gradient(90% 80% at 50% 35%, #1B3350 0%, #112337 60%, #0C1B2C 100%); }
+html[data-tema] .tkort .tbild, html[data-tema] .car .pic, html[data-tema] .car a.piclink, html[data-tema] .jmfbild, html[data-tema] .mssparade img, html[data-tema] .kkbild { background: var(--t-scen); }
+html[data-tema] .car img.pic { background: var(--t-scen); object-fit: contain; }
+html[data-tema] .jmfbild img { object-fit: contain; max-height: 320px; }
+html[data-tema] .tkort .tbild img { object-fit: contain; }
+html[data-tema] .herobil { background: var(--t-scen); }
+/* Foton som inte gick att frilägga visas som vanliga foton som fyller rutan */
+html[data-tema] img[src*="bilder/born-"], html[data-tema] img[src*="bilder/bz4xt-"], html[data-tema] img[src*="bilder/ex30cc-"], html[data-tema] img[src*="bilder/formentor-"], html[data-tema] img[src*="bilder/golf-"], html[data-tema] img[src*="bilder/ix2-"], html[data-tema] img[src*="bilder/passat-"], html[data-tema] img[src*="bilder/peaq-"], html[data-tema] img[src*="bilder/picanto-"], html[data-tema] img[src*="bilder/q4-"] { object-fit: cover !important; background: none !important; }
+html[data-tema] .tkort .tbild { aspect-ratio: 16 / 10; border-radius: 0; }
+html[data-tema] .tkort .tbild img { width: 100%; height: 100%; object-fit: contain; }
+html[data-tema] .tkort .tinner { border-top: 0; }
+html[data-tema] .tkort .thuvud { border-top: 0; padding-top: 0; }
+@media (min-width: 900px) {
+  html[data-tema] .herobil, html[data-tema="ljus"] .herobil, html[data-tema="mork"] .herobil { background: radial-gradient(60% 14% at 50% 90%, rgba(15,33,56,.25), rgba(15,33,56,0) 70%); box-shadow: none; border-radius: 0; filter: none; mix-blend-mode: normal; }
+  html[data-tema="mork"] .herobil { background: radial-gradient(60% 14% at 50% 90%, rgba(0,0,0,.6), rgba(0,0,0,0) 70%); }
+}

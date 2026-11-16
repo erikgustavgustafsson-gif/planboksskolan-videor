@@ -116,7 +116,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <meta name="description" content="{html.escape(beskr)}">
   <link rel="canonical" href="{url}">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0E2A47">
+  <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Jämföra Privatleasing">
@@ -136,6 +136,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
   <nav class="topnav">
     <div class="wrap navrad">
       <a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a>
+      <button type="button" class="temaknapp" id="temaKnapp" aria-label="Byt till mörkt läge" title="Byt till mörkt läge"><svg class="ikon-mane" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="currentColor"/></svg><svg class="ikon-sol" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg></button>
       <button type="button" class="menyknapp" id="menyKnapp" aria-label="Meny" aria-expanded="false">☰</button>
       <div class="navlankar">{meny}</div>
     </div>
@@ -773,7 +774,7 @@ try:
     for jpg in sorted((UT / "bilder").glob("*.jpg")):
         for bredd, kval in ((480, 72), (960, 76)):
             mal = UT / "bilder" / f"{jpg.stem}-{bredd}.webp"
-            if not mal.exists() or mal.stat().st_mtime < jpg.stat().st_mtime:
+            if not mal.exists():   # finns WebP redan (t.ex. genomskinlig frilagd bil) rörs den inte
                 im = Image.open(jpg).convert("RGB"); im.thumbnail((bredd, bredd)); im.save(mal, "WEBP", quality=kval, method=6)
 except ImportError:
     print("OBS: Pillow saknas – WebP-bilder skapades inte (pip install pillow)")
