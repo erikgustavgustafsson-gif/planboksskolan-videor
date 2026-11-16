@@ -84,6 +84,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         .replace(/\b(europas mest sålda bil|\/?priv\w{0,5}\s?l?t?eas\w*|\w*kampanj\w*|leasing fr\.?|erbjudande\w*|beställningsbil\w*|lagerbil\w*|omgående\b.*|snabb leverans.*|NYA!?)/gi, " ")
         .replace(/\s*(inkl\.?|ink\.?|&|och|med)?\s*(fria\s+)?(drag\s*(&|och)\s*)?(service\w*\s*(&|och)\s*)?vinterhjul.*$/i, "")
         .replace(/\s*\b(serviceavtal|service)\b.*$/i, "").replace(/\s\d[\d ]*\s?kr\b.*$/i, "")
+        .replace(/\s+(t\.?\s?o\.?\s?m\.?|tom)\s.*$/i, "").replace(/\s+inkl\b.*$/i, "").replace(/\s+(\+|")+\s*$/g, "").replace(/\s+"\s*$/, "")
         .replace(/[\s/.\-–]*\b(lager|leasing)\b\.?\s*(fr\.?)?$/i, "")
         .replace(/^(citroen|mercedes-benz|mercedes|vw)\s+/i, "")
         .replace(/\s+(fr\.?|från|i|nu|pris|fr\.?\s*\d.*)$/i, "").replace(/\s+/g, " ").replace(/^[\s\-–|,*!/.:&]+|[\s\-–|,*!/.:&]+$/g, "");
@@ -3224,6 +3225,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       "CC BY-SA 3.0 de": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.sv",
       "CC BY 3.0":       "https://creativecommons.org/licenses/by/3.0/deed.sv",
       "CC BY 2.0":       "https://creativecommons.org/licenses/by/2.0/deed.sv",
+      "CC BY 4.0":       "https://creativecommons.org/licenses/by/4.0/deed.sv",
       "CC0":             "https://creativecommons.org/publicdomain/zero/1.0/deed.sv"
     };
     const C = "https://commons.wikimedia.org/wiki/File:";
@@ -3582,7 +3584,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     function uppdJmfKnapp(b) {
       const pa = JMF.har(b.dataset.jmf);
       b.classList.toggle("vald", pa); b.setAttribute("aria-pressed", pa);
-      b.textContent = pa ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar";
+      b.textContent = pa ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen";
     }
     document.addEventListener("click", e => {
       const b = e.target.closest("button[data-jmf]"); if (!b) return;
@@ -3680,11 +3682,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       const billigast = minst(rader.filter(r => !r.milokand), "total") || minst(rader, "total");
       const billigastEl = minst(rader.filter(r => r.drivmedel === "El"), "total");
       const namn = b => b ? b.marke + " " + b.modell : "";
-      if (summary) summary.innerHTML = `
-        <div class="stat"><small>Lägst faktisk kostnad</small><b>${billigast ? kr(Math.round(billigast.total / 36)) + "/mån" : "–"}</b><small>${namn(billigast)}</small></div>
-        <div class="stat"><small>Bäst pris mot nypris</small><b>${bast ? pct(bast.andel) + " av nypriset" : "–"}</b><small>${namn(bast)}</small></div>
-        <div class="stat"><small>Billigaste elbil totalt</small><b>${billigastEl ? kr(billigastEl.total) : "–"}</b><small>${namn(billigastEl)}</small></div>
-        <div class="stat"><small>Modeller · erbjudanden</small><b>${modellRader.length} · ${rader.length}</b></div>`;
+      if (summary) summary.innerHTML = `<p class="antalrad">${modellRader.length ? `<b>${modellRader.length}</b> ${modellRader.length === 1 ? "modell" : "modeller"} · billigast först${s === "total" ? " (alla avgifter inräknade)" : ""}` : ""}</p>`;
 
       // 5) Bygg ett kort per bil
       if (visaMer) {
@@ -3695,6 +3693,8 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       lista.innerHTML = modellRader.slice(0, antalVisas).map((b, i) => {
         const bt = betyg(b.andel);
         const visaRank = s !== "marke" && (s === "andel" ? b.andel != null : b.total != null);
+        const ms = MODELLER[b.mkey] ? modellSammanfattning(b.mkey) : null;
+        if (ms) { b.antal = ms.antal; b.handlare = ms.saljare; }
         const flera = b.antal > 1, handl = esc(b.kalla.split(/ \(|,/)[0]);
         const huvudlank = flera ? b.msida : ut(b.url), ny = flera ? "" : ` target="_blank" rel="${rel(b.url)}"`;
         return `
@@ -3703,17 +3703,17 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           <div>
             <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
             <h3><a href="${b.msida}" style="color:inherit;text-decoration:none">${esc(b.marke)} ${esc(b.mnamn)}</a></h3>
-            <p class="kortvariant">Billigast: ${esc(b.modell)} · ${handl}</p>
+            <p class="kortvariant">Billigast: ${esc(b.modell)}<br>hos ${handl}</p>
           </div>
           <div class="price">
             ${b.m != null
-              ? `<small class="fran">${flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div>${b.forhojd || b.start || b.forsakring ? `<div class="effpris">= ${kr(b.eff)}/mån med ${[b.forhojd && "insats", b.start && "avgifter", b.forsakring && "obligatorisk försäkring"].filter(Boolean).join(" och ")} inräknat</div>` : ""}<div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
+              ? `<small class="fran">${SIDA === "kampanjer" ? "Kampanjpris" : flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div>${b.forhojd || b.start || b.forsakring ? `<div class="effpris">= ${kr(b.eff)}/mån med ${[b.forhojd && "insats", b.start && "avgifter", b.forsakring && "obligatorisk försäkring"].filter(Boolean).join(" och ")} inräknat</div>` : ""}<div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
             <div class="kortpiller"><span class="antalerb">${b.antal} ${b.antal === 1 ? "erbjudande" : "erbjudanden"}${b.handlare > 1 ? ` · ${b.handlare} säljare` : ""}</span><span>36 mån</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : (b.m != null ? valdMil : b.mil).toLocaleString("sv-SE") + " mil/år"}</span></div>
             ${flera
-              ? `<a class="cta" href="${b.msida}">Jämför ${b.antal} erbjudanden →</a><a class="ext" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till billigaste erbjudandet ↗</a>`
+              ? `<a class="cta" href="${b.msida}">Se alla ${b.antal} erbjudanden →</a>`
               : `<a class="cta" href="${ut(b.url)}" target="_blank" rel="${rel(b.url)}">Till erbjudandet ↗</a><a class="ext" href="${b.msida}">Om ${esc(b.mnamn)} →</a>`}${arAff(b.url) ? `<small class="annons">Annonslänk</small>` : ""}
-            <button type="button" class="jmfval ${JMF.har(b.mkey) ? "vald" : ""}" data-jmf="${b.mkey}" aria-pressed="${JMF.har(b.mkey)}">${JMF.har(b.mkey) ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar"}</button>
+            <button type="button" class="jmfval ${JMF.har(b.mkey) ? "vald" : ""}" data-jmf="${b.mkey}" aria-pressed="${JMF.har(b.mkey)}">${JMF.har(b.mkey) ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen"}</button>
           </div>
           <div class="tags">
             ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(b.andel)} av nypris</span>` : ""}
@@ -3722,7 +3722,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
             ${platstagg(b)}
             ${b.forhojd ? `<span class="tag warn">${kr(b.forhojd)} vid start</span>` : ""}
           </div>
-          <details class="mer"><summary>Avgifter, villkor och källa</summary>
+          ${flera ? "" : `<details class="mer"><summary>Avgifter, villkor och källa</summary>
           <div class="tags">
             <span class="tag">36 mån · ${b.mil.toLocaleString("sv-SE")} mil/år ingår</span>
             ${b.forhojd ? `<span class="tag warn">Engångsbelopp vid start: ${kr(b.forhojd)}</span>` : ""}
@@ -3734,7 +3734,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           ${b.not ? `<div class="source"><b>Obs:</b> ${b.not}</div>` : ""}
           ${b.utr && b.utr.length ? `<details class="utr"><summary>Utrustning som ingår (${b.utr.length})</summary><ul>${b.utr.map(x => `<li>${x}</li>`).join("")}</ul></details>` : ""}
           <div class="source">Nypris ${b.nypris ? kr(b.nypris) : "saknas"} · ${b.kalla} · villkor kontrollerade ${KONTROLL}</div>
-          </details>
+          </details>`}
         </article>`;
       }).join("") || "<p>Inga bilar matchar din sökning.</p>";
     }
@@ -4173,11 +4173,11 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           <div class="tinner">
             <div class="thuvud">
               <div><div class="tnamn">${t.namn}</div><div class="tversion">${esc(version) || "&nbsp;"}</div></div>
-              <div class="tfran">Från<div class="tpris">${kr(b.m).replace(" kr", "")}:-<small>/mån</small><sup class="fn"><a href="#villkor">1</a></sup></div></div>
+              <div class="tfran">Från<div class="tpris">${kr(b.m)}<small>/mån</small><sup class="fn"><a href="#villkor">1</a></sup></div></div>
             </div>
             <div class="tchips"><span>36 månader</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : b.mil.toLocaleString("sv-SE") + " mil/år"}</span>${b.forhojd ? `<span>${kr(b.forhojd)} vid start</span>` : ""}</div>
             <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "hos "}${esc(b.kalla.split(/ \(|,/)[0])}${antal > 1 ? ` · billigast av ${antal}` : ""}</div>
-            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Jämför " + antal + " →" : "Till erbjudandet →"}</a></div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Se alla " + antal + " →" : "Se erbjudandet →"}</a></div>
           </div>
         </article>`;
       }).join("");
@@ -4250,13 +4250,12 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         <div class="jmflista">${rader.slice(0, jmfVisa).map(r => {
           const billigast = lagst != null && r.eff === lagst && !r.milokand, handlare = esc(r.kalla.split(/ \(|,/)[0]);
           const plats = !r.lokal ? "Hela Sverige – hämtas hos närmaste märkeshandlare" : r.orter ? r.orter.slice(0, 3).join(", ") + (r.orter.length > 3 ? " m.fl." : "") + (r.lan.length === 1 && !r.orter.includes(r.lan[0]) ? ", " + r.lan[0] : "") : "Lokal handlare – fråga var bilen hämtas";
-          const bt = betyg(r.andel);
           const extra = r.forhojd || r.start || r.adm || r.forsakring || (jmfFors && r.total != null);
           const milrad = r.milokand ? `<b class="jmfokand">Körsträcka: fråga handlaren</b>` : milTxt(r.ingar) + (r.milharledd ? " (som märkets kampanj)" : "") + (jmfMil && r.ingar > jmfMil ? ` – mer än du behöver` : "");
           return `<article class="jmfkort ${billigast ? "bast" : ""}">
             <div class="jmftopp">
               <span class="jmfbadge ${billigast ? "bast" : ""}">${billigast ? "Billigast" : r.typ === "Märket" ? "Märkets pris" : "Handlare"}</span>
-              <div class="jmfpris">${r.m == null ? `<b class="jmfsaknas">Pris saknas</b><span>för ${milTxt(jmfMil)} – fråga säljaren</span>` : `<b>${kr(r.m)}</b><small>/mån</small><span>${r.krmil == null ? "kr/mil: –" : tal(r.krmil) + " kr/mil"}</span>${r.forhojd ? `<span class="jmfins">+ ${kr(r.forhojd)} vid start</span>` : ""}`}</div>
+              <div class="jmfpris">${r.m == null ? `<b class="jmfsaknas">Pris saknas</b><span>för ${milTxt(jmfMil)} – fråga säljaren</span>` : `<b>${kr(r.m)}</b><small>/mån</small>${r.krmil == null ? "" : `<span>${tal(r.krmil)} kr/mil</span>`}${r.forhojd ? `<span class="jmfins">+ ${kr(r.forhojd)} vid start</span>` : ""}`}</div>
             </div>
             <h3>${esc(r.marke)} ${esc(r.modell)}</h3>
             <p class="jmfhandlare">${handlare}</p>
@@ -4264,10 +4263,9 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
             <p class="jmfinfo">36 mån · ${milrad} · ${esc(r.drivmedel)}</p>
             ${r.total != null && extra ? `<p class="jmfeff"><b>${kr(Math.round(r.eff))}/mån</b> i faktisk kostnad – ${[r.forhojd && "insats", (r.start || r.adm) && "avgifter", (r.forsakring || jmfFors) && "försäkring"].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " och $1")} inräknat</p>` : ""}
             <div class="jmfchips">
-              <span class="${r.service ? "ja" : r.service === false ? "nej" : ""}">${r.service ? "✓ Service ingår" : r.service === false ? "✗ Service ingår inte" : "Service: fråga säljaren"}</span>
-              <span class="${r.forsakring ? "ja" : ""}">${r.forsakring ? "✓ Försäkring ingår" : "Försäkring tillkommer"}</span>
-              ${r.forhojd ? `<span class="nej">${kr(r.forhojd)} vid start</span>` : `<span class="ja">✓ 0 kr vid start</span>`}
-              ${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct(r.andel)} av nypris</span>` : ""}
+              ${r.forhojd ? "" : `<span class="ja">✓ Ingen insats</span>`}
+              ${r.service ? `<span class="ja">✓ Service ingår</span>` : ""}
+              ${r.forsakring ? `<span class="ja">✓ Försäkring ingår</span>` : ""}
             </div>
             <details class="jmfmerinfo"><summary>Hela kostnaden och villkor</summary>
               <table>
@@ -4293,7 +4291,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         ${rader.length > jmfVisa ? `<button type="button" class="visamer" id="jmfmer">Visa fler erbjudanden (${rader.length - jmfVisa} till)</button>` : ""}
         <p class="jmffot">${rader.some(r => r.milokand) ? "Står körsträckan inte i handlarens annons visar vi den inte och räknar inget pris per mil – fråga handlaren. Sådana erbjudanden kan inte bli märkta Billigast. " : ""}Priserna gäller 36 månader. Avi- och uppläggningsavgifter är inräknade i totalkostnad och kr/mil. Kontrollerat ${KONTROLL}.</p>
         ${histHtml(mk)}
-        <div class="jmfverktyg"><button type="button" class="jmfval ${JMF.har(mk) ? "vald" : ""}" data-jmf="${mk}" aria-pressed="${JMF.har(mk)}">${JMF.har(mk) ? "✓ Vald för jämförelse" : "＋ Jämför med andra bilar"}</button><a href="rakna.html${bast ? `?leasing=${bast.m}&start=${bast.start + bast.forhojd}&ingar=${bast.ingar}&bil=${encodeURIComponent(b0.marke + " " + b0.mnamn)}` : ""}">Räkna på hela kostnaden →</a></div>`;
+        <div class="jmfverktyg"><button type="button" class="jmfval ${JMF.har(mk) ? "vald" : ""}" data-jmf="${mk}" aria-pressed="${JMF.har(mk)}">${JMF.har(mk) ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen"}</button><a href="rakna.html${bast ? `?leasing=${bast.m}&start=${bast.start + bast.forhojd}&ingar=${bast.ingar}&bil=${encodeURIComponent(b0.marke + " " + b0.mnamn)}` : ""}">Räkna på hela kostnaden →</a></div>`;
       document.getElementById("jmfsort").value = s;
     }
     if (jamfor) {
@@ -4319,7 +4317,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       const l = JMF.lista(), tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const alla = Object.keys(MODELLER).sort((a, b) => (MODELLER[a][0].marke + MODELLER[a][0].mnamn).localeCompare(MODELLER[b][0].marke + MODELLER[b][0].mnamn, "sv"));
       const valj = l.length < 4 ? `<div class="svvalj"><label for="svny">Lägg till bil</label><select id="svny"><option value="">Välj modell…</option>${alla.filter(k => !l.includes(k)).map(k => `<option value="${k}">${esc(MODELLER[k][0].marke)} ${esc(MODELLER[k][0].mnamn)}</option>`).join("")}</select></div>` : "";
-      if (!l.length) { sidavid.innerHTML = `<p class="svtom">Du har inte valt några bilar än. Välj två till fyra modeller här, eller tryck på <b>＋ Jämför med andra bilar</b> på ett bilkort.</p>${valj}`; return; }
+      if (!l.length) { sidavid.innerHTML = `<p class="svtom">Du har inte valt några bilar än. Välj två till fyra modeller här, eller tryck på <b>＋ Lägg till i jämförelsen</b> på ett bilkort.</p>${valj}`; return; }
       const d = l.map(k => ({ k, ...modellSammanfattning(k) }));
       const minst = f => Math.min(...d.map(f).filter(v => v != null));
       const lEff = minst(x => x.bast.eff), lKrmil = minst(x => x.bast.krmil), lStart = minst(x => x.bast.forhojd + x.bast.start);
@@ -4446,12 +4444,14 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       markeSel.innerHTML = `<option value="alla">Alla märken</option>` + marken.map(m => `<option>${m}</option>`).join("");
     }
     // Lista med alla märken (länkar till märkessidorna)
+    // Fler filter är öppet på datorn (där finns plats), stängt på mobilen så att bilarna syns direkt
+    try { if (matchMedia("(min-width: 1100px)").matches) document.querySelectorAll("details.flerfilter").forEach(d => d.open = true); } catch (e) {}
     const markeLankar = document.getElementById("markelankar");
     if (markeLankar) {
       const antal = {}; BILAR.forEach(b => antal[b.marke] = (antal[b.marke] || 0) + 1);
       markeLankar.innerHTML = Object.keys(antal).sort((a, b) => a.localeCompare(b, "sv"))
         .filter(m => m !== SIDMARKE)
-        .map(m => `<a href="privatleasing-${slug(m)}.html"><b>${m}</b><small>${antal[m]} ${antal[m] === 1 ? "bil" : "bilar"}</small></a>`).join("");
+        .map(m => `<a href="privatleasing-${slug(m)}.html"><b>${m}</b><small>${antal[m]} ${antal[m] === 1 ? "erbjudande" : "erbjudanden"}</small></a>`).join("");
     }
     // Antal bilar i rubriker som har data-antal
     document.querySelectorAll("[data-antal]").forEach(el => {

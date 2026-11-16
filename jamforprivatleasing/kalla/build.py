@@ -176,28 +176,29 @@ def sidhuvud(h1, text, brod=None):
 def filter_html(med_marke=True):
     marke = '<div><label for="marke">Märke</label><select id="marke"><option value="alla">Alla märken</option></select></div>' if med_marke else ""
     tak = "".join(f'<option value="{v}">{kr(v)}</option>' for v in (3000, 3500, 4000, 5000, 6000, 8000))
+    # Det viktigaste syns direkt (sök, sortering, drivmedel). Resten ligger under "Fler filter" så att bilarna kommer högt upp på mobilen.
     return f"""
     <section class="controls">
-      <div class="hel narabox"><label for="postnr">Nära dig</label>
-        <div class="narad">
-          <input id="postnr" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Postnummer">
-          <button type="button" id="minPlats">📍 Använd min plats</button>
-          <select id="radie" aria-label="Avstånd"><option value="0">Hela Sverige</option><option value="50">Inom 5 mil</option><option value="100">Inom 10 mil</option><option value="250" selected>Inom 25 mil</option><option value="500">Inom 50 mil</option></select>
-        </div>
-        <small id="plattext"></small>
-      </div>
       <div class="sokfalt"><label for="sok">Sök modell</label><input id="sok" type="search" placeholder="t.ex. EX30 eller Tiguan"></div>
-      {marke}
-      <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option>{tak}</select></div>
       <div class="sorterafalt"><label for="sortera">Sortera</label><select id="sortera">
-        <option value="total">Lägst faktisk kostnad</option><option value="manad">Lägst månadshyra</option>
-        <option value="andel">Bäst pris mot nypris</option><option value="marke">Märke A–Ö</option></select></div>
+        <option value="total">Billigast totalt (alla avgifter)</option><option value="manad">Lägst månadshyra</option>
+        <option value="andel">Mest bil för pengarna</option><option value="marke">Märke A–Ö</option></select></div>
       <div class="hel"><label>Drivmedel</label>
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button><button type="button" data-v="Diesel">Diesel</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
       <input type="hidden" id="tillval" value="alla">
-      <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
+      <details class="flerfilter"><summary>Fler filter: plats, {"märke, " if med_marke else ""}maxpris, körsträcka</summary>
+        <div class="hel narabox"><label for="postnr">Nära dig</label>
+          <div class="narad">
+            <input id="postnr" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Postnummer">
+            <button type="button" id="minPlats">📍 Använd min plats</button>
+            <select id="radie" aria-label="Avstånd"><option value="0">Hela Sverige</option><option value="50">Inom 5 mil</option><option value="100">Inom 10 mil</option><option value="250" selected>Inom 25 mil</option><option value="500">Inom 50 mil</option></select>
+          </div>
+          <small id="plattext"></small>
+        </div>
         <div class="rad">
+          {marke}
+          <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option>{tak}</select></div>
           <div><label for="mil">Körsträcka per år</label><select id="mil"><option value="1000">1 000 mil</option><option value="1500">1 500 mil</option><option value="2000">2 000 mil</option></select></div>
           <div><label for="forsakring">Din försäkring (kr/mån)</label><input id="forsakring" type="number" min="0" step="50" value="0"></div>
         </div>
@@ -426,8 +427,8 @@ sidor["alla-bilar.html"] = sida(
     sidhuvud("Jämför alla bilar",
              f"<span data-antal>{antal_bilar}</span> erbjudanden från {len(MARKEN)} märken. Filtrera på pris och drivmedel – vi räknar med alla avgifter.",
              brod((None, "Alla bilar")))
-    + f'\n  <div class="wrap" style="padding:0 16px">{KATLANKAR}<h2 class="ortrub">Privatleasing nära dig</h2>{ORTBLOCK}</div>'
-    + lista_html("Bilar som matchar") + f"\n  <div class=\"wrap\" style=\"padding:0 16px\">{INFOKORT}</div>",
+    + f'\n  <div class="wrap" style="padding:0 16px">{KATLANKAR}</div>'
+    + lista_html("Bilar som matchar") + f'\n  <div class="wrap" style="padding:0 16px"><h2 class="ortrub">Privatleasing nära dig</h2>{ORTBLOCK}{INFOKORT}</div>',
     aktiv="alla-bilar.html", sida_typ="alla", ld=[brod_ld(("alla-bilar.html", "Alla bilar"))])
 
 # ---------- Märken ----------

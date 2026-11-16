@@ -20,7 +20,7 @@
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=f6638800">
+  <link rel="stylesheet" href="stil.css?v=25e1a33f">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Start", "item": "https://jamforprivatleasing.se/"}, {"@type": "ListItem", "position": 2, "name": "Märken", "item": "https://jamforprivatleasing.se/marken.html"}, {"@type": "ListItem", "position": 3, "name": "Privatleasing Volvo", "item": "https://jamforprivatleasing.se/privatleasing-volvo.html"}]}]}</script>
 </head>
 <body data-sida="marke" data-marke="Volvo">
@@ -41,26 +41,26 @@
   <main class="wrap" style="padding: 0 16px;" id="alla">
     
     <section class="controls">
-      <div class="hel narabox"><label for="postnr">Nära dig</label>
-        <div class="narad">
-          <input id="postnr" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Postnummer">
-          <button type="button" id="minPlats">📍 Använd min plats</button>
-          <select id="radie" aria-label="Avstånd"><option value="0">Hela Sverige</option><option value="50">Inom 5 mil</option><option value="100">Inom 10 mil</option><option value="250" selected>Inom 25 mil</option><option value="500">Inom 50 mil</option></select>
-        </div>
-        <small id="plattext"></small>
-      </div>
       <div class="sokfalt"><label for="sok">Sök modell</label><input id="sok" type="search" placeholder="t.ex. EX30 eller Tiguan"></div>
-      
-      <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option><option value="3000">3 000 kr</option><option value="3500">3 500 kr</option><option value="4000">4 000 kr</option><option value="5000">5 000 kr</option><option value="6000">6 000 kr</option><option value="8000">8 000 kr</option></select></div>
       <div class="sorterafalt"><label for="sortera">Sortera</label><select id="sortera">
-        <option value="total">Lägst faktisk kostnad</option><option value="manad">Lägst månadshyra</option>
-        <option value="andel">Bäst pris mot nypris</option><option value="marke">Märke A–Ö</option></select></div>
+        <option value="total">Billigast totalt (alla avgifter)</option><option value="manad">Lägst månadshyra</option>
+        <option value="andel">Mest bil för pengarna</option><option value="marke">Märke A–Ö</option></select></div>
       <div class="hel"><label>Drivmedel</label>
         <div class="chips" id="drivchips"><button type="button" class="vald" data-v="alla">Alla</button><button type="button" data-v="El">El</button><button type="button" data-v="Laddhybrid">Laddhybrid</button><button type="button" data-v="Hybrid">Hybrid</button><button type="button" data-v="Bensin">Bensin</button><button type="button" data-v="Diesel">Diesel</button></div>
         <input type="hidden" id="drivmedel" value="alla"></div>
       <input type="hidden" id="tillval" value="alla">
-      <details class="flerfilter"><summary>Fler val: körsträcka och försäkring</summary>
+      <details class="flerfilter"><summary>Fler filter: plats, maxpris, körsträcka</summary>
+        <div class="hel narabox"><label for="postnr">Nära dig</label>
+          <div class="narad">
+            <input id="postnr" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Postnummer">
+            <button type="button" id="minPlats">📍 Använd min plats</button>
+            <select id="radie" aria-label="Avstånd"><option value="0">Hela Sverige</option><option value="50">Inom 5 mil</option><option value="100">Inom 10 mil</option><option value="250" selected>Inom 25 mil</option><option value="500">Inom 50 mil</option></select>
+          </div>
+          <small id="plattext"></small>
+        </div>
         <div class="rad">
+          
+          <div><label for="maxpris">Max per månad</label><select id="maxpris"><option value="0">Inget tak</option><option value="3000">3 000 kr</option><option value="3500">3 500 kr</option><option value="4000">4 000 kr</option><option value="5000">5 000 kr</option><option value="6000">6 000 kr</option><option value="8000">8 000 kr</option></select></div>
           <div><label for="mil">Körsträcka per år</label><select id="mil"><option value="1000">1 000 mil</option><option value="1500">1 500 mil</option><option value="2000">2 000 mil</option></select></div>
           <div><label for="forsakring">Din försäkring (kr/mån)</label><input id="forsakring" type="number" min="0" step="50" value="0"></div>
         </div>
@@ -109,7 +109,7 @@
   </section>
   <footer>Jämföra Privatleasing · priser kontrollerade 16 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
-  <script src="samtycke.js?v=f6638800"></script>
-  <script src="paket.js?v=f6638800"></script>
+  <script src="samtycke.js?v=25e1a33f"></script>
+  <script src="paket.js?v=25e1a33f"></script>
 </body>
 </html>
