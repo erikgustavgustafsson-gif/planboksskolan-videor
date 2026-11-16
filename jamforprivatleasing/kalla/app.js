@@ -10,6 +10,8 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       } catch (e) {}
     }
     stat("visa");
+    // Kontot (Mina sidor) – fylls i av konto-delen längst ned när sidan laddat klart
+    var KONTO = { inloggad: false, epost: "", namn: "", telefon: "", sparade: [], kontakter: [] }, KONTAKTRADER = {}, KONTAKTNR = 0;
     document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank"); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
 
     // Gör ett märkesnamn till en adress: "Mercedes-Benz" -> "mercedes-benz", "Škoda" -> "skoda"
@@ -3699,7 +3701,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         const huvudlank = flera ? b.msida : ut(b.url), ny = flera ? "" : ` target="_blank" rel="${rel(b.url)}"`;
         return `
         <article class="car">
-          <a class="piclink" href="${huvudlank}"${ny}>${b.andel != null && b.andel < .45 ? `<span class="kortbadge">🔥 Kampanjpris</span>` : ""}${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.mnamn}" loading="lazy">` : `<div class="pic ingen"><b>${esc(b.marke)} ${esc(b.mnamn)}</b><small>Bild kommer</small></div>`}</a>
+          <a class="piclink" href="${huvudlank}"${ny}>${b.drivmedel === "El" ? `<span class="elbadge">⚡<b>100% EL</b></span>` : ""}${b.foto ? `<img class="pic" src="${bildUrl(b, "", 600)}" alt="${b.marke} ${b.mnamn}" loading="lazy">` : `<div class="pic ingen"><b>${esc(b.marke)} ${esc(b.mnamn)}</b><small>Bild kommer</small></div>`}</a>
           <div>
             <div class="brand">${visaRank ? `<span class="rank">#${i + 1}</span>` : ""}${b.marke}</div>
             <h3><a href="${b.msida}" style="color:inherit;text-decoration:none">${esc(b.marke)} ${esc(b.mnamn)}</a></h3>
@@ -3707,7 +3709,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           </div>
           <div class="price">
             ${b.m != null
-              ? `<small class="fran">${SIDA === "kampanjer" ? "Kampanjpris" : flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div>${b.forhojd || b.start || b.forsakring ? `<div class="effpris">= ${kr(b.eff)}/mån med ${[b.forhojd && "insats", b.start && "avgifter", b.forsakring && "obligatorisk försäkring"].filter(Boolean).join(" och ")} inräknat</div>` : ""}<div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
+              ? `<small class="fran">${flera ? "Från" : "Pris"}</small><div class="month">${kr(b.m)}/mån<sup class="fn"><a href="#villkor">1</a></sup></div>${b.forhojd || b.start || b.forsakring ? `<div class="effpris">= ${kr(b.eff)}/mån med ${[b.forhojd && "insats", b.start && "avgifter", b.forsakring && "obligatorisk försäkring"].filter(Boolean).join(" och ")} inräknat</div>` : ""}<div class="total">${kr(b.total)} totalt på 36 mån${flera && b.maxm > b.m ? ` · upp till ${kr(b.maxm)}/mån` : ""}</div>`
               : `<div class="month">${kr(b.manad)}/mån</div><div class="total">vid ${b.mil || "?"} mil/år · tillägg för ${valdMil} mil: fråga handlaren</div>`}
             <div class="kortpiller"><span class="antalerb">${b.antal} ${b.antal === 1 ? "erbjudande" : "erbjudanden"}${b.handlare > 1 ? ` · ${b.handlare} säljare` : ""}</span><span>36 mån</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : (b.m != null ? valdMil : b.mil).toLocaleString("sv-SE") + " mil/år"}</span></div>
             ${flera
@@ -3934,7 +3936,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       if (st.typ === "ov") {
         const mv = milVal(bil, cfg);
         const diffs = mv.map(m => cfg ? cfg.bas[m] - cfg.bas[mv[0]] : (m <= bil.mil ? 0 : bil.mer[m]));
-        h += `${bil.andel != null && bil.andel < .45 ? `<div class="kkampanj">🔥 Kampanjpris – ${pct(bil.andel)} av nypriset på 36 månader</div>` : ""}`;
+        h += `${bil.andel != null && bil.andel < .45 ? `<div class="kkampanj">${pct(bil.andel)} av nypriset på 36 månader</div>` : ""}`;
         h += `<div class="kgrupp"><h4>Det här ingår</h4>${checklista(bil)}</div>`;
         h += `<div class="kgrupp"><h4>Välj körsträcka</h4>${vagHtml(mv, diffs)}` + (mv.length === 1 ? `<small>Fler mil går ofta att välja mot en högre månadskostnad. Skriv det under önskemål, så räknar handlaren på det.</small>` : "") + `</div>`;
         h += `<div class="kgrupp"><h4>Avtal</h4><div class="kseg"><label><input type="radio" checked disabled><b>36 mån</b><small>Avtalstid</small></label><label><input type="radio" checked disabled><b>0 kr</b><small>Kontantinsats</small></label></div></div>`;
@@ -4284,14 +4286,14 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
               ${r.nypris && r.total != null ? `<p><a href="rakna.html?pris=${r.nypris}&leasing=${r.m}&start=${r.start + r.forhojd}&bil=${encodeURIComponent(r.marke + " " + r.mnamn)}#kopa">Räkna: leasa eller köpa den här bilen? →</a></p>` : ""}
             </details>
             <div class="jmfknappar">
-              <a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet →</a>${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
+              ${saljarKontakt(r) ? `<button type="button" class="cta" data-kontakt="${kontaktId(r)}">Kontakta säljaren</button><a class="annonslank" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Se annonsen ↗</a>` : `<a class="cta" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Till erbjudandet →</a>`}${arAff(r.url) ? `<small class="annons">Annonslänk</small>` : ""}
             </div>
           </article>`;
         }).join("") || "<p>Inga erbjudanden i den regionen.</p>"}</div>
         ${rader.length > jmfVisa ? `<button type="button" class="visamer" id="jmfmer">Visa fler erbjudanden (${rader.length - jmfVisa} till)</button>` : ""}
         <p class="jmffot">${rader.some(r => r.milokand) ? "Står körsträckan inte i handlarens annons visar vi den inte och räknar inget pris per mil – fråga handlaren. Sådana erbjudanden kan inte bli märkta Billigast. " : ""}Priserna gäller 36 månader. Avi- och uppläggningsavgifter är inräknade i totalkostnad och kr/mil. Kontrollerat ${KONTROLL}.</p>
         ${histHtml(mk)}
-        <div class="jmfverktyg"><button type="button" class="jmfval ${JMF.har(mk) ? "vald" : ""}" data-jmf="${mk}" aria-pressed="${JMF.har(mk)}">${JMF.har(mk) ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen"}</button><a href="rakna.html${bast ? `?leasing=${bast.m}&start=${bast.start + bast.forhojd}&ingar=${bast.ingar}&bil=${encodeURIComponent(b0.marke + " " + b0.mnamn)}` : ""}">Räkna på hela kostnaden →</a></div>`;
+        <div class="jmfverktyg"><button type="button" class="sparaknapp ${arSparad(mk) ? "vald" : ""}" data-spara="${mk}" aria-pressed="${arSparad(mk)}">${arSparad(mk) ? "♥ Sparad på Mina sidor" : "♡ Spara bilen"}</button><button type="button" class="jmfval ${JMF.har(mk) ? "vald" : ""}" data-jmf="${mk}" aria-pressed="${JMF.har(mk)}">${JMF.har(mk) ? "✓ Tillagd i jämförelsen" : "＋ Lägg till i jämförelsen"}</button><a href="rakna.html${bast ? `?leasing=${bast.m}&start=${bast.start + bast.forhojd}&ingar=${bast.ingar}&bil=${encodeURIComponent(b0.marke + " " + b0.mnamn)}` : ""}">Räkna på hela kostnaden →</a></div>`;
       document.getElementById("jmfsort").value = s;
     }
     if (jamfor) {
@@ -4507,4 +4509,172 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       } catch { svar.textContent = "Det gick inte att skicka just nu. Försök igen om en stund."; }
       knapp.disabled = false; knapp.textContent = "Bli kontaktad";
     });
-  
+
+    /* ================================================================
+       KONTO (Mina sidor) OCH KONTAKT MED SÄLJAREN
+       Inloggning med e-postlänk via konto.php. Samtal, sms och mejl går från besökarens egen
+       telefon eller e-post direkt till säljaren – vi skickar inget åt dem och ser inte vad de skriver.
+       Säljarnas telefon och e-post (SALJARE) är de som säljarna själva visar i sina annonser.
+       ================================================================ */
+    const KAN_KONTO = /^https?:$/.test(location.protocol) && !/claude|usercontent/.test(location.hostname);
+    async function kontoAnrop(a, data) {
+      const r = await fetch("konto.php", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json", "X-JP": "1" }, body: JSON.stringify({ a, ...(data || {}) }) });
+      const j = await r.json().catch(() => ({})); if (r.status === 401) { KONTO.inloggad = false; uppdKontoUI(); } return j;
+    }
+    function lokalaSparade() { try { return JSON.parse(localStorage.getItem("jp_sparade") || "[]"); } catch (e) { return []; } }
+    function sattLokala(l) { try { localStorage.setItem("jp_sparade", JSON.stringify(l.slice(0, 100))); } catch (e) {} }
+    function arSparad(mk) { return (KONTO.inloggad ? KONTO.sparade : lokalaSparade()).includes(mk); }
+    async function vaxlaSparad(mk) {
+      const pa = !arSparad(mk);
+      if (KONTO.inloggad) { const j = await kontoAnrop("spara", { mkey: mk, pa }); if (j.ok) KONTO.sparade = j.sparade; }
+      else { const l = lokalaSparade().filter(x => x !== mk); if (pa) l.unshift(mk); sattLokala(l); }
+      if (pa) stat("sparad", (MODELLER[mk] || [])[0]);
+      uppdKontoUI();
+      return pa;
+    }
+    function uppdKontoUI() {
+      document.querySelectorAll('.navlankar a[href="mina-sidor.html"]').forEach(a => a.textContent = KONTO.inloggad ? "Mina sidor" : "Logga in");
+      document.querySelectorAll("[data-spara]").forEach(b => { const pa = arSparad(b.dataset.spara); b.classList.toggle("vald", pa); b.setAttribute("aria-pressed", pa); b.textContent = pa ? "♥ Sparad på Mina sidor" : "♡ Spara bilen"; });
+      if (document.getElementById("minasidor")) ritaMinaSidor();
+    }
+    const kontoKlar = (async () => {
+      if (KAN_KONTO) try {
+        const j = await (await fetch("konto.php?a=jag", { credentials: "same-origin", cache: "no-store" })).json();
+        if (j.inloggad) {
+          Object.assign(KONTO, j);
+          const lok = lokalaSparade();
+          if (lok.length) { const s2 = await kontoAnrop("sparalista", { mkeys: lok }); if (s2.ok) { KONTO.sparade = s2.sparade; sattLokala([]); } }
+        }
+      } catch (e) {}
+      uppdKontoUI();
+    })();
+    document.addEventListener("click", async e => {
+      const b = e.target.closest("button[data-spara]"); if (!b) return;
+      const pa = await vaxlaSparad(b.dataset.spara);
+      if (pa && !KONTO.inloggad) visaTips(b, 'Sparad i den här webbläsaren. <a href="mina-sidor.html">Logga in</a> så finns den kvar på alla dina enheter.');
+    });
+    function visaTips(nara, html) {
+      let t = nara.parentElement.querySelector(".kontotips"); if (!t) { t = document.createElement("p"); t.className = "kontotips"; nara.parentElement.appendChild(t); }
+      t.innerHTML = html;
+    }
+
+    // ---------- Kontakta säljaren ----------
+    function saljarNyckel(r) {
+      if (/hedinautomotive\.se/.test(r.url || "")) return r.kalla + "|" + r.marke;
+      return r.kalla.replace(/ \(via Bilweb\)$/, "");
+    }
+    function saljarKontakt(r) { const k = typeof SALJARE !== "undefined" ? SALJARE[saljarNyckel(r)] : null; return k && (k.tel || k.epost) ? k : null; }
+    function kontaktId(r) { const id = "k" + (KONTAKTNR++); KONTAKTRADER[id] = r; return id; }
+    const arMobil = t => /^07[02369]\d{7}$/.test(t || "");
+    function kontaktText(r, namn, tel) {
+      const pris = r.manad ? `${kr(r.manad)}/mån` : "";
+      return `Hej!\n\nJag är intresserad av er ${r.marke} ${r.modell}${pris ? " för " + pris : ""} (36 mån, ${r.milokand ? "körsträcka enligt er annons" : r.mil.toLocaleString("sv-SE") + " mil/år"}).\n` +
+        `Annons: ${r.url}\n\nFinns bilen kvar, och kan ni skicka ett avtalsförslag med allt som ingår?\n\nMvh\n${namn || ""}${tel ? "\n" + tel : ""}`.trimEnd();
+    }
+    function kontaktRuta() {
+      let d = document.getElementById("kontaktruta");
+      if (!d) {
+        d = document.createElement("dialog"); d.id = "kontaktruta"; d.className = "kontaktruta"; d.setAttribute("aria-labelledby", "kontaktRubrik");
+        d.addEventListener("click", e => { if (e.target === d || e.target.closest("[data-stang]")) d.close(); });
+        document.body.appendChild(d);
+      }
+      return d;
+    }
+    async function oppnaKontakt(r) {
+      const k = saljarKontakt(r); if (!k) return;
+      await kontoKlar;
+      const d = kontaktRuta(), handl = esc(r.kalla.replace(/ \(via Bilweb\)$/, "").split(/ \(|,/)[0]);
+      d.innerHTML = `<div class="kinner">
+        <button type="button" class="kstang" data-stang aria-label="Stäng">✕</button>
+        <h2 id="kontaktRubrik">Kontakta ${handl}</h2>
+        <p class="kkbil">${esc(r.marke)} ${esc(r.modell)} · <b>${r.manad ? kr(r.manad) + "/mån" : ""}</b> · 36 mån${r.milokand ? "" : " · " + r.mil.toLocaleString("sv-SE") + " mil/år"}</p>
+        <div class="kkfalt"><label>Ditt namn<input id="kNamn" autocomplete="name" value="${esc(KONTO.namn)}"></label><label>Din telefon<input id="kTel" type="tel" autocomplete="tel" inputmode="tel" value="${esc(KONTO.telefon)}"></label></div>
+        <label class="ktextrub" for="kText">Meddelande <small>(du kan ändra det)</small></label>
+        <textarea id="kText" rows="8"></textarea>
+        <div class="kkval">
+          ${k.tel ? `<a class="kkknapp ring" data-satt="ring" href="tel:${k.tel}">📞 Ring ${esc(k.visa || k.tel)}</a>` : ""}
+          ${k.epost ? `<a class="kkknapp mejl" data-satt="mejl" href="#">✉️ Mejla säljaren</a>` : ""}
+          ${arMobil(k.tel) ? `<a class="kkknapp sms" data-satt="sms" href="#">💬 Skicka sms</a>` : ""}
+          <a class="kkknapp kkannons" data-satt="annons" href="${ut(r.url)}" target="_blank" rel="${rel(r.url)}">Se annonsen ↗</a>
+        </div>
+        <p class="kkinfo">Samtalet eller mejlet går från din egen telefon eller e-post direkt till säljaren. Vi skickar inget åt dig och ser inte vad du skriver.
+        ${KONTO.inloggad ? "Kontakten sparas på <a href=\"mina-sidor.html\">Mina sidor</a>." : "<a href=\"mina-sidor.html\">Logga in</a> om du vill spara bilen och se vilka säljare du har kontaktat."}</p>
+      </div>`;
+      const txt = d.querySelector("#kText"), nm = d.querySelector("#kNamn"), tl = d.querySelector("#kTel");
+      const fyll = () => { txt.value = kontaktText(r, nm.value.trim(), tl.value.trim()); };
+      fyll(); let andrad = false; txt.addEventListener("input", () => andrad = true);
+      [nm, tl].forEach(f => f.addEventListener("input", () => { if (!andrad) fyll(); }));
+      d.querySelectorAll("[data-satt]").forEach(a => a.addEventListener("click", ev => {
+        const satt = a.dataset.satt, amne = `Privatleasing ${r.marke} ${r.modell}`;
+        if (satt === "mejl") { ev.preventDefault(); location.href = `mailto:${k.epost}?subject=${encodeURIComponent(amne)}&body=${encodeURIComponent(txt.value)}`; }
+        if (satt === "sms") { ev.preventDefault(); location.href = `sms:${k.tel}${/iPhone|iPad/.test(navigator.userAgent) ? "&" : "?"}body=${encodeURIComponent(txt.value)}`; }
+        stat("kontakt-" + satt, r); if (window.jpHandelse) jpHandelse("kontakt", { satt, saljare: handl, bil: r.marke + " " + r.mnamn });
+        if (KONTO.inloggad) {
+          kontoAnrop("kontakt", { mkey: r.mkey, bil: r.marke + " " + r.modell, saljare: r.kalla.replace(/ \(via Bilweb\)$/, ""), satt, pris: r.manad, url: r.url });
+          if (nm.value.trim() !== KONTO.namn || tl.value.trim() !== KONTO.telefon) { KONTO.namn = nm.value.trim(); KONTO.telefon = tl.value.trim(); kontoAnrop("uppgifter", { namn: KONTO.namn, telefon: KONTO.telefon }); }
+        }
+      }));
+      if (d.showModal) d.showModal(); else d.setAttribute("open", "");
+      stat("kontaktruta", r);
+    }
+    document.addEventListener("click", e => {
+      const b = e.target.closest("button[data-kontakt]"); if (!b) return;
+      const r = KONTAKTRADER[b.dataset.kontakt]; if (r) oppnaKontakt(r);
+    });
+
+    // ---------- Mina sidor ----------
+    let msLage = "", msEpost = "";
+    function ritaMinaSidor() {
+      const el = document.getElementById("minasidor"); if (!el) return;
+      if (!KAN_KONTO) { el.innerHTML = `<section class="mskort"><h2>Mina sidor</h2><p>Inloggningen fungerar på jamforprivatleasing.se – det här är en förhandsvisning.</p></section>` + msSparade(lokalaSparade()); return; }
+      if (!KONTO.inloggad) {
+        el.innerHTML = msLage === "skickat"
+          ? `<section class="mskort"><h2>Kolla din e-post</h2><p>Vi har skickat en inloggningslänk till <b>${esc(msEpost)}</b>. Den gäller i 20 minuter. Hittar du den inte – titta i skräpposten.</p><button type="button" class="lank" id="msIgen">Skicka till en annan adress</button></section>`
+          : `<section class="mskort"><h2>Logga in eller skapa konto</h2>
+              <p>Skriv din e-post så mejlar vi en inloggningslänk. Inget lösenord behövs – finns det inget konto skapas ett.</p>
+              <form id="msForm" class="msform" novalidate><input type="email" id="msEpost" required autocomplete="email" placeholder="din@epost.se" aria-label="Din e-postadress"><button type="submit">Skicka länk</button></form>
+              <p class="msfel" id="msFel" hidden></p>
+              <ul class="msfordelar"><li><b>Spara bilar</b> och se det lägsta priset varje gång du kommer tillbaka</li><li><b>Kontakta säljare</b> med dina uppgifter ifyllda</li><li><b>Se vilka säljare</b> du har ringt eller mejlat, och om vilken bil</li></ul>
+              <p class="msliten">Vi sparar bara din e-post och det du själv lägger in. Du kan radera kontot när du vill. <a href="integritetspolicy.html#konto">Så hanterar vi dina uppgifter</a>.</p>
+            </section>` + msSparade(lokalaSparade());
+        const f = document.getElementById("msForm");
+        if (f) f.addEventListener("submit", async ev => {
+          ev.preventDefault(); const ep = document.getElementById("msEpost").value.trim(), fel = document.getElementById("msFel"), kn = f.querySelector("button");
+          if (!/^\S+@\S+\.\S+$/.test(ep)) { fel.hidden = false; fel.textContent = "Skriv din e-postadress."; return; }
+          kn.disabled = true; kn.textContent = "Skickar…";
+          try { const j = await kontoAnrop("lank", { epost: ep }); if (j.ok) { msLage = "skickat"; msEpost = ep; ritaMinaSidor(); return; } fel.hidden = false; fel.textContent = j.fel || "Det gick inte just nu. Försök igen om en stund."; }
+          catch (e2) { fel.hidden = false; fel.textContent = "Det gick inte just nu. Försök igen om en stund."; }
+          kn.disabled = false; kn.textContent = "Skicka länk";
+        });
+        const ig = document.getElementById("msIgen"); if (ig) ig.onclick = () => { msLage = ""; ritaMinaSidor(); };
+        return;
+      }
+      const datum = t => new Date(t * 1000).toLocaleDateString("sv-SE", { day: "numeric", month: "short", year: "numeric" });
+      const sattTxt = { ring: "📞 Ringde", sms: "💬 Sms", mejl: "✉️ Mejlade", annons: "↗ Öppnade annonsen" };
+      el.innerHTML = `<section class="mskort"><h2>Hej${KONTO.namn ? " " + esc(KONTO.namn.split(" ")[0]) : ""}!</h2><p>Du är inloggad som <b>${esc(KONTO.epost)}</b>.</p></section>`
+        + msSparade(KONTO.sparade)
+        + `<section class="mskort"><h2>Mina kontakter</h2>${KONTO.kontakter.length ? `<ul class="mskontakter">${KONTO.kontakter.map(k => `<li><div><b>${esc(k.bil)}</b><span>${esc(k.saljare)}${k.pris ? " · " + kr(k.pris) + "/mån" : ""}</span></div><div class="mskmeta">${sattTxt[k.satt] || ""} · ${datum(k.t)}${k.url ? ` · <a href="${esc(k.url)}" target="_blank" rel="noopener">Annonsen ↗</a>` : ""}${MODELLER[k.mkey] ? ` · <a href="privatleasing-${k.mkey}.html">Jämför igen →</a>` : ""}</div></li>`).join("")}</ul>` : "<p>Du har inte kontaktat någon säljare än. Tryck på <b>Kontakta säljaren</b> på ett erbjudande.</p>"}</section>`
+        + `<section class="mskort"><h2>Mina uppgifter</h2><p class="msliten">Fylls i när du kontaktar en säljare. Valfritt.</p>
+            <form id="msUpp" class="msupp"><label>Namn<input id="msNamn" autocomplete="name" value="${esc(KONTO.namn)}"></label><label>Telefon<input id="msTel" type="tel" autocomplete="tel" value="${esc(KONTO.telefon)}"></label><button type="submit">Spara</button><span id="msUppOk" class="msok" hidden>Sparat ✓</span></form></section>`
+        + `<section class="mskort"><h2>Konto</h2><div class="mskonto"><button type="button" id="msUt">Logga ut</button><button type="button" id="msRadera" class="farlig">Radera mitt konto</button></div><p class="msliten" id="msRaderaInfo" hidden>Tryck igen för att radera kontot, dina sparade bilar och kontakthistoriken. Det går inte att ångra.</p></section>`;
+      document.getElementById("msUpp").addEventListener("submit", async ev => {
+        ev.preventDefault(); KONTO.namn = document.getElementById("msNamn").value.trim(); KONTO.telefon = document.getElementById("msTel").value.trim();
+        const j = await kontoAnrop("uppgifter", { namn: KONTO.namn, telefon: KONTO.telefon }); if (j.ok) document.getElementById("msUppOk").hidden = false;
+      });
+      document.getElementById("msUt").onclick = async () => { await kontoAnrop("ut"); Object.assign(KONTO, { inloggad: false, epost: "", namn: "", telefon: "", sparade: [], kontakter: [] }); uppdKontoUI(); };
+      let radSteg = 0; document.getElementById("msRadera").onclick = async () => {
+        if (!radSteg++) { document.getElementById("msRaderaInfo").hidden = false; document.getElementById("msRadera").textContent = "Ja, radera allt"; return; }
+        const j = await kontoAnrop("radera"); if (j.ok) { Object.assign(KONTO, { inloggad: false, epost: "", namn: "", telefon: "", sparade: [], kontakter: [] }); msLage = "raderat"; uppdKontoUI();
+          document.getElementById("minasidor").insertAdjacentHTML("afterbegin", '<p class="msok">Ditt konto och allt som hörde till det är raderat.</p>'); }
+      };
+    }
+    function msSparade(lista) {
+      const l = lista.filter(mk => MODELLER[mk]);
+      if (!l.length) return KONTO.inloggad ? `<section class="mskort"><h2>Sparade bilar</h2><p>Du har inga sparade bilar än. Tryck på <b>♡ Spara bilen</b> på en bils sida.</p></section>` : "";
+      return `<section class="mskort"><h2>Sparade bilar${KONTO.inloggad ? "" : " i den här webbläsaren"}</h2><div class="mssparade">${l.map(mk => {
+        const sm = modellSammanfattning(mk), b = sm.bast;
+        return `<article><a href="privatleasing-${mk}.html">${b.foto ? `<img src="${bildUrl(b, "", 400)}" alt="" loading="lazy">` : ""}<b>${esc(b.marke)} ${esc(b.mnamn)}</b><span>från <b>${kr(b.eff)}/mån</b> · ${sm.antal} ${sm.antal === 1 ? "erbjudande" : "erbjudanden"}</span></a><button type="button" data-spara="${mk}" class="sparaknapp vald">♥ Sparad</button></article>`;
+      }).join("")}</div></section>`;
+    }
+    if (new URLSearchParams(location.search).get("inloggad") === "1") { try { history.replaceState(null, "", location.pathname); } catch (e) {} }
+

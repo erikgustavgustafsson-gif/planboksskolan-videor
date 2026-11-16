@@ -1,5 +1,6 @@
 ErrorDocument 404 /404.html
 AddDefaultCharset UTF-8
+Options -Indexes
 
 # Alla adresser (http, www och den tillfälliga Strato-adressen) går till https://jamforprivatleasing.se
 RewriteEngine On
@@ -7,6 +8,9 @@ RewriteCond %{HTTP_HOST} !^jamforprivatleasing\.se$ [NC,OR]
 RewriteCond %{HTTPS} !=on
 RewriteCond %{HTTP:X-Forwarded-Proto} !=https
 RewriteRule ^(.*)$ https://jamforprivatleasing.se/$1 [R=301,L]
+
+# Kontouppgifter och statistik ligger i data/ – aldrig åtkomligt utifrån
+RewriteRule ^data(/|$) - [F,L]
 
 # Sammanslagna modellsidor: gamla adresser skickas till den nya sidan
 RewriteRule ^privatleasing-audi-a2\.html$ /privatleasing-audi-a2-e-tron.html [R=301,L]

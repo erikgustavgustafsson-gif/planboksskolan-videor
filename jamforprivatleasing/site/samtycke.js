@@ -67,7 +67,7 @@ const SPARNING = {
       <b>Får vi använda kakor?</b>
       <p>${harAnnons ? "Vi vill mäta hur sidan används och kunna visa relevant reklam, hos oss och på andra sajter. Då sparas kakor på din enhet och uppgifter delas med våra partner." : "Vi vill mäta hur sidan används med Google Analytics, så att vi kan göra den bättre. Då sparas kakor på din enhet och Google får uppgifter om ditt besök."} Du väljer själv, och sidan fungerar lika bra om du säger nej. <a href="integritetspolicy.html#kakor">Läs mer</a></p>
       <div class="kakval" ${installningar ? "" : "hidden"}>
-        <label><input type="checkbox" checked disabled> <span><b>Nödvändiga</b> – ditt val i den här rutan och sådant du själv sparar (plats, jämförelse). Kan inte stängas av.</span></label>
+        <label><input type="checkbox" checked disabled> <span><b>Nödvändiga</b> – ditt val i den här rutan, inloggningen på Mina sidor och sådant du själv sparar (plats, jämförelse). Kan inte stängas av.</span></label>
         <label><input type="checkbox" id="kakStat" ${s.stat ? "checked" : ""}> <span><b>Statistik</b> – hur många som besöker sidan och vad de tittar på (Google Analytics).</span></label>
         ${harAnnons ? `<label><input type="checkbox" id="kakAnnons" ${s.annons ? "checked" : ""}> <span><b>Marknadsföring</b> – personlig reklam och mätning av annonser (Google, Meta, TikTok).</span></label>` : ""}
       </div>

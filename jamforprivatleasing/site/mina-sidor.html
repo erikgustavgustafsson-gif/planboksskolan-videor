@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- Jämföra Privatleasing – byggs av kalla/build.py. Stil: stil.css, logik: app.js, bilar och priser: i app.js (BILAR) och konfig.js. -->
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mina sidor – sparade bilar och kontakter | Jämföra Privatleasing</title>
+  <meta name="description" content="Spara bilar, kontakta säljare och se vilka du har kontaktat. Logga in med en länk till din e-post – inget lösenord.">
+  <link rel="canonical" href="https://jamforprivatleasing.se/mina-sidor.html">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#0E2A47">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:site_name" content="Jämföra Privatleasing">
+  <meta property="og:title" content="Mina sidor – sparade bilar och kontakter | Jämföra Privatleasing">
+  <meta property="og:description" content="Spara bilar, kontakta säljare och se vilka du har kontaktat. Logga in med en länk till din e-post – inget lösenord.">
+  <meta property="og:url" content="https://jamforprivatleasing.se/mina-sidor.html">
+  <meta property="og:image" content="https://jamforprivatleasing.se/bilder/delning.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="bilder/app-ikon.png">
+  <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stil.css?v=4bf3ac8d">
+  
+</head>
+<body data-sida="minasidor">
+  <nav class="topnav">
+    <div class="wrap navrad">
+      <a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a>
+      <button type="button" class="menyknapp" id="menyKnapp" aria-label="Meny" aria-expanded="false">☰</button>
+      <div class="navlankar"><a href="index.html">Start</a><a href="kampanjer.html">Mest för pengarna</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="jamfor-bilar.html">Jämför bilar</a><a href="rakna.html">Räkna</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a><a href="mina-sidor.html" class="aktiv" aria-current="page">Logga in</a></div>
+    </div>
+  </nav>
+
+  <header class="sidhuvud">
+    <div class="wrap"><div class="brodsmula"><a href="index.html">Start</a> › Mina sidor</div>
+      <h1>Mina sidor</h1>
+      <p>Spara bilar och håll koll på vilka säljare du har kontaktat. Du loggar in med en länk till din e-post – inget lösenord.</p>
+    </div>
+  </header>
+  <main class="wrap" style="padding: 0 16px;"><div id="minasidor" class="minasidor"><p>Laddar…</p></div></main>
+  <dialog id="konf" aria-labelledby="konfTitel">
+    <div class="kh"><span class="klogo"><b>JÄMFÖRA</b><br>PRIVATLEASING</span><h2 id="konfTitel">Bygg din bil</h2><button type="button" id="konfStang" aria-label="Stäng">×</button></div>
+    <nav class="kprog" id="konfSteg" aria-label="Steg"></nav>
+    <div class="kgrid">
+      <aside class="kvisual" id="konfBild"></aside>
+      <div class="kpanel" id="konfPanel"><div class="kb" id="konfBody"></div></div>
+    </div>
+    <div class="kfot">
+      <div class="ksum" id="konfSum"></div>
+      <button type="button" class="tillbaka" id="konfBak">Tillbaka</button>
+      <button type="button" class="nasta" id="konfNasta">Fortsätt</button>
+    </div>
+  </dialog>
+
+  <footer class="sidfot">
+    <div class="wrap fotrad">
+      <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
+      <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="#" data-kakor>Kakinställningar</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
+      <div><b>Företag</b><span id="fotforetag"></span></div>
+    </div>
+  </footer>
+  <section class="wrap kallor" style="padding: 0 16px;">
+    <details>
+      <summary>Bildkällor</summary>
+      <ul id="kallor"></ul>
+    </details>
+  </section>
+  <footer>Jämföra Privatleasing · priser kontrollerade 16 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+
+  <script src="samtycke.js?v=4bf3ac8d"></script>
+  <script src="paket.js?v=4bf3ac8d"></script>
+</body>
+</html>

@@ -70,6 +70,12 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - Slås fler tjänster på (Ads, Meta, TikTok, AdSense) måste integritetspolicyn uppdateras samtidigt. Prisbevakningen (bevaka.php) ligger kvar på grenen `kakor-senare`.
 - Nya bilbilder: använd det snabba flödet i `verktyg/bildflode/LASMIG.md`.
 
+## Konto och kontakt med säljare (16 nov 2026)
+- `site/konto.php`: Mina sidor. Inloggning med e-postlänk (inga lösenord), sparade bilar, kontakthistorik, radera konto. Data i `data/konto-<slump>/` på servern – **aldrig i repot**, och data/ ska aldrig skrivas över av zip-paketet.
+- `kalla/saljare.json` = säljarnas telefon och e-post som de själva visar i sina annonser (nyckel: Bilweb-säljarens namn, Hedin "Hedin Automotive <ort>|<märke>"). build.py gör `site/saljare.js` och lägger den i paket.js.
+- Nya säljare i den dagliga körningen: kör `verktyg/skord_kontakt.py '<json-lista med befintliga nycklar>'` i sandlådan, för över kontakt.tsv som gzip-PNG och kör `python3 verktyg/gen_kontakt.py kontakt.tsv kalla/saljare.json`. Säljare utan kontakt får knappen "Till erbjudandet" som förut.
+- Samtal, sms och mejl öppnas i besökarens egen telefon/e-post – sidan skickar inget till säljarna.
+
 ## Regler
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.

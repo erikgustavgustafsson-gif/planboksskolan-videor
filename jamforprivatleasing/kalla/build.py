@@ -55,6 +55,8 @@ def kr(n):
 ICON = re.search(r'<link rel="icon"[^>]*>', ORIG).group(0)
 HERO = block('<header class="hero">', "</header>")
 TOPP = block('<section class="topp" id="kampanjer"', "</section>")
+TOPP = (TOPP.replace('Bästa kampanjerna just nu', 'Lägsta priset just nu')
+        .replace('Bästa kampanj = lägst kostnad i förhållande till nypriset.', 'Priset är det billigaste erbjudandet på modellen just nu, med alla avgifter inräknade.'))
 TOPP = TOPP.replace('<div class="topp10" id="topp"></div>', '<div class="topp10" id="topp"></div><p class="sveptips">Svep för att se alla fem →</p>')
 STEG = block('<section class="steg2" id="sa-funkar-det">', "</section>")
 INGAR = block('<section class="ingar" id="vad-ingar">', "</section>")
@@ -84,17 +86,17 @@ EJBIL = ""   # formuläret "Hittar du inte din bil?" används inte när vi bara 
 
 HERO = """<header class="hero foto">
     <div class="wrap herotext">
-      <h1>Jämför privatleasing och hitta bästa kampanjen</h1>
+      <h1>Jämför privatleasing på alla nya bilar</h1>
       <p class="heroslogan">Alla märken. Alla avgifter. Ett pris.</p>
       <p class="heroingress">Vi jämför märkenas och handlarnas privatleasing på nya bilar – med insats och avgifter inräknade, billigast överst och kontrollerat varje dag.</p>
       <form class="startsok" id="startsok" role="search"><input name="q" type="search" list="modellforslag" placeholder="Sök bil, t.ex. Volvo EX30" aria-label="Sök bil"><datalist id="modellforslag"></datalist><button type="submit">Jämför</button></form>
-      <div class="heroknappar"><a class="knapp" href="kampanjer.html">Se kampanjerna</a><a class="knapp ljus" href="alla-bilar.html">Jämför alla bilar</a></div>
+      <div class="heroknappar"><a class="knapp" href="billigaste-privatleasing.html">Billigast just nu</a><a class="knapp ljus" href="alla-bilar.html">Jämför alla bilar</a></div>
       <div class="trust" id="trust"></div>
     </div>
   </header>"""
 
-MENY = [("index.html", "Start"), ("kampanjer.html", "Kampanjer"), ("alla-bilar.html", "Alla bilar"),
-        ("marken.html", "Märken"), ("jamfor-bilar.html", "Jämför bilar"), ("rakna.html", "Räkna"), ("guide.html", "Guide"), ("fragor.html", "Frågor & svar")]
+MENY = [("index.html", "Start"), ("kampanjer.html", "Mest för pengarna"), ("alla-bilar.html", "Alla bilar"),
+        ("marken.html", "Märken"), ("jamfor-bilar.html", "Jämför bilar"), ("rakna.html", "Räkna"), ("guide.html", "Guide"), ("fragor.html", "Frågor & svar"), ("mina-sidor.html", "Logga in")]
 
 
 def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, ogtitel=None, modell="", forval=None):
@@ -364,7 +366,7 @@ sidor["index.html"] = sida(
     f"Jämför {antal_bilar} privatleasingerbjudanden från märken och handlare på {len({b['mkey'] for b in BILAR})} nya bilmodeller. Insats och avgifter inräknade, billigast överst, kontrollerat varje dag.",
     f"""
   {HERO}
-  {TOPP.replace('</small>', '</small><p style="text-align:center;margin:18px 0 0"><a class="knapp" href="kampanjer.html">Se alla kampanjer →</a></p>', 1)}
+  {TOPP.replace('</small>', '</small><p style="text-align:center;margin:18px 0 0"><a class="knapp" href="kampanjer.html">Mest bil för pengarna →</a></p>', 1)}
   <section class="block">
     <div class="wrap">
       <h2>Vad letar du efter?</h2>
@@ -405,19 +407,19 @@ sidor["index.html"] = sida(
   {STEG}
   <div class="wrap" style="padding:0 16px">{VILLKOR}</div>""",
     aktiv="index.html", sida_typ="start", ld=ORG_LD,
-    ogtitel="Jämför privatleasing – hitta bästa leasingkampanjen 2026")
+    ogtitel="Jämför privatleasing – alla märken, alla avgifter, ett pris")
 
 # ---------- Kampanjer ----------
 sidor["kampanjer.html"] = sida(
     "kampanjer.html",
-    f"Privatleasing kampanjer – bästa erbjudandena just nu ({MANAD}) | Jämföra Privatleasing",
-    "De bästa privatleasingkampanjerna just nu, kontrollerade varje dag. Bara bilar där du betalar under 45 % av nypriset på 36 månader.",
-    sidhuvud("Bästa privatleasingkampanjerna just nu",
-             "Här visar vi bara erbjudanden med <b>bra</b> eller <b>mycket bra</b> pris – där du betalar under 45 % av bilens nypris på 36 månader, med alla avgifter inräknade.",
-             brod((None, "Kampanjer")))
-    + "\n  " + TOPP.replace(' id="kampanjer"', "").replace('<h2 id="toppRubrik" class="sektionsrubrik">Bästa kampanjerna just nu</h2>', '<h2 id="toppRubrik" class="sektionsrubrik">Topp 5 bland de mest leasade bilarna</h2>')
-    + lista_html("Alla bra kampanjer", ejbil=True),
-    aktiv="kampanjer.html", sida_typ="kampanjer", ld=[brod_ld(("kampanjer.html", "Kampanjer"))])
+    f"Privatleasing kampanjer jämförda – mest bil för pengarna ({MANAD}) | Jämföra Privatleasing",
+    "Märkenas och handlarnas privatleasingerbjudanden jämförda mot bilens nypris. Här visas bilarna där du betalar under 45 % av nypriset på 36 månader. Kontrolleras varje dag.",
+    sidhuvud("Mest bil för pengarna",
+             "Bilarna där du betalar minst i förhållande till bilens nypris – under 45 % på 36 månader, med alla avgifter inräknade. Vi tar inte betalt av säljarna, så ordningen bestäms bara av priset.",
+             brod((None, "Mest för pengarna")))
+    + "\n  " + TOPP.replace(' id="kampanjer"', "").replace('<h2 id="toppRubrik" class="sektionsrubrik">Lägsta priset just nu</h2>', '<h2 id="toppRubrik" class="sektionsrubrik">Topp 5 bland de mest leasade bilarna</h2>')
+    + lista_html("Lägst andel av nypriset", ejbil=True),
+    aktiv="kampanjer.html", sida_typ="kampanjer", ld=[brod_ld(("kampanjer.html", "Mest för pengarna"))])
 
 # ---------- Alla bilar ----------
 sidor["alla-bilar.html"] = sida(
@@ -436,7 +438,7 @@ sidor["marken.html"] = sida(
     "marken.html",
     "Privatleasing per bilmärke 2026 – Volvo, Volkswagen, Tesla med flera | Jämföra Privatleasing",
     f"Jämför privatleasing hos {len(MARKEN)} bilmärken. Se alla erbjudanden för ditt märke med totalpris på 36 månader.",
-    sidhuvud("Privatleasing per märke", "Välj märke för att se alla erbjudanden, billigaste modellen och bästa kampanjen.", brod((None, "Märken")))
+    sidhuvud("Privatleasing per märke", "Välj märke för att se alla erbjudanden och vilken modell som är billigast just nu.", brod((None, "Märken")))
     + MARKE_BLOCK.replace("<h2>Privatleasing per märke</h2>", "").replace('class="block"', 'class="block ljus"'),
     aktiv="marken.html", sida_typ="marken", ld=[brod_ld(("marken.html", "Märken"))])
 
@@ -524,6 +526,16 @@ sidor["jamfor-bilar.html"] = sida(
 # ---------- Räkna: hela kostnaden + leasa eller köpa ----------
 def falt(id_, text, hjalp="", varde="", ph=""):
     return f'<div><label for="{id_}">{text}{f" <small>{hjalp}</small>" if hjalp else ""}</label><input id="{id_}" type="number" inputmode="numeric" min="0" value="{varde}" placeholder="{ph}"></div>'
+
+sidor["mina-sidor.html"] = sida(
+    "mina-sidor.html",
+    "Mina sidor – sparade bilar och kontakter | Jämföra Privatleasing",
+    "Spara bilar, kontakta säljare och se vilka du har kontaktat. Logga in med en länk till din e-post – inget lösenord.",
+    sidhuvud("Mina sidor", "Spara bilar och håll koll på vilka säljare du har kontaktat. Du loggar in med en länk till din e-post – inget lösenord.", brod((None, "Mina sidor")))
+    + """
+  <main class="wrap" style="padding: 0 16px;"><div id="minasidor" class="minasidor"><p>Laddar…</p></div></main>""",
+    aktiv="mina-sidor.html", sida_typ="minasidor")
+sidor["mina-sidor.html"] = sidor["mina-sidor.html"].replace('<meta name="robots" content="index, follow">', '<meta name="robots" content="noindex, follow">')
 
 sidor["rakna.html"] = sida(
     "rakna.html",
@@ -799,7 +811,9 @@ TEXTFIX = {
 }
 # All kod i EN fil (paket.js): sidan hämtar en fil i stället för fem – snabbare och topplistan ritas direkt.
 # De enskilda filerna finns kvar (foretag.js används av villkorssidorna, prishistorik.js av prisbevakningen).
-PAKET = "\n;\n".join((UT / f).read_text(encoding="utf-8") for f in ("foretag.js", "affiliate.js", "bildkalla.js", "prishistorik.js")) + "\n;\n" + (HIT / "app.js").read_text(encoding="utf-8")
+import json as _json
+(UT / "saljare.js").write_text("// Säljarnas telefon och e-post – som de själva visar i sina annonser. Byggs av verktyg/gen_kontakt.py.\nconst SALJARE = " + _json.dumps(_json.loads((HIT / "saljare.json").read_text(encoding="utf-8")), ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
+PAKET = "\n;\n".join((UT / f).read_text(encoding="utf-8") for f in ("foretag.js", "affiliate.js", "bildkalla.js", "prishistorik.js", "saljare.js")) + "\n;\n" + (HIT / "app.js").read_text(encoding="utf-8")
 (UT / "paket.js").write_text(PAKET, encoding="utf-8")
 PVER = hashlib.md5((PAKET + (HIT / "stil.css").read_text(encoding="utf-8")).encode("utf-8")).hexdigest()[:8]
 _traff = {k: 0 for k in TEXTFIX}
@@ -815,7 +829,7 @@ shutil.copy(HIT / "app.js", UT / "app.js")
 ovriga = ["om-oss.html", "villkor.html", "integritetspolicy.html"]
 prio = {"index.html": "1.0", "alla-bilar.html": "0.9", "kampanjer.html": "0.9", "marken.html": "0.7", "guide.html": "0.6", "fragor.html": "0.6"}
 rader = []
-for fil in list(sidor) + ovriga:
+for fil in [f for f in sidor if f != "mina-sidor.html"] + ovriga:
     loc = DOMAN + ("" if fil == "index.html" else fil)
     p = prio.get(fil, "0.8" if fil.startswith("privatleasing-") else "0.2")
     rader.append(f"  <url><loc>{loc}</loc><lastmod>{DATUM}</lastmod><priority>{p}</priority></url>")
