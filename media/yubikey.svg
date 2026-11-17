@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="520" viewBox="0 0 700 520">
+<g transform="rotate(-12 350 260)">
+<rect x="150" y="190" width="380" height="150" rx="28" fill="#000" opacity="0.22" transform="translate(10,14)"/>
+<rect x="150" y="190" width="380" height="150" rx="28" fill="#1B2238"/>
+<rect x="520" y="225" width="90" height="80" rx="8" fill="#C9CED8"/>
+<rect x="540" y="240" width="18" height="14" rx="3" fill="#8A93A6"/><rect x="540" y="276" width="18" height="14" rx="3" fill="#8A93A6"/>
+<circle cx="205" cy="265" r="22" fill="#F7EFE0" stroke="#1B2238" stroke-width="0"/>
+<circle cx="205" cy="265" r="10" fill="#1B2238"/>
+<circle cx="350" cy="265" r="46" fill="#F7C548"/>
+<circle cx="350" cy="265" r="30" fill="#E3AE2E"/>
+</g>
+<path d="M350 70 l70 26 v58 c0 48 -32 82 -70 98 c-38 -16 -70 -50 -70 -98 v-58 z" fill="#48AA7A"/>
+<path d="M322 160 l20 20 l38 -42" stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="350" y="470" font-family="Inter Display" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle">säkerhetsnyckel</text>
+</svg>

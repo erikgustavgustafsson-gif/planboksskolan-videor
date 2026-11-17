@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="520" viewBox="0 0 860 520">
+<rect x="40" y="30" width="780" height="460" rx="32" fill="#000" opacity="0.2" transform="translate(8,12)"/>
+<rect x="40" y="30" width="780" height="460" rx="32" fill="#FFFFFF"/>
+<text x="90" y="100" font-family="Inter Display" font-weight="900" font-size="40" fill="#1B2238">Yubico 2026</text>
+<line x1="90" y1="430" x2="770" y2="430" stroke="#D9DEE8" stroke-width="5"/>
+<polyline points="90,380 160,370 230,385 300,350 370,340 440,300 510,310 580,240 620,250 660,170 700,150 760,140" fill="none" stroke="#48AA7A" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="760" cy="140" r="14" fill="#48AA7A"/>
+<text x="90" y="470" font-family="Inter Display" font-weight="600" font-size="22" fill="#9AA3B5">jan</text>
+<text x="770" y="470" font-family="Inter Display" font-weight="600" font-size="22" fill="#9AA3B5" text-anchor="end">illustration · nov</text>
+</svg>

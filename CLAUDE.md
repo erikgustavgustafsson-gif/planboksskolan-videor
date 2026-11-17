@@ -14,10 +14,12 @@ TikTok-kontot **@planboksskolan** ("Skolan du aldrig fick om pengar – ny lekti
    - något som ändras/försvinner med ett datum ("Har du X? Snart …")
    - en konkret räkneexempel-siffra
    - "visste du"-tips, tvärtom-påståenden ("Sluta spara det som blir över")
-3. **Faktakolla varje siffra** mot minst en tillförlitlig källa (myndighet, bank, Riksbanken, Skatteverket, Konsumentverket, större medier). Hittar du ingen säker källa: välj ett annat ämne eller ta bort siffran. Gissa aldrig belopp, räntor eller datum. Inga råd om enskilda aktier.
+3. **Faktakolla varje siffra** mot minst en tillförlitlig källa (myndighet, bank, Riksbanken, Skatteverket, Konsumentverket, större medier). Hittar du ingen säker källa: välj ett annat ämne eller ta bort siffran. Gissa aldrig belopp, räntor eller datum. Inga köp- eller säljråd om enskilda aktier (fakta om vad som hänt går bra).
 4. **Skriv specen** `specs/<YYYY-MM-DD>_<slug>.json` enligt `mall/exempel_spec.json`:
    - 5 scener: `hook` → 2–3 av (`cards`, `statement`, `number`) → `cta`. Bakgrunden växlar automatiskt.
-   - All `say`-text tillsammans **300–360 tecken** (≈ 25–29 s). Siffror skrivs med ord i `say` ("tiotusen kronor") men med siffror i bild.
+   - All `say`-text tillsammans **230–290 tecken** (≈ 17–22 s). Kortare videor ses klart oftare (snittittartid ligger runt 8 s). Siffror skrivs med ord i `say` ("tiotusen kronor") men med siffror i bild.
+   - **Det viktigaste ska komma inom 8 sekunder** – inte sist i videon.
+   - **Lärdom (nov 2026):** videor med kända bolag/aktier kopplade till tittarens egna pengar och något som händer nu (Nvidia + din pension, tre omtalade aktier) fick 2–3 gånger fler visningar. Blanda gärna in sådana ämnen, men ge aldrig köp- eller säljråd om enskilda aktier – berätta vad som hänt och vad man ska tänka på, och skriv "Inget köp- eller säljråd" i fäst kommentar.
    - **Kroken** (första meningen) ska vara skarp från första ordet: ett påstående, en fråga tittaren känner igen sig i, eller en siffra. Aldrig "Om du …" eller vaga "förmodligen".
    - Texter i bild: korta (max ~22 tecken per rad i `big`/`highlight`, ~28 i `lines`).
    - Fyll i `title` (krävs av TikTok), `caption` (kort text + fråga till tittarna + högst 5 hashtags inkl. #plånboksskolan), `pinned_comment`, `sources` (URL:er) och `cover`.

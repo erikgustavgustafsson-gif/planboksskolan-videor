@@ -1,0 +1,74 @@
+{
+  "slug": "2026-11-17_yubico-dubblats",
+  "title": "Den här svenska aktien har dubblats i år",
+  "caption": "Yubico har mer än dubblats i år och toppar Stockholmsbörsens storbolagslista – men få har hört talas om bolaget 👀 Inga köptips, bara läget.\n\nHade du hört talas om Yubico? 👇\n\n#aktier #yubico #börsen #privatekonomi #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. +123 % i år enligt Placera/Millistream (9 nov). Det som stigit mycket kan också falla mycket. Hade du hört talas om Yubico? Ja 🙋 / Aldrig 😳",
+  "sources": [
+    "https://placera.se/nyheter/storagarna-som-taljer-guld-pa-storbolagens-rally-2026-11-10 (Yubico +123 % i år, bästa Large Cap-aktien, Millistream 2026-11-09)",
+    "https://www.aktiespararna.se/nyheter/oktobers-kursraketer-aktierna-som-rusade-mest (Yubico steg drygt 35 % i oktober, bl.a. på oro för säkerhetsrisker kopplade till AI)"
+  ],
+  "cover": {
+    "title": [
+      "DUBBLATS",
+      "I ÅR"
+    ],
+    "pill": "Svensk aktie",
+    "label": "Ingen känner till den:",
+    "big": "+123 %",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Den här svenska aktien har mer än dubblats i år. Och nästan ingen känner till den.",
+      "kicker": "SVENSK AKTIE",
+      "big": "DUBBLATS I ÅR",
+      "sub": "och ingen känner till den",
+      "image": "media/yubico_upp.png",
+      "image_width": 760,
+      "image_y": 1450
+    },
+    {
+      "type": "statement",
+      "bg": "navy",
+      "say": "Yubico gör små säkerhetsnycklar som skyddar dina inloggningar.",
+      "title": "YUBICO",
+      "highlight": "SÄKERHETSNYCKLAR",
+      "chip": "skyddar inloggningar",
+      "image": "media/yubikey.png",
+      "image_width": 620,
+      "image_y": 1400
+    },
+    {
+      "type": "number",
+      "bg": "navy",
+      "say": "Aktien är upp hundratjugotre procent i år.",
+      "top": "Yubico i år",
+      "value": 123,
+      "prefix": "+",
+      "suffix": " %",
+      "color": "green",
+      "sub": "bäst bland storbolagen",
+      "note": "Millistream, 9 nov"
+    },
+    {
+      "type": "statement",
+      "bg": "mint",
+      "say": "Den rusade i oktober, när oron för säkerhetsrisker med AI växte.",
+      "title": "RUSADE I OKTOBER",
+      "highlight": "AI-ORO",
+      "chip": "säkerhetsrisker",
+      "image": "media/yubico_upp.png",
+      "image_width": 760,
+      "image_y": 1380
+    },
+    {
+      "type": "cta",
+      "bg": "navy",
+      "say": "Men det som rusat kan också rasa. Följ Plånboksskolan!",
+      "line1": "Det som rusat",
+      "big": "KAN RASA",
+      "line2": "Inget köpråd."
+    }
+  ]
+}
