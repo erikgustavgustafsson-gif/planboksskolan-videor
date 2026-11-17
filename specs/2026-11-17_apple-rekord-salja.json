@@ -1,0 +1,84 @@
+{
+  "slug": "2026-11-17_apple-rekord-salja",
+  "title": "Apple har slagit rekord 29 gånger i år – sälja nu?",
+  "caption": "Apple och Stockholmsbörsen på rekordnivå 📈 Känns det som att toppen är nådd? Historiken säger något annat. Inget köp- eller säljråd.\n\nSäljer du när börsen slår rekord? 👇\n\n#aktier #apple #börsen #privatekonomi #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd – gäller börsen i stort, inte Apple-aktien specifikt. Historisk avkastning är ingen garanti. Källor: Yahoo Finance (Apple), Rika Tillsammans (SIXRX 1996–2025), JPMorgan 1988–2020.",
+  "sources": [
+    "https://finance.yahoo.com/quote/AAPL/history/ (rekordstängning 356,27 $ 13 nov 2026; 29 rekorddagar 2026, egen räkning på dagskurser, tidigare rekord 286,19 $)",
+    "https://rikatillsammans.se/grafer/borsen-pa-rekordniva/ (SIXRX 586 rekord 1996–2025)",
+    "https://rikatillsammans.se/grafer/4-av-10-dagar-ar-inom-5-av-en-rekordniva/ (JPMorgan 1988–2020: 14,6 % vs 11,7 %)",
+    "https://hurbra.se/?p=48066 (OMXS30 rekord 3 360,01, 11 nov 2026)"
+  ],
+  "cover": {
+    "title": [
+      "REKORD PÅ",
+      "BÖRSEN"
+    ],
+    "pill": "Dags att sälja?",
+    "label": "Apple i år:",
+    "big": "29 rekord",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Apple har slagit rekord tjugonio gånger i år. Är det dags att sälja?",
+      "kicker": "APPLE I ÅR",
+      "big": "29 REKORD",
+      "sub": "dags att sälja?",
+      "image": "media/apple_rekord.png",
+      "image_width": 760,
+      "image_y": 1450
+    },
+    {
+      "type": "number",
+      "bg": "navy",
+      "say": "Stockholmsbörsen? Femhundraåttiosex rekord sedan nittonhundranittiosex.",
+      "top": "Stockholmsbörsen",
+      "value": 586,
+      "suffix": " rekord",
+      "color": "green",
+      "sub": "sedan 1996",
+      "note": "SIXRX 1996–2025, Rika Tillsammans"
+    },
+    {
+      "type": "statement",
+      "bg": "mint",
+      "say": "Ett rekord följs oftast av nya rekord.",
+      "title": "REKORD",
+      "highlight": "→ FLER REKORD",
+      "chip": "oftast",
+      "image": "media/apple_rekord.png",
+      "image_width": 760,
+      "image_y": 1400
+    },
+    {
+      "type": "cards",
+      "bg": "navy",
+      "say": "I USA gav köp på en rekorddag mer året efter än en vanlig dag.",
+      "title": "KÖP I USA, ÅRET EFTER",
+      "cards": [
+        [
+          "+14,6 %",
+          "köp på en rekorddag"
+        ],
+        [
+          "+11,7 %",
+          "köp en vanlig dag"
+        ],
+        [
+          "JPMorgan",
+          "1988–2020"
+        ]
+      ]
+    },
+    {
+      "type": "cta",
+      "bg": "navy",
+      "say": "Rekord är ingen säljsignal. Följ Plånboksskolan!",
+      "line1": "Rekord är",
+      "big": "INGEN SÄLJSIGNAL",
+      "line2": "Inget köp- eller säljråd."
+    }
+  ]
+}
