@@ -1,0 +1,26 @@
+{
+  "slug": "2026-11-17_nvidia-ikvall-300-miljarder",
+  "title": "Ikväll: 300 miljarder dollar på spel för Nvidia",
+  "caption": "Nvidia rapporterar ikväll efter USA-börsens stängning 🎲 Aktien har rasat över 35 % sedan rekordet och optionsmarknaden räknar med en stor rörelse – åt något håll. Inget köp- eller säljråd.\n\nTror du det blir upp eller ner? 👇\n\n#nvidia #aktier #börsen #pension #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. 300 mdr $ ≈ 8 % av Nvidias börsvärde, den rörelse optionerna prisar in (Cboe via Invezz). Kurs: Yahoo Finance. AP7: Nvidia största innehavet (4,6 %, TT aug 2026).",
+  "sources": [
+    "https://invezz.com/news/2026/11/17/nvidia-stock-faces-a-300-billion-earnings-gamble-as-options-signal-8-swing/ (Cboe-optioner prisar ca 8 % rörelse, ca 300 mdr $)",
+    "https://www.tokenpost.com/news/investing/59327 (aktien -35 % från oktoberrekordet, stängde 157 $ 16 nov)",
+    "https://finance.yahoo.com/quote/NVDA/history/ (rekord 239,24 $ 6 okt 2026; 153 $ under dagen 17 nov)",
+    "https://www.realtid.se/it-tech/sa-viktigt-ar-nvidia-for-svenska-soffliggare/ (Nvidia största innehavet i AP7 Aktiefond, 4,6 %)"
+  ],
+  "cover": {"title": ["NVIDIA", "IKVÄLL"], "pill": "Rapport efter 22", "label": "På spel:", "big": "300 mdr $", "big_color": "yellow"},
+  "scenes": [
+    {"type": "hook", "say": "Ikväll kan Nvidia vinna eller förlora trehundra miljarder dollar på några minuter.",
+     "kicker": "NVIDIA IKVÄLL", "big": "300 MDR $", "sub": "upp eller ner",
+     "image": "media/nv_rekord_ras.png", "image_width": 760, "image_y": 1450},
+    {"type": "number", "bg": "navy", "say": "Aktien har redan rasat över trettiofem procent sedan rekordet i oktober.",
+     "top": "Sedan rekordet 6 okt", "value": 35, "prefix": "−", "suffix": " %", "color": "red",
+     "sub": "239 $ → 153 $", "note": "Yahoo Finance"},
+    {"type": "statement", "bg": "mint", "say": "Ikväll kommer rapporten. Optionsmarknaden räknar med att aktien rör sig runt åtta procent, upp eller ner.",
+     "title": "RAPPORT IKVÄLL", "highlight": "±8 %", "chip": "enligt optionerna",
+     "image": "media/nv_rekord_ras.png", "image_width": 760, "image_y": 1400},
+    {"type": "cta", "bg": "navy", "say": "Har du AP7 i pensionen äger du Nvidia. Följ Plånboksskolan!",
+     "line1": "Har du AP7?", "big": "DÅ ÄGER DU NVIDIA", "line2": "Inget köp- eller säljråd."}
+  ]
+}
