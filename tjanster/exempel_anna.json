@@ -1,0 +1,20 @@
+{
+  "namn": "Anna",
+  "lon": 26500,
+  "utgifter": {
+    "Boende": 8200,
+    "Räkningar och försäkringar": 1100,
+    "Mat": 4900,
+    "Transport": 1400,
+    "Abonnemang och streaming": 1150,
+    "Nöje och restaurang": 3600,
+    "Shopping och kläder": 2700,
+    "Övrigt": 1500
+  },
+  "mal_namn": "Resa till Japan",
+  "mal_belopp": 30000,
+  "mal_manader": 12,
+  "redan_sparat": 4000,
+  "buffert": 5000,
+  "kommentar": "Du har en stabil grund – hyran ligger på en rimlig nivå och du har redan börjat spara. Den största vinsten finns i nöje och shopping, där småköpen har smugit iväg. Med planen här når du Japan inom ett år och bygger samtidigt upp en buffert, så att en oväntad räkning inte förstör resan."
+}
