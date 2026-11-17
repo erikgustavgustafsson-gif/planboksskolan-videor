@@ -5,7 +5,8 @@
   "pinned_comment": "Inget köp- eller säljråd. +123 % i år enligt Placera/Millistream (9 nov). Det som stigit mycket kan också falla mycket. Hade du hört talas om Yubico? Ja 🙋 / Aldrig 😳",
   "sources": [
     "https://placera.se/nyheter/storagarna-som-taljer-guld-pa-storbolagens-rally-2026-11-10 (Yubico +123 % i år, bästa Large Cap-aktien, Millistream 2026-11-09)",
-    "https://www.aktiespararna.se/nyheter/oktobers-kursraketer-aktierna-som-rusade-mest (Yubico steg drygt 35 % i oktober, bl.a. på oro för säkerhetsrisker kopplade till AI)"
+    "https://www.aktiespararna.se/nyheter/oktobers-kursraketer-aktierna-som-rusade-mest (Yubico steg drygt 35 % i oktober, bl.a. på oro för säkerhetsrisker kopplade till AI)",
+    "https://finance.yahoo.com/quote/YUBICO.ST/history/"
   ],
   "cover": {
     "title": [
@@ -24,7 +25,7 @@
       "kicker": "SVENSK AKTIE",
       "big": "DUBBLATS I ÅR",
       "sub": "och ingen känner till den",
-      "image": "media/yubico_upp.png",
+      "image": "media/yubico_kurs.png",
       "image_width": 760,
       "image_y": 1450
     },
@@ -58,7 +59,7 @@
       "title": "RUSADE I OKTOBER",
       "highlight": "AI-ORO",
       "chip": "säkerhetsrisker",
-      "image": "media/yubico_upp.png",
+      "image": "media/yubico_okt.png",
       "image_width": 760,
       "image_y": 1380
     },
