@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <!-- Jämföra Privatleasing – byggs av kalla/build.py. Stil: stil.css, logik: app.js, bilar och priser: i app.js (BILAR) och konfig.js. -->
-<html lang="sv">
+<html lang="sv" data-tema="ljus">
 <head>
+  <script>try{var t=localStorage.getItem("jp_tema");if(t==="mork"||t==="ljus")document.documentElement.dataset.tema=t}catch(e){}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Citroën e-C3 eller Volkswagen ID.3? Privatleasing jämförd (november 2026) | Jämföra Privatleasing</title>
-  <meta name="description" content="Citroën e-C3 från 3 477 kr/mån eller Volkswagen ID.3 från 3 895 kr/mån? Vi jämför faktisk månadskostnad, startavgifter, körsträcka och vad som ingår i privatleasingen. Kontrollerat 16 nov 2026.">
+  <meta name="description" content="Citroën e-C3 från 3 477 kr/mån eller Volkswagen ID.3 från 3 895 kr/mån? Vi jämför faktisk månadskostnad, startavgifter, körsträcka och vad som ingår i privatleasingen. Kontrollerat 18 nov 2026.">
   <link rel="canonical" href="https://jamforprivatleasing.se/jamfor-citroen-e-c3-eller-volkswagen-id-3.html">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0E2A47">
+  <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Jämföra Privatleasing">
   <meta property="og:title" content="Citroën e-C3 eller Volkswagen ID.3? Privatleasing jämförd (november 2026) | Jämföra Privatleasing">
-  <meta property="og:description" content="Citroën e-C3 från 3 477 kr/mån eller Volkswagen ID.3 från 3 895 kr/mån? Vi jämför faktisk månadskostnad, startavgifter, körsträcka och vad som ingår i privatleasingen. Kontrollerat 16 nov 2026.">
+  <meta property="og:description" content="Citroën e-C3 från 3 477 kr/mån eller Volkswagen ID.3 från 3 895 kr/mån? Vi jämför faktisk månadskostnad, startavgifter, körsträcka och vad som ingår i privatleasingen. Kontrollerat 18 nov 2026.">
   <meta property="og:url" content="https://jamforprivatleasing.se/jamfor-citroen-e-c3-eller-volkswagen-id-3.html">
   <meta property="og:image" content="https://jamforprivatleasing.se/bilder/delning.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="bilder/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="bilder/app-ikon.png">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=25844d52">
+  <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stil.css?v=2fa3c989">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Start", "item": "https://jamforprivatleasing.se/"}, {"@type": "ListItem", "position": 2, "name": "Jämför bilar", "item": "https://jamforprivatleasing.se/jamfor-bilar.html"}, {"@type": "ListItem", "position": 3, "name": "Citroën e-C3 eller Volkswagen ID.3", "item": "https://jamforprivatleasing.se/jamfor-citroen-e-c3-eller-volkswagen-id-3.html"}]}]}</script>
 </head>
 <body data-sida="par">
   <nav class="topnav">
     <div class="wrap navrad">
       <a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a>
+      <button type="button" class="temaknapp" id="temaKnapp" aria-label="Byt till mörkt läge" title="Byt till mörkt läge"><svg class="ikon-mane" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="currentColor"/></svg><svg class="ikon-sol" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg></button>
       <button type="button" class="menyknapp" id="menyKnapp" aria-label="Meny" aria-expanded="false">☰</button>
-      <div class="navlankar"><a href="index.html">Start</a><a href="kampanjer.html">Kampanjer</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="jamfor-bilar.html" class="aktiv" aria-current="page">Jämför bilar</a><a href="rakna.html">Räkna</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a></div>
+      <div class="navlankar"><a href="index.html">Start</a><a href="kampanjer.html">Mest för pengarna</a><a href="alla-bilar.html">Alla bilar</a><a href="marken.html">Märken</a><a href="jamfor-bilar.html" class="aktiv" aria-current="page">Jämför bilar</a><a href="rakna.html">Räkna</a><a href="guide.html">Guide</a><a href="fragor.html">Frågor &amp; svar</a><a href="mina-sidor.html">Logga in</a></div>
     </div>
   </nav>
 
@@ -39,13 +42,13 @@
     </div>
   </header>
   <main class="wrap" style="padding: 0 16px;">
-    <p class="direktsvar"><b>Citroën e-C3 är 418 kr billigare per månad</b> än Volkswagen ID.3 just nu – 15 048 kr på tre år. Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell, med insats och avgifter inräknade. Kontrollerat 16 nov 2026.</p>
+    <p class="direktsvar"><b>Citroën e-C3 är 418 kr billigare per månad</b> än Volkswagen ID.3 just nu – 15 048 kr på tre år. Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell, med insats och avgifter inräknade. Kontrollerat 18 nov 2026.</p>
     <div class="svrull"><table class="svtab par"><thead><tr><td></td><th scope="col"><a href="privatleasing-citroen-e-c3.html"><img src="bilder/ec3-480.webp" alt="Citroën e-C3" width="480" height="300" loading="lazy"><span>Citroën</span><b>e-C3</b></a></th><th scope="col"><a href="privatleasing-volkswagen-id-3.html"><img src="bilder/id3-480.webp" alt="Volkswagen ID.3" width="480" height="300" loading="lazy"><span>Volkswagen</span><b>ID.3</b></a></th></tr></thead><tbody>
       <tr><th scope="row">Faktisk kostnad per månad</th><td class="bast"><b>3 477 kr</b></td><td class=""><b>3 895 kr</b></td></tr><tr><th scope="row">Månadshyra</th><td class="">3 199 kr</td><td class="">3 895 kr</td></tr><tr><th scope="row">Betalas vid start</th><td class="">10 000 kr</td><td class="bast">0 kr</td></tr><tr><th scope="row">Totalt på 36 månader</th><td class="bast">125 164 kr</td><td class="">140 220 kr</td></tr><tr><th scope="row">Körsträcka som ingår</th><td class="">1 000 mil/år</td><td class="">1 000 mil/år</td></tr><tr><th scope="row">Drivmedel</th><td class="">El</td><td class="">El</td></tr><tr><th scope="row">Service</th><td class="">Fråga säljaren</td><td class="">Fråga säljaren</td></tr><tr><th scope="row">Billigaste säljare</th><td class="">J BIL Ängelholm</td><td class="">Din Bil / Volkswagen Backa</td></tr><tr><th scope="row">Dyraste erbjudandet</th><td class="">3 477 kr/mån</td><td class="">4 209 kr/mån</td></tr><tr><th scope="row">Erbjudanden hos oss</th><td class="">11 st från 11 säljare</td><td class="bast">17 st från 13 säljare</td></tr>
       <tr><th scope="row"></th><td><a class="cta" href="privatleasing-citroen-e-c3.html">Se alla 11 →</a></td><td><a class="cta" href="privatleasing-volkswagen-id-3.html">Se alla 17 →</a></td></tr>
     </tbody></table></div>
     <p class="jmffot">Grönt = bäst i raden. Priset säger inte allt: jämför också utrustning, räckvidd och bagage hos tillverkaren, och provkör båda. <a href="jamfor-bilar.html?m=citroen-e-c3,volkswagen-id-3">Lägg till fler bilar i jämförelsen →</a></p>
-    <h2 class="ortrub">Fler jämförelser</h2><div class="katlankar"><a href="jamfor-citroen-e-c3-eller-mini-cooper.html">e-C3 eller Cooper</a><a href="jamfor-citroen-e-c3-eller-hyundai-ioniq-3.html">e-C3 eller IONIQ 3</a><a href="jamfor-citroen-e-c3-eller-mg-4-ev-urban.html">e-C3 eller 4 EV Urban</a><a href="jamfor-cupra-born-eller-volkswagen-id-3.html">Born eller ID.3</a><a href="jamfor-mini-cooper-eller-volkswagen-id-3.html">Cooper eller ID.3</a><a href="jamfor-nissan-leaf-eller-volkswagen-id-3.html">Leaf eller ID.3</a></div>
+    <h2 class="ortrub">Fler jämförelser</h2><div class="katlankar"><a href="jamfor-citroen-e-c3-eller-hyundai-ioniq-3.html">e-C3 eller IONIQ 3</a><a href="jamfor-citroen-e-c3-eller-hyundai-ioniq-3.html">e-C3 eller IONIQ 3</a><a href="jamfor-citroen-e-c3-eller-mg-4-ev-urban.html">e-C3 eller 4 EV Urban</a><a href="jamfor-cupra-born-eller-volkswagen-id-3.html">Born eller ID.3</a><a href="jamfor-hyundai-ioniq-3-eller-volkswagen-id-3.html">IONIQ 3 eller ID.3</a><a href="jamfor-nissan-leaf-eller-volkswagen-id-3.html">Leaf eller ID.3</a></div>
     
     <section class="kollruta">
       <h2>Kolla det här innan du skriver på</h2>
@@ -88,9 +91,9 @@
       <ul id="kallor"></ul>
     </details>
   </section>
-  <footer>Jämföra Privatleasing · priser kontrollerade 16 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+  <footer>Jämföra Privatleasing · priser kontrollerade 18 nov 2026 · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
 
-  <script src="samtycke.js?v=25844d52"></script>
-  <script src="paket.js?v=25844d52"></script>
+  <script src="samtycke.js?v=2fa3c989"></script>
+  <script src="paket.js?v=2fa3c989"></script>
 </body>
 </html>
