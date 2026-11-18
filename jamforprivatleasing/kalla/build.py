@@ -509,8 +509,8 @@ sidor["jamfor-bilar.html"] = sida(
     "Jämför bilar sida vid sida – privatleasing | Jämföra Privatleasing",
     "Ställ två till fyra bilar bredvid varandra och jämför faktisk månadskostnad, totalpris, pris per mil, körsträcka och vad som ingår.",
     sidhuvud("Jämför bilar sida vid sida", "Välj två till fyra modeller. Vi ställer det billigaste erbjudandet på varje bil bredvid varandra och markerar vilken som är bäst på varje rad.", brod((None, "Jämför bilar")))
-    + '\n  <main class="wrap" style="padding: 0 16px;"><section id="sidavid"></section><h2 class="ortrub">Färdiga jämförelser</h2><div class="katlankar radbryt">'
-    + "".join(f'<a href="{parfil(p)}">{html.escape(MOD[p[0]][0]["marke"])} {html.escape(MOD[p[0]][0]["mnamn"])} eller {html.escape(MOD[p[1]][0]["marke"])} {html.escape(MOD[p[1]][0]["mnamn"])}</a>' for p in PAR) + "</div></main>",
+    + '\n  <main class="wrap" style="padding: 0 16px;"><section id="sidavid"></section><details class="svfardiga"><summary>Färdiga jämförelser (' + str(len(PAR)) + ' st)</summary><div class="katlankar radbryt">'
+    + "".join(f'<a href="{parfil(p)}">{html.escape(MOD[p[0]][0]["marke"])} {html.escape(MOD[p[0]][0]["mnamn"])} eller {html.escape(MOD[p[1]][0]["marke"])} {html.escape(MOD[p[1]][0]["mnamn"])}</a>' for p in PAR) + "</div></details></main>",
     aktiv="jamfor-bilar.html", sida_typ="jamforbilar", ld=[brod_ld(("jamfor-bilar.html", "Jämför bilar"))])
 
 # ---------- Räkna: hela kostnaden + leasa eller köpa ----------
@@ -668,7 +668,7 @@ for par in PAR:
     <p class="direktsvar">{slut} Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell, med insats och avgifter inräknade. Kontrollerat {KONTROLL}.</p>
     <div class="svrull"><table class="svtab par"><thead><tr><td></td>{huvud}</tr></thead><tbody>
       {"".join(f'<tr><th scope="row">{r}</th>{c}</tr>' for r, c in rader)}
-      <tr><th scope="row"></th><td><a class="cta" href="privatleasing-{par[0]}.html">Se alla {a["n"]} →</a></td><td><a class="cta" href="privatleasing-{par[1]}.html">Se alla {b["n"]} →</a></td></tr>
+      <tr><th scope="row"></th><td><a class="cta" href="privatleasing-{par[0]}.html">Se erbjudanden</a></td><td><a class="cta" href="privatleasing-{par[1]}.html">Se erbjudanden</a></td></tr>
     </tbody></table></div>
     <p class="jmffot">Grönt = bäst i raden. Priset säger inte allt: jämför också utrustning, räckvidd och bagage hos tillverkaren, och provkör båda. <a href="jamfor-bilar.html?m={par[0]},{par[1]}">Lägg till fler bilar i jämförelsen →</a></p>
     {('<h2 class="ortrub">Fler jämförelser</h2><div class="katlankar">' + "".join(f'<a href="{parfil(p)}">{html.escape(MOD[p[0]][0]["mnamn"])} eller {html.escape(MOD[p[1]][0]["mnamn"])}</a>' for p in andra) + "</div>") if andra else ""}

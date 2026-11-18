@@ -1441,3 +1441,85 @@ html[data-tema] .tkort .thuvud { border-top: 0; padding-top: 0; }
 html[data-tema] .tkort .tfot { justify-content: center; }
 html[data-tema] .tkort .tfot > span:empty { display: none; }
 html[data-tema] .tkort .tfot .cta { flex: 1 1 100%; text-align: center; padding: 15px 18px; font-size: 17px; border-radius: 14px; }
+
+/* ---------- Jämför sida vid sida (18 nov): rutnät i stället för tabell ---------- */
+#sidavid { margin-top: 22px; }
+.svgrid { --n: 2; display: grid; grid-template-columns: 170px repeat(var(--n), minmax(0, 1fr)); background: var(--t-kort, #fff); color: var(--t-text, #0F2138); border: 1px solid var(--t-linje, #DAE2EA); border-radius: 18px; overflow: hidden; }
+.svrad { display: contents; }
+.svrub, .svcell { padding: 12px 14px; border-top: 1px solid var(--t-linje, #DAE2EA); font-size: 15px; min-width: 0; overflow-wrap: anywhere; }
+.svrub { font-weight: 600; color: var(--t-dampad, #56677B); font-size: 14px; background: var(--t-yta, #F2F5F8); }
+.svrub small { display: block; font-weight: 400; font-size: 12px; margin-top: 2px; }
+.svrad.viktig .svcell { font-size: 17px; }
+.svrad.viktig .svcell b { font-family: "Bricolage", "Inter", sans-serif; font-size: 20px; letter-spacing: -0.02em; }
+.svcell.bast { background: var(--t-mintljus, #DDF4F0); color: var(--t-accent, #0B8576); font-weight: 700; position: relative; }
+.svhuvud .svrub, .svhuvud .svcell { border-top: 0; }
+.svhuvud .svrub { background: var(--t-yta, #F2F5F8); }
+.svbil { position: relative; padding-top: 14px; }
+.svbil a { display: block; text-decoration: none; color: var(--t-text, #0F2138) !important; }
+.svbild { display: block; aspect-ratio: 16 / 10; border-radius: 12px; background: var(--t-scen, #EEF2F6); margin-bottom: 8px; overflow: hidden; }
+.svbild img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.svbil small { display: block; font-size: 13px; color: var(--t-dampad, #56677B); font-weight: 500; }
+.svbil b { display: block; font-family: "Bricolage", "Inter", sans-serif; font-size: 19px; line-height: 1.15; letter-spacing: -0.015em; }
+.svbort { position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--t-kort, #fff); color: var(--t-text, #0F2138); box-shadow: 0 1px 4px rgba(0,0,0,.2); font-size: 14px; cursor: pointer; display: grid; place-content: center; }
+.svfot .svcell { padding-bottom: 16px; }
+.svfot .cta { display: block; text-align: center; padding: 12px 10px; font-size: 15px; margin: 0; }
+.svvalj { margin: 18px 0 10px; max-width: 460px; }
+html[data-tema] .svvalj select { width: 100%; font: inherit; font-size: 16px; font-weight: 600; padding: 14px 16px; border-radius: 14px; border: 2px solid var(--t-text); background: var(--t-falt); color: var(--t-text); cursor: pointer; }
+.svsnabb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; }
+.svsnabb span { color: var(--t-dampad, #56677B); font-size: 14px; margin-right: 2px; }
+.svsnabb button { font: inherit; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 99px; border: 1px solid var(--t-linje, #DAE2EA); background: var(--t-kort, #fff); color: var(--t-text, #0F2138); cursor: pointer; }
+.svsnabb button:hover { border-color: var(--t-text, #0F2138); }
+html[data-tema] .svtom { color: var(--t-text) !important; font-size: 17px; margin: 0 0 12px; }
+.svvald { display: flex; gap: 12px; align-items: center; margin: 0 0 4px; font-weight: 600; }
+.svmax { color: var(--t-dampad, #56677B); font-size: 14px; margin: 16px 0 0; }
+html[data-tema] .svdela .lanklik, html[data-tema] .lanklik { color: var(--t-accent); }
+html[data-tema] .jmffot { color: var(--t-dampad) !important; font-size: 13px; }
+html[data-tema] h2.ortrub { color: var(--t-text) !important; }
+.svfardiga { margin: 26px 0 30px; }
+.svfardiga summary { cursor: pointer; font-weight: 700; font-size: 16px; color: var(--t-text, #0F2138); padding: 6px 0; }
+.svfardiga .katlankar { margin-top: 12px; }
+/* Mobil: rubriken på egen rad, bilarna i kolumner under */
+@media (max-width: 720px) {
+  .svgrid { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); margin: 0 -8px; border-radius: 14px; }
+  .svrub { grid-column: 1 / -1; padding: 8px 12px 6px; font-size: 13px; }
+  .svrub small { display: inline; margin-left: 6px; }
+  .svrub small::before { content: "– "; }
+  .svhuvud .svrub, .svfot .svrub { display: none; }
+  .svcell { padding: 9px 10px 11px; border-top: 0; font-size: 14px; }
+  .svcell + .svcell { border-left: 1px solid var(--t-linje, #DAE2EA); }
+  .svrad.viktig .svcell b { font-size: 18px; }
+  .svbil { padding: 10px 8px 10px; }
+  .svbil b { font-size: 16px; }
+  .svbort { top: 14px; right: 12px; width: 26px; height: 26px; font-size: 12px; }
+  .svfot .cta { font-size: 13.5px; padding: 11px 4px; }
+}
+@media (max-width: 720px) { .svgrid[style*="--n:4"] .svcell { font-size: 12.5px; padding: 8px 6px 10px; } .svgrid[style*="--n:4"] .svrad.viktig .svcell b { font-size: 15px; } .svgrid[style*="--n:4"] .svbil b { font-size: 13.5px; } .svgrid[style*="--n:4"] .svfot .cta { font-size: 12px; } }
+html[data-tema] { background: var(--t-bg); }
+.svfot .cta::first-letter { text-transform: uppercase; }
+@media (max-width: 720px) { .svgrid[style*="--n:4"] .svse, .svgrid[style*="--n:3"] .svse { display: none; } .svgrid[style*="--n:4"] .svfot .cta { font-size: 11.5px; padding: 10px 2px; } .svgrid[style*="--n:4"] .svfot .svcell { padding-left: 4px; padding-right: 4px; } }
+html[data-tema] .kollruta, html[data-tema] .checklista { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); border-left: 4px solid var(--t-gul); }
+html[data-tema] .kollruta h2, html[data-tema] .checklista h2, html[data-tema] .checklista h3, html[data-tema] .kollruta li b, html[data-tema] .checklista li b { color: var(--t-text) !important; }
+html[data-tema] .kollruta li, html[data-tema] .checklista li, html[data-tema] .kollruta p, html[data-tema] .checklista p { color: var(--t-dampad) !important; }
+/* Kontrasträttningar 18 nov (ljust/mörkt) */
+html[data-tema] .textsida h2, html[data-tema] .textsida h3, html[data-tema] .textsida b, html[data-tema] .textsida strong { color: var(--t-text) !important; }
+html[data-tema] .textsida, html[data-tema] .textsida p, html[data-tema] .textsida li { color: var(--t-text); }
+html[data-tema] .textsida span { color: inherit; }
+html[data-tema] .topp10 h2 { color: var(--t-text) !important; }
+html[data-tema] .svtab { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); }
+html[data-tema] .svtab th, html[data-tema] .svtab td { border-color: var(--t-linje); color: var(--t-text); }
+html[data-tema] .svtab tbody th { background: var(--t-yta); color: var(--t-dampad); }
+html[data-tema] .svtab thead a, html[data-tema] .svtab a:not(.cta) { color: var(--t-text) !important; }
+html[data-tema] .svtab thead span { text-transform: none; letter-spacing: 0; color: var(--t-dampad); }
+html[data-tema] .svtab td.bast { background: var(--t-mintljus); color: var(--t-accent); }
+html[data-tema] .svtab thead img { object-fit: contain; background: var(--t-scen); }
+html[data-tema] .infokort div { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); box-shadow: none; }
+html[data-tema] .infokort div h3 { color: var(--t-text) !important; } html[data-tema] .infokort div p { color: var(--t-dampad) !important; }
+html[data-tema] .tagg.ja { background: #DFF5EC; color: #11734B !important; } html[data-tema] .tagg.oft { background: #FFF4D6; color: #8A5A00 !important; } html[data-tema] .tagg.nej { background: #FBE3E2; color: #A23431 !important; }
+html[data-tema] details.flerfilter summary, html[data-tema] details.utr summary, html[data-tema] .car .pic.ingen small, html[data-tema] .car details summary { color: var(--t-text); }
+html[data-tema] .car .pic.ingen { background: var(--t-scen); }
+html[data-tema] .topptab { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); }
+html[data-tema] .topptab th { background: var(--t-yta); color: var(--t-dampad); }
+html[data-tema] .topptab th, html[data-tema] .topptab td { border-color: var(--t-linje); }
+html[data-tema] .topptab a { color: var(--t-text) !important; font-weight: 600; }
+html[data-tema] .car .pic.ingen b { color: var(--t-text); }
+html[data-tema] .direktsvar a { color: var(--t-accent) !important; font-weight: 700; }

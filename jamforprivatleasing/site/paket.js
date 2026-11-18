@@ -3685,7 +3685,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       if (!l.length || SIDA === "jamforbilar") { if (f) f.remove(); return; }
       if (!f) { f = document.createElement("div"); f.id = "jmffalt"; f.className = "jmffalt"; document.body.appendChild(f); }
       f.innerHTML = `<span><b>${l.length}</b> ${l.length === 1 ? "bil vald" : "bilar valda"}<small>${l.map(k => esc(MODELLER[k][0].mnamn)).join(", ")}</small></span>
-        <button type="button" class="lanklik" id="jmfrensa">Rensa</button><a class="cta" href="jamfor-bilar.html">${l.length > 1 ? "Jämför sida vid sida →" : "Välj en bil till →"}</a>`;
+        <button type="button" class="lanklik" id="jmfrensa">Rensa</button><a class="cta" href="jamfor-bilar.html">${l.length > 1 ? "Jämför sida vid sida" : "Välj en bil till"}</a>`;
       document.getElementById("jmfrensa").onclick = () => { JMF.spara([]); jmfFalt(); document.querySelectorAll("[data-jmf]").forEach(uppdJmfKnapp); };
     }
     function uppdJmfKnapp(b) {
@@ -4426,35 +4426,46 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     function ritaSidavid() {
       const q = new URLSearchParams(location.search).get("m");
       if (q) JMF.spara(q.split(",").filter(k => MODELLER[k]).slice(0, 4));
-      const l = JMF.lista(), tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      const alla = Object.keys(MODELLER).sort((a, b) => (MODELLER[a][0].marke + MODELLER[a][0].mnamn).localeCompare(MODELLER[b][0].marke + MODELLER[b][0].mnamn, "sv"));
-      const valj = l.length < 4 ? `<div class="svvalj"><label for="svny">Lägg till bil</label><select id="svny"><option value="">Välj modell…</option>${alla.filter(k => !l.includes(k)).map(k => `<option value="${k}">${esc(MODELLER[k][0].marke)} ${esc(MODELLER[k][0].mnamn)}</option>`).join("")}</select></div>` : "";
-      if (!l.length) { sidavid.innerHTML = `<p class="svtom">Du har inte valt några bilar än. Välj två till fyra modeller här, eller tryck på <b>＋ Lägg till i jämförelsen</b> på ett bilkort.</p>${valj}`; return; }
+      const l = JMF.lista().filter(k => MODELLER[k]), tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const namn = k => MODELLER[k][0].marke + " " + MODELLER[k][0].mnamn;
+      const alla = Object.keys(MODELLER).filter(k => !l.includes(k)).sort((a, b) => namn(a).localeCompare(namn(b), "sv"));
+      const marken = [...new Set(alla.map(k => MODELLER[k][0].marke))];
+      const val = `<select id="svny" aria-label="Lägg till en bil i jämförelsen"><option value="">${l.length ? "＋ Lägg till en bil" : "Välj en bil…"}</option>${marken.map(m => `<optgroup label="${esc(m)}">${alla.filter(k => MODELLER[k][0].marke === m).map(k => `<option value="${k}">${esc(namn(k))}</option>`).join("")}</optgroup>`).join("")}</select>`;
+      const forslag = TOPP.filter(t => MODELLER[t.k] && !l.includes(t.k)).slice(0, 4);
+      const snabb = forslag.length ? `<p class="svsnabb"><span>Populära:</span>${forslag.map(t => `<button type="button" data-lagg="${t.k}">${esc(t.namn)}</button>`).join("")}</p>` : "";
+      if (l.length < 2) {
+        sidavid.innerHTML = `<div class="svstart"><p class="svtom">${l.length ? `<b>${esc(namn(l[0]))}</b> är vald. Välj minst en bil till att jämföra med.` : "Välj två till fyra bilar så ställer vi dem bredvid varandra."}</p>
+          ${l.length ? `<p class="svvald"><span>${esc(namn(l[0]))}</span><button type="button" class="lanklik" data-bort="${l[0]}">Ta bort</button></p>` : ""}
+          <div class="svvalj">${val}</div>${snabb}</div>`;
+        return;
+      }
       const d = l.map(k => ({ k, ...modellSammanfattning(k) }));
-      const minst = f => Math.min(...d.map(f).filter(v => v != null));
-      const lEff = minst(x => x.bast.eff), lKrmil = minst(x => x.bast.krmil), lStart = minst(x => x.bast.forhojd + x.bast.start);
-      const rad = (rub, f, bastF) => `<tr><th scope="row">${rub}</th>${d.map(x => { const v = f(x); return `<td class="${bastF && bastF(x) && d.length > 1 ? "bast" : ""}">${v}</td>`; }).join("")}</tr>`;
+      const minst = f => { const v = d.map(f).filter(v => v != null); return v.length ? Math.min(...v) : null; };
+      const lEff = minst(x => x.bast.eff), lKrmil = minst(x => x.bast.krmil), lStart = minst(x => x.bast.forhojd + x.bast.start), lTot = minst(x => x.bast.total);
+      const unik = (f, v) => d.filter(x => f(x) === v).length < d.length;   // markera bara om alla inte är lika
+      const rad = (rub, f, bastF, forklaring) => `<div class="svrad${forklaring ? " viktig" : ""}"><div class="svrub">${rub}${forklaring ? `<small>${forklaring}</small>` : ""}</div>${d.map(x => `<div class="svcell${bastF && bastF(x) ? " bast" : ""}">${f(x)}</div>`).join("")}</div>`;
       sidavid.innerHTML = `
-        <div class="svrull"><table class="svtab">
-          <thead><tr><td></td>${d.map(x => `<th scope="col"><a href="${x.bast.msida}">${x.bast.foto ? `<img src="${bildUrl(x.bast, "", 600)}" alt="" loading="lazy">` : ""}<span>${esc(x.bast.marke)}</span><b>${esc(x.bast.mnamn)}</b></a><button type="button" class="lanklik" data-bort="${x.k}">Ta bort</button></th>`).join("")}</tr></thead>
-          <tbody>
-            ${rad("Faktisk kostnad per månad", x => `<b>${kr(x.bast.eff)}</b>`, x => x.bast.eff === lEff)}
-            ${rad("Månadshyra", x => kr(x.bast.m))}
-            ${rad("Betalas vid start", x => kr(x.bast.forhojd + x.bast.start), x => x.bast.forhojd + x.bast.start === lStart)}
-            ${rad("Totalt på 36 månader", x => kr(x.bast.total), x => x.bast.eff === lEff)}
-            ${rad("Körsträcka som ingår", x => x.bast.milokand ? "Fråga handlaren" : x.bast.mil.toLocaleString("sv-SE") + " mil/år")}
-            ${rad("Pris per mil", x => x.bast.krmil == null ? "–" : tal(x.bast.krmil) + " kr", x => x.bast.krmil != null && x.bast.krmil === lKrmil)}
-            ${rad("Drivmedel", x => esc(x.bast.drivmedel))}
-            ${rad("Karosstyp", x => esc(x.bast.kaross || "–"))}
-            ${rad("Service", x => x.bast.service ? "Ingår" : x.bast.service === false ? "Ingår inte" : "Fråga säljaren")}
-            ${rad("Försäkring", x => x.bast.forsakring ? "Ingår" : "Tillkommer")}
-            ${rad("Nypris", x => x.bast.nypris ? kr(x.bast.nypris) : "–")}
-            ${rad("Billigaste säljare", x => esc(x.bast.kalla.split(/ \(|,/)[0]))}
-            ${rad("Erbjudanden hos oss", x => `${x.antal} st från ${x.saljare} ${x.saljare === 1 ? "säljare" : "säljare"}`)}
-            ${rad("", x => `<a class="cta" href="${x.bast.msida}">Se ${x.antal > 1 ? "alla " + x.antal : "erbjudandet"} →</a>`)}
-          </tbody></table></div>
-        <p class="jmffot">Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell. Faktisk kostnad = allt du betalar till säljaren på 36 månader (hyra, insats och avgifter) delat på 36. Grönt = bäst i raden. Kontrollerat ${KONTROLL}.</p>
-        ${valj}
+        <div class="svgrid" style="--n:${d.length}">
+          <div class="svrad svhuvud"><div class="svrub"></div>${d.map(x => `<div class="svcell svbil">
+            <a href="${x.bast.msida}">${x.bast.foto ? `<span class="svbild"><img src="${bildUrl(x.bast, "", 600)}" alt="" loading="lazy"></span>` : ""}<small>${esc(x.bast.marke)}</small><b>${esc(x.bast.mnamn)}</b></a>
+            <button type="button" class="svbort" data-bort="${x.k}" aria-label="Ta bort ${esc(namn(x.k))}">✕</button></div>`).join("")}</div>
+          ${rad("Kostnad per månad", x => `<b>${kr(x.bast.eff)}</b>`, x => x.bast.eff === lEff && unik(y => y.bast.eff, lEff), "Med insats och avgifter utslaget på 36 mån")}
+          ${rad("Månadshyra", x => kr(x.bast.m))}
+          ${rad("Betalas vid start", x => kr(x.bast.forhojd + x.bast.start), x => x.bast.forhojd + x.bast.start === lStart && unik(y => y.bast.forhojd + y.bast.start, lStart))}
+          ${rad("Totalt på 36 månader", x => kr(x.bast.total), x => x.bast.total === lTot && unik(y => y.bast.total, lTot))}
+          ${rad("Körsträcka som ingår", x => x.bast.milokand ? "Fråga handlaren" : x.bast.mil.toLocaleString("sv-SE") + " mil/år")}
+          ${rad("Pris per mil", x => x.bast.krmil == null ? "–" : tal(x.bast.krmil) + " kr", x => x.bast.krmil != null && x.bast.krmil === lKrmil && unik(y => y.bast.krmil, lKrmil))}
+          ${rad("Drivmedel", x => esc(x.bast.drivmedel))}
+          ${rad("Kaross", x => esc(x.bast.kaross || "–"))}
+          ${rad("Service", x => x.bast.service ? "Ingår" : x.bast.service === false ? "Ingår inte" : "Fråga säljaren")}
+          ${rad("Försäkring", x => x.bast.forsakring ? "Ingår" : "Tillkommer")}
+          ${rad("Nypris", x => x.bast.nypris ? kr(x.bast.nypris) : "Uppgift saknas")}
+          ${rad("Billigast hos", x => esc(x.bast.kalla.split(/ \(|,/)[0]))}
+          ${rad("Erbjudanden", x => `${x.antal} st hos ${x.saljare} ${x.saljare === 1 ? "säljare" : "säljare"}`)}
+          <div class="svrad svfot"><div class="svrub"></div>${d.map(x => `<div class="svcell"><a class="cta" href="${x.bast.msida}"><span class="svse">Se </span>${x.antal > 1 ? "erbjudanden" : "erbjudandet"}</a></div>`).join("")}</div>
+        </div>
+        ${l.length < 4 ? `<div class="svvalj">${val}</div>${snabb}` : `<p class="svmax">Du kan jämföra fyra bilar åt gången. Ta bort en för att lägga till en annan.</p>`}
+        <p class="jmffot">Vi jämför det billigaste erbjudandet med känd körsträcka på varje modell. Kostnad per månad = allt du betalar till säljaren på 36 månader (hyra, insats och avgifter) delat på 36. Grön ruta = bäst på raden. Kontrollerat ${KONTROLL}.</p>
         <p class="svdela"><button type="button" class="lanklik" id="svlank">Kopiera länk till jämförelsen</button></p>`;
     }
     if (sidavid) {
@@ -4462,6 +4473,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       sidavid.addEventListener("change", e => { if (e.target.id === "svny" && e.target.value) { JMF.vaxla(e.target.value); history.replaceState(null, "", location.pathname); ritaSidavid(); } });
       sidavid.addEventListener("click", e => {
         const b = e.target.closest("button[data-bort]"); if (b) { JMF.vaxla(b.dataset.bort); history.replaceState(null, "", location.pathname); ritaSidavid(); return; }
+        const n = e.target.closest("button[data-lagg]"); if (n) { if (!JMF.lista().includes(n.dataset.lagg)) JMF.vaxla(n.dataset.lagg); history.replaceState(null, "", location.pathname); ritaSidavid(); return; }
         if (e.target.id === "svlank") { const u = location.origin + location.pathname + "?m=" + JMF.lista().join(","); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => e.target.textContent = "✓ Länken är kopierad", () => { history.replaceState(null, "", "?m=" + JMF.lista().join(",")); e.target.textContent = "Länken står nu i adressfältet"; }); }
       });
     }
