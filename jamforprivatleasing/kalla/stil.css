@@ -1437,3 +1437,7 @@ html[data-tema] .tkort .thuvud { border-top: 0; padding-top: 0; }
   html[data-tema] .herobil, html[data-tema="ljus"] .herobil, html[data-tema="mork"] .herobil { background: radial-gradient(60% 14% at 50% 90%, rgba(15,33,56,.25), rgba(15,33,56,0) 70%); box-shadow: none; border-radius: 0; filter: none; mix-blend-mode: normal; }
   html[data-tema="mork"] .herobil { background: radial-gradient(60% 14% at 50% 90%, rgba(0,0,0,.6), rgba(0,0,0,0) 70%); }
 }
+/* Topplistan: stor knapp i mitten (18 nov) */
+html[data-tema] .tkort .tfot { justify-content: center; }
+html[data-tema] .tkort .tfot > span:empty { display: none; }
+html[data-tema] .tkort .tfot .cta { flex: 1 1 100%; text-align: center; padding: 15px 18px; font-size: 17px; border-radius: 14px; }

@@ -4193,7 +4193,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
             </div>
             <div class="tchips"><span>36 månader</span><span>${b.milokand ? "Körsträcka: fråga handlaren" : b.mil.toLocaleString("sv-SE") + " mil/år"}</span>${b.forhojd ? `<span>${kr(b.forhojd)} vid start</span>` : ""}</div>
             <div class="ttotal">${kr(b.total)} totalt · ${/\bvia\b/.test(b.kalla) ? "" : "hos "}${esc(b.kalla.split(/ \(|,/)[0])}${antal > 1 ? ` · billigast av ${antal}` : ""}</div>
-            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Se alla " + antal : "Se erbjudandet"}</a></div>
+            <div class="tfot">${bt ? `<span class="betyg ${bt.klass}">${bt.text} · ${pct((b.total - (b.forsakring || 0) * 36) / b.nypris)}</span>` : "<span></span>"}<a class="cta" href="${b.msida}">${antal > 1 ? "Se erbjudanden" : "Se erbjudandet"}</a></div>
           </div>
         </article>`;
       }).join("");
