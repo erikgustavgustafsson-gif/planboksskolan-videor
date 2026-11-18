@@ -1,0 +1,26 @@
+{
+  "slug": "2026-11-18_nvidia-slog-forvantningarna",
+  "title": "Nvidia slog förväntningarna med 7 miljarder dollar",
+  "caption": "Nvidia har rapporterat: 115,8 miljarder dollar i omsättning på ett kvartal, 7 miljarder mer än väntat 📊 Aktien steg i efterhandeln – men är långt från rekordet. Inget köp- eller säljråd.\n\nTrodde du på upp eller ner? 👇\n\n#nvidia #aktier #börsen #pension #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Siffror: Nvidias rapport 17 nov (omsättning 115,8 mdr $, +103 %), förväntat 108,8 mdr $ (CoinDesk). Kurs: Yahoo Finance, efterhandel 17 nov. AP7: Nvidia största innehavet (4,6 %, TT aug 2026).",
+  "sources": [
+    "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000088/q3fy27pr.htm (omsättning 115,8 mdr $, +103 % mot i fjol)",
+    "https://www.coindesk.com/markets/2026/11/17/nvidia-tops-estimates-issues-strong-guidance-adds-usd150-billion-to-buyback-authorization (förväntat 108,8 mdr $)",
+    "https://finance.yahoo.com/quote/NVDA/ (stängning 155,46 $ 17 nov; efterhandel ca 162,68 $ = +4,6 %; rekord 239,24 $ 6 okt)",
+    "https://www.realtid.se/it-tech/sa-viktigt-ar-nvidia-for-svenska-soffliggare/ (Nvidia största innehavet i AP7 Aktiefond, 4,6 %)"
+  ],
+  "cover": {"title": ["NVIDIA SLOG", "PROGNOSEN"], "pill": "Rapporten är här", "label": "Mer än väntat:", "big": "+7 mdr $", "big_color": "green"},
+  "scenes": [
+    {"type": "hook", "say": "Nvidia sålde för hundrafemton miljarder dollar på tre månader. Dubbelt mot i fjol.",
+     "kicker": "NVIDIA PÅ 3 MÅNADER", "big": "115 MDR $", "sub": "dubbelt mot i fjol",
+     "image": "media/nv_efter_rapport.png", "image_width": 760, "image_y": 1450},
+    {"type": "number", "bg": "navy", "say": "Det var sju miljarder mer än analytikerna trodde.",
+     "top": "Mer än väntat", "value": 7, "prefix": "+", "suffix": " mdr $", "color": "green",
+     "sub": "115,8 mot väntade 108,8", "note": "Nvidia / CoinDesk"},
+    {"type": "statement", "bg": "mint", "say": "Aktien steg runt fyra procent i efterhandeln. Men den ligger fortfarande långt under rekordet.",
+     "title": "+4 % EFTERÅT", "highlight": "MEN LÅNGT KVAR", "chip": "rekord 239 $",
+     "image": "media/nv_efter_rapport.png", "image_width": 760, "image_y": 1400},
+    {"type": "cta", "bg": "navy", "say": "Har du AP7 i pensionen äger du Nvidia. Följ Plånboksskolan!",
+     "line1": "Har du AP7?", "big": "DÅ ÄGER DU NVIDIA", "line2": "Inget köp- eller säljråd."}
+  ]
+}
