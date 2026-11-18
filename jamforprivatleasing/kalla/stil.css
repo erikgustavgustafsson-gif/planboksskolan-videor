@@ -1523,3 +1523,22 @@ html[data-tema] .topptab th, html[data-tema] .topptab td { border-color: var(--t
 html[data-tema] .topptab a { color: var(--t-text) !important; font-weight: 600; }
 html[data-tema] .car .pic.ingen b { color: var(--t-text); }
 html[data-tema] .direktsvar a { color: var(--t-accent) !important; font-weight: 700; }
+/* Bästa privatleasing (18 nov) */
+.bastavinnare-rad { display: grid; gap: 12px; margin: 22px 0 8px; }
+@media (min-width: 800px) { .bastavinnare-rad { grid-template-columns: repeat(3, 1fr); } }
+.bastavinnare { display: grid; grid-template-columns: 120px 1fr; grid-template-rows: auto auto auto auto; column-gap: 14px; align-items: center; text-decoration: none; background: var(--t-kort, #fff); color: var(--t-text, #0F2138) !important; border: 1px solid var(--t-linje, #DAE2EA); border-radius: 18px; padding: 12px; box-shadow: var(--t-skugga, none); }
+.bastavinnare:first-child { border: 2px solid var(--t-text, #0F2138); }
+.bvbild { grid-row: 1 / span 4; aspect-ratio: 16 / 10; border-radius: 12px; background: var(--t-scen, #EEF2F6); overflow: hidden; }
+.bvbild img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.bvrub { font-size: 12.5px; font-weight: 700; color: var(--t-gultext, #2B2100); background: var(--t-gul, #F5C431); justify-self: start; padding: 2px 8px; border-radius: 5px; }
+.bastavinnare b { font-family: "Bricolage", "Inter", sans-serif; font-size: 18px; line-height: 1.2; margin-top: 4px; }
+.bvsiffra { font-family: "Bricolage", "Inter", sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
+.bvtext { font-size: 13px; color: var(--t-dampad, #56677B); }
+@media (min-width: 800px) { .bastavinnare { grid-template-columns: 1fr; } .bvbild { grid-row: auto; margin-bottom: 10px; } }
+.bastaforkl { color: var(--t-dampad, #56677B) !important; font-size: 14px; margin: 4px 0 0; max-width: 640px; }
+.bastatab td small { display: block; color: var(--t-dampad, #56677B); font-size: 12.5px; font-weight: 500; }
+.bastakrit ul { padding-left: 20px; display: grid; gap: 8px; color: var(--t-dampad, #56677B); }
+.bastakrit li b { color: var(--t-text, #0F2138); }
+.bastafraga { border-top: 1px solid var(--t-linje, #DAE2EA); padding: 10px 0; }
+.bastafraga summary { font-weight: 700; cursor: pointer; color: var(--t-text, #0F2138); }
+.bastafraga p { color: var(--t-dampad, #56677B) !important; margin: 8px 0 0; }

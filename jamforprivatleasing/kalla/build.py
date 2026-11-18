@@ -90,7 +90,7 @@ HERO = """<header class="hero foto">
       <h1>Jämför privatleasing på alla nya bilar</h1>
       <p class="heroingress">Märkenas och handlarnas erbjudanden sida vid sida – med insats och avgifter inräknade, billigast först och kontrollerade varje dag.</p>
       <form class="startsok" id="startsok" role="search"><input name="q" type="search" list="modellforslag" placeholder="Sök bil, t.ex. Volvo EX30" aria-label="Sök bil"><datalist id="modellforslag"></datalist><button type="submit">Jämför</button></form>
-      <nav class="herogenvagar" aria-label="Genvägar"><a href="billigaste-privatleasing.html">Billigast just nu</a><a href="privatleasing-elbil.html">Elbil</a><a href="privatleasing-suv.html">SUV</a><a href="privatleasing-kombi.html">Kombi</a><a href="privatleasing-smabil.html">Småbil</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="alla-bilar.html">Alla bilar</a></nav>
+      <nav class="herogenvagar" aria-label="Genvägar"><a href="basta-privatleasing.html">Bästa just nu</a><a href="billigaste-privatleasing.html">Billigast just nu</a><a href="privatleasing-elbil.html">Elbil</a><a href="privatleasing-suv.html">SUV</a><a href="privatleasing-kombi.html">Kombi</a><a href="privatleasing-smabil.html">Småbil</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="alla-bilar.html">Alla bilar</a></nav>
       <div class="trust" id="trust"></div>
     </div>
   </header>"""
@@ -148,7 +148,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
     <div class="wrap fotrad">
       <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
       <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="#" data-kakor>Kakinställningar</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
-      <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
+      <div><b>Jämför</b><a href="basta-privatleasing.html">Bästa privatleasing just nu</a><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
       <div><b>Företag</b><span id="fotforetag"></span></div>
     </div>
   </footer>
@@ -502,6 +502,76 @@ for fil, h1, ord_, forval, villkor_f, intro in KATEGORIER:
         + f'\n  <div class="wrap" style="padding:0 16px">{CHECKLISTA}</div>',
         aktiv="alla-bilar.html", sida_typ="kategori", forval=forval,
         ld=[brod_ld(("alla-bilar.html", "Alla bilar"), (fil, h1))])
+
+# ---------- Bästa privatleasing just nu (topplistor efter tydliga kriterier, räknas om varje dag) ----------
+def per_modell(urval, nyckel):
+    """Bästa erbjudandet per modell enligt nyckel (bara känd körsträcka), sorterat."""
+    per = {}
+    for b in sorted([b for b in urval if not b["milokand"] and nyckel(b) is not None], key=nyckel): per.setdefault(b["mkey"], b)
+    return list(per.values())
+KRMIL = lambda b: b["total"] / (b["mil"] * 3) if b["mil"] else None
+ANDEL = lambda b: b["total"] / b["nypris"] if b.get("nypris") else None
+def tal2(x): return f"{x:.2f}".replace(".", ",")
+def bastalista(rader, kol, varde, n=5):
+    r = "".join(f'<tr><td>{i + 1}</td><td><a href="privatleasing-{b["mkey"]}.html">{html.escape(b["marke"])} {html.escape(b["mnamn"])}</a><small>{html.escape(SALJARE(b))} · {b["mil"]:,} mil/år</small></td><td>{varde(b)}</td></tr>'.replace(",", " ", 1) if False else
+                f'<tr><td>{i + 1}</td><td><a href="privatleasing-{b["mkey"]}.html">{html.escape(b["marke"])} {html.escape(b["mnamn"])}</a><small>{html.escape(SALJARE(b))}, {str(b["mil"])[:-3] + " " + str(b["mil"])[-3:] if b["mil"] >= 1000 else b["mil"]} mil/år</small></td><td>{varde(b)}</td></tr>' for i, b in enumerate(rader[:n]))
+    return f'<div class="svrull"><table class="topptab bastatab"><thead><tr><th>#</th><th>Bil och säljare</th><th>{kol}</th></tr></thead><tbody>{r}</tbody></table></div>'
+_mil = per_modell(BILAR, KRMIL); _man = per_modell(BILAR, lambda b: b["eff"]); _and = per_modell(BILAR, ANDEL)
+def vinnare(b, rub, siffra, text):
+    bild = f'<span class="bvbild"><img src="bilder/{b["foto"]}-480.webp" alt="" width="480" height="300" loading="lazy"></span>' if b.get("foto") else ""
+    return (f'<a class="bastavinnare" href="privatleasing-{b["mkey"]}.html">{bild}<span class="bvrub">{rub}</span>'
+            f'<b>{html.escape(b["marke"])} {html.escape(b["mnamn"])}</b><span class="bvsiffra">{siffra}</span><span class="bvtext">{text}</span></a>')
+BASTA_KAT = [("Bästa elbil", lambda b: b["drivmedel"] == "El"), ("Bästa SUV", lambda b: b.get("kaross") == "SUV"),
+             ("Bästa kombi", lambda b: b.get("kaross") == "Kombi"), ("Bästa småbil", lambda b: b.get("kaross") == "Småbil"),
+             ("Bästa laddhybrid", lambda b: b["drivmedel"] == "Laddhybrid")]
+_v1, _v2 = _mil[0], _man[0]
+_v3 = _and[0] if _and else None
+_svar = (f'Räknat på vad du betalar per mil – med insats och alla avgifter – är <a href="privatleasing-{_v1["mkey"]}.html">{html.escape(_v1["marke"])} {html.escape(_v1["mnamn"])}</a> '
+         f'bäst just nu: <b>{tal2(KRMIL(_v1))} kr/mil</b> ({kr(_v1["eff"])}/mån för {_v1["mil"]:,} mil/år hos {html.escape(SALJARE(_v1))}). '.replace(",", " ", 1)
+         + f'Lägst månadskostnad har <a href="privatleasing-{_v2["mkey"]}.html">{html.escape(_v2["marke"])} {html.escape(_v2["mnamn"])}</a> för <b>{kr(_v2["eff"])}/mån</b>. Kontrollerat {KONTROLL}.')
+_kathtml = "".join(f'<section class="topp10"><h2>{rub} att privatleasa – {MANAD}</h2>{bastalista(per_modell([b for b in BILAR if f(b)], KRMIL), "Kr per mil", lambda b: tal2(KRMIL(b)) + " kr")}</section>'
+                   for rub, f in BASTA_KAT if per_modell([b for b in BILAR if f(b)], KRMIL))
+_fragor = [
+    ("Vilken är den bästa privatleasingen just nu?",
+     f"Räknat på kostnad per mil med insats och alla avgifter är {_v1['marke']} {_v1['mnamn']} bäst just nu, {tal2(KRMIL(_v1))} kr/mil hos {SALJARE(_v1)}. Lägst månadskostnad har {_v2['marke']} {_v2['mnamn']}, {kr(_v2['eff'])}/mån. Listorna räknas om varje dag."),
+    ("Hur vet jag om ett privatleasingerbjudande är bra?",
+     "Räkna på hela kostnaden: lägg ihop alla månadshyror, insatsen och avgifterna och dela med hur många mil du får köra. Då kan du jämföra erbjudanden med olika körsträcka och insats. Kolla också vad som ingår, till exempel service och vinterhjul."),
+    ("Varför är den billigaste månadskostnaden inte alltid bäst?",
+     "Ett lågt månadspris kan ha en hög insats, avgifter eller en kort körsträcka. Därför visar vi både lägsta faktiska månadskostnad och lägsta kostnad per mil."),
+    ("Betalar bilmärken eller handlare för att synas här?",
+     "Nej. Ordningen bestäms bara av siffrorna. Eventuella annonslänkar är alltid märkta och påverkar inte placeringen."),
+]
+_faqld = {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in _fragor]}
+sidor["basta-privatleasing.html"] = sida(
+    "basta-privatleasing.html",
+    f"Bästa privatleasing just nu – topplistor {MANAD} | Jämföra Privatleasing",
+    f"Bästa privatleasingen just nu: {_v1['marke']} {_v1['mnamn']} för {tal2(KRMIL(_v1))} kr/mil. Topplistor för elbil, SUV, kombi och småbil, räknade på {len(BILAR)} erbjudanden med alla avgifter. Kontrollerat {KONTROLL}.",
+    sidhuvud("Bästa privatleasing just nu", f"Vi räknar på alla {len(BILAR):,} erbjudanden varje dag och tar fram de bästa – efter vad du faktiskt betalar, inte annonspriset.".replace(",", " "), brod((None, "Bästa privatleasing")))
+    + f'''
+  <div class="wrap" style="padding:0 16px">
+    <p class="direktsvar">{_svar}</p>
+    <div class="bastavinnare-rad">
+      {vinnare(_v1, "Lägst kostnad per mil", tal2(KRMIL(_v1)) + " kr/mil", f"{kr(_v1['eff'])}/mån, {SALJARE(_v1)}")}
+      {vinnare(_v2, "Lägst månadskostnad", kr(_v2["eff"]) + "/mån", f"{_v2['mil']} mil/år, {SALJARE(_v2)}")}
+      {vinnare(_v3, "Mest bil för pengarna", str(round(ANDEL(_v3) * 100)) + " % av nypriset", f"betalar du på 36 månader, {SALJARE(_v3)}") if _v3 else ""}
+    </div>
+    <section class="topp10"><h2>Lägst kostnad per mil – {MANAD}</h2><p class="bastaforkl">Allt du betalar på 36 månader (hyra, insats och avgifter) delat med hur många mil som ingår. Bäst om du vill ha mycket bil för pengarna och kör en del.</p>{bastalista(_mil, "Kr per mil", lambda b: tal2(KRMIL(b)) + " kr")}</section>
+    <section class="topp10"><h2>Lägst månadskostnad – {MANAD}</h2><p class="bastaforkl">Faktisk kostnad per månad med insats och avgifter utslagna på 36 månader. Bäst om du kör kort och vill ha en så låg månadskostnad som möjligt.</p>{bastalista(_man, "Per månad", lambda b: kr(b["eff"]))}</section>
+    {f'<section class="topp10"><h2>Mest bil för pengarna – {MANAD}</h2><p class="bastaforkl">Hur stor del av bilens nypris du betalar under 36 månader. Lägre andel betyder att du får en dyrare bil för pengarna.</p>{bastalista(_and, "Andel av nypris", lambda b: str(round(ANDEL(b) * 100)) + " %")}</section>' if _and else ""}
+    {_kathtml}
+    <section class="topp10 bastakrit"><h2>Så har vi valt</h2>
+      <ul>
+        <li><b>Bara siffror.</b> Ingen säljare eller tillverkare kan betala för en plats. Vi bedömer inte köregenskaper eller utrustning – läs gärna biltester innan du bestämmer dig.</li>
+        <li><b>Hela kostnaden.</b> Insats, uppläggningsavgift och aviavgift räknas in. Ett lågt annonspris med dyr start hamnar inte högt.</li>
+        <li><b>Bara erbjudanden med känd körsträcka</b> kommer med, en rad per bilmodell, och listorna räknas om varje dag.</li>
+      </ul>
+      <p><a href="sa-jamfor-vi.html">Läs mer om hur vi jämför</a></p>
+    </section>
+    <section class="topp10"><h2>Vanliga frågor</h2>{"".join(f"<details class=\"bastafraga\"><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>" for q, a in _fragor)}</section>
+    {KATLANKAR}
+  </div>'''
+    + f'\n  <div class="wrap" style="padding:0 16px">{CHECKLISTA}</div>',
+    aktiv="", sida_typ="basta", ld=[brod_ld(("basta-privatleasing.html", "Bästa privatleasing")), _faqld])
 
 # ---------- Jämför bilar sida vid sida ----------
 sidor["jamfor-bilar.html"] = sida(
