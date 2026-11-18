@@ -1,0 +1,87 @@
+{
+ "slug": "2026-11-18_bolanet-dyrare-16-december",
+ "title": "Ditt bolån blev dyrare – 16 december kan det hända igen",
+ "caption": "Riksbanken har höjt styrräntan till 2 % och nästa besked kommer 16 december 🏠 Har du rörligt bolån på 2 miljoner kostar varje höjning på 0,25 procentenheter ca 5 000 kr om året (före ränteavdrag), om banken höjer lika mycket.\n\nHar du rörlig eller bunden ränta? 👇\n\n#bolån #ränta #riksbanken #privatekonomi #plånboksskolan",
+ "pinned_comment": "Rörligt eller bundet? 🔄 Rörligt / 🔒 Bundet / 🏠 Hyr 👇 Räkneexempel: 2 000 000 kr × 0,25 % = 5 000 kr/år före ränteavdrag (≈ 290 kr/mån efter 30 % avdrag), om banken höjer lika mycket som Riksbanken.",
+ "sources": [
+  "https://www.riksbank.se/sv/penningpolitik/penningpolitisk-rapport/2026/penningpolitiskt-beslut-november-2026/ (styrräntan höjs 0,25 p.e. till 2,00 % från 11 nov 2026; nästa besked 16 december 2026)",
+  "https://nu.se/riksbankens-nya-rantesmall-sa-mycket-dyrare-blir-ditt-bolan/ (4 nov 2026: 2 mkr lån +417 kr/mån, +5 000 kr/år vid +0,25 p.e.; ränteavdrag 30 %; Riksbanken: fler höjningar troliga)",
+  "https://www.nordea.se/privat/andring-av-styrrantan.html (Nordea: styrräntan höjd till 2 % 4 nov, gäller från 11 nov)",
+  "Eget räkneexempel: 2 000 000 × 0,0025 = 5 000 kr/år; × 0,7 / 12 ≈ 292 kr/mån efter ränteavdrag"
+ ],
+ "cover": {
+  "title": [
+   "DITT BOLÅN",
+   "BLEV DYRARE"
+  ],
+  "pill": "Nästa besked 16 december",
+  "label": "2 mkr, +0,25 %:",
+  "big": "+5 000 kr/år",
+  "big_color": "red"
+ },
+ "scenes": [
+  {
+   "type": "hook",
+   "say": "Ditt bolån blev precis dyrare. Sextonde december kan det hända igen.",
+   "kicker": "HAR DU RÖRLIGT BOLÅN?",
+   "big": "DYRARE NU",
+   "sub": "nästa besked 16 dec",
+   "punch": [
+    "Och det kan",
+    "hända igen."
+   ]
+  },
+  {
+   "type": "statement",
+   "say": "Riksbanken har höjt styrräntan till två procent.",
+   "title": "RIKSBANKEN HÖJDE",
+   "lines": [
+    "Styrräntan i november"
+   ],
+   "highlight": "1,75 % → 2,00 %",
+   "chip": "Källa: Riksbanken"
+  },
+  {
+   "type": "number",
+   "say": "Har du två miljoner i rörligt lån kostar varje kvarts procent femtusen kronor om året.",
+   "top": "Lån 2 000 000 kr, +0,25 %",
+   "prefix": "+",
+   "value": 5000,
+   "suffix": " kr",
+   "color": "red",
+   "sub": "per år, före avdrag",
+   "prefix2": "≈ +",
+   "value2": 290,
+   "suffix2": " kr",
+   "color2": "yellow",
+   "sub2": "i månaden efter avdrag",
+   "note": "om banken höjer lika mycket"
+  },
+  {
+   "type": "cards",
+   "say": "Kolla din ränta mot bankens snittränta.",
+   "title": "GÖR DET HÄR",
+   "cards": [
+    [
+     "Kolla din ränta",
+     "i bankappen"
+    ],
+    [
+     "Jämför snitträntan",
+     "den finns på bankens sajt"
+    ],
+    [
+     "Förhandla",
+     "eller byt bank"
+    ]
+   ]
+  },
+  {
+   "type": "cta",
+   "say": "Förhandla – och följ Plånboksskolan.",
+   "line1": "Ring banken",
+   "big": "FÖRHANDLA",
+   "line2": "Följ Plånboksskolan"
+  }
+ ]
+}
