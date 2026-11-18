@@ -1523,3 +1523,18 @@ html[data-tema] .topptab th, html[data-tema] .topptab td { border-color: var(--t
 html[data-tema] .topptab a { color: var(--t-text) !important; font-weight: 600; }
 html[data-tema] .car .pic.ingen b { color: var(--t-text); }
 html[data-tema] .direktsvar a { color: var(--t-accent) !important; font-weight: 700; }
+
+/* Genomgång 18 nov: kontrastfixar */
+html[data-tema] .jmfhist b { color: var(--t-text); }
+html[data-tema="ljus"] .jmfhist .ned { color: #0B7A55; }
+html[data-tema="ljus"] .jmfhist .upp { color: #B45309; }
+html[data-tema] section.info.modellfaq h2 { color: var(--t-text) !important; }
+html[data-tema="mork"] { --muted: #93A5B9; }
+html[data-tema="mork"] .narabox { background: var(--t-yta); border: 1px solid var(--t-linje); }
+html[data-tema="mork"] .betyg.mb { background: #1F7A6B; color: #fff; }
+html[data-tema="mork"] .raknare { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); }
+html[data-tema="mork"] .raknare h2, html[data-tema="mork"] .rform label, html[data-tema="mork"] .rtva b { color: var(--t-text); }
+html[data-tema="mork"] .rform input { background: var(--t-bg); color: var(--t-text); border-color: var(--t-linje); }
+html[data-tema="mork"] .rtva div.vinn { background: rgba(46,196,182,.12); }
+html[data-tema="mork"] .rsvar p.rslut { color: var(--t-text) !important; }
+html[data-tema="mork"] .jmfmerinfo a, html[data-tema="mork"] .jmfkort p a:not(.cta) { color: var(--t-mint, #5EE0D2) !important; }

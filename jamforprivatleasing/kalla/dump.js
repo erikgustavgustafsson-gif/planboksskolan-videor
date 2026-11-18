@@ -5,7 +5,7 @@ const src = fs.readFileSync(process.argv[2] || __dirname + "/app.js", "utf8");
 const a = src.indexOf("const KONTROLL"), slutMark = "// Postnummer -> ungefärlig plats";
 let b = src.indexOf(slutMark); if (b < 0) b = src.indexOf("const POSTNR");
 if (a < 0 || b < 0) { console.error("Hittar inte datadelen i app.js"); process.exit(1); }
-const slug = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const slug = t => t.replace(/\+/g, " plus ").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const kod = src.slice(a, b) + `
 ;return { KONTROLL, BILAR, MA: typeof MODELLALIAS !== "undefined" ? MODELLALIAS : {}, FA: typeof FOTOALIAS !== "undefined" ? FOTOALIAS : {}, MODELLNAMN: typeof MODELLNAMN !== "undefined" ? MODELLNAMN : {} };`;
 const d = new Function("slug", "KONFIG", kod)(slug, {});

@@ -15,7 +15,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank"); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
 
     // Gör ett märkesnamn till en adress: "Mercedes-Benz" -> "mercedes-benz", "Škoda" -> "skoda"
-    function slug(t) { return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+    function slug(t) { return t.replace(/\+/g, " plus ").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
 
     // Mobilmenyn (☰)
     const menyKnapp = document.getElementById("menyKnapp");
@@ -73,7 +73,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     // --- BWORT SLUT ---
     // Samma bil under olika namn hos säljarna slås ihop till ett modellnamn (annars får bilen två sidor)
     const MODELLALIAS = { "Renault|5": "5 E-Tech", "Renault|4": "4 E-Tech", "Renault|Scénic": "Scenic E-Tech", "Renault|Scenic": "Scenic E-Tech", "Hyundai|Ioniq 3": "IONIQ 3", "Hyundai|Ioniq 5": "IONIQ 5",
-      "Kia|Sportage Plug-In Hybrid": "Sportage", "Audi|A2": "A2 e-tron", "Nissan|Juke Hybrid": "Juke", "BYD|SEAL U DM-i": "Seal U", "BYD|SEAL 6 DM-i Touring": "Seal 6 Touring", "Mercedes-Benz|C-Klass": "C", "Audi|A2": "A2 e-tron",
+      "Kia|Sportage Plug-In Hybrid": "Sportage", "Audi|A2": "A2 e-tron", "Nissan|Juke Hybrid": "Juke", "BYD|SEAL U DM-i": "Seal U", "BYD|SEAL 6 DM-i Touring": "Seal 6 Touring", "Mercedes-Benz|C-Klass": "C", "Audi|e-tron": "Q4 e-tron", "BYD|Atto 2": "ATTO 2", "BYD|Atto 3": "ATTO 3", "BYD|Atto 3 EVO": "ATTO 3 EVO", "BYD|Atto 3 Evo": "ATTO 3 EVO", "Audi|A2": "A2 e-tron",
       "Toyota|Aygo": "Aygo X", "DS|7 Crossback": "7", "MG|MG4": "MG4", "Dacia|Sandero Stepway": "Sandero", "Opel|Corsa-e": "Corsa", "Suzuki|e Vitara": "e Vitara" };
     // Elvarianter med samma kaross som en modell vi redan har bild på
     const FOTOALIAS = {"Peugeot|e-3008": "p3008", "Peugeot|e-5008": "p5008", "Renault|5 E-Tech": "r5", "Opel|Frontera": "frontera", "Opel|Grandland": "grandland", "Kia|K4": "k4", "Citroën|C5 AirCross": "c5aircross", "Mitsubishi|Outlander": "outlander", "Hyundai|Santa Fe": "santafe", "Citroën|C3 Aircross": "c3aircross", "Renault|Scenic E-Tech": "scenic", "Hyundai|IONIQ 9": "ioniq9", "Ford|Explorer": "explorer", "Opel|Mokka": "mokka", "Leapmotor|B10": "b10", "Leapmotor|T03": "t03", "MG|S5": "mgs5", "Ford|Capri": "capri", "MINI|Aceman": "aceman", "Dacia|Duster": "duster", "BMW|iX1": "ix1", "Mercedes-Benz|GLA": "gla", "Peugeot|408": "p408", "Opel|Mokka-e": "mokka", "Citroën|e-C3 Aircross": "c3aircross", "Hyundai|IONIQ 3": "ioniq3", "Hyundai|IONIQ 5": "ioniq5", "Nissan|Leaf": "leaf", "Ford|Kuga": "kuga", "Renault|4 E-Tech": "r4", "MG|4 EV Urban": "mg4urban", "Nissan|X-Trail": "xtrail", "Opel|Zafira": "zafira", "MG|S6": "mgs6", "Citroën|C4": "c4", "Citroën|e-C3": "ec3", "Renault|Clio": "clio", "DS|7": "ds7", "BYD|Seal U": "sealu", "Audi|A2 e-tron": "a2etron", "MINI|Cooper": "cooper", "BYD|Seal 6 Touring": "seal6t", "Audi|A6 e-tron": "a6etron", "Audi|Q5": "q5", "Audi|Q8": "q8", "Dacia|Jogger": "jogger", "Nissan|Ariya": "ariya", "Renault|Rafale": "rafale", "Audi|A6": "a6", "Skoda|Octavia": "octavia", "Volkswagen|T-Cross": "tcross", "Ford|Mustang Mach-E": "mache", "Kia|Niro": "niro", "Renault|Captur": "captur", "Audi|A6 Allroad": "a6allroad", "BMW|X1": "x1", "Mercedes-Benz|C": "cklass", "Opel|Corsa": "corsa", "XPENG|L03": "l03", "BMW|iX3": "ix3", "Ford|Puma Gen-E": "pumagene", "Honda|HR-V": "hrv", "Audi|Q3": "q3", "BMW|X3": "x3", "Ford|Puma": "puma", "MINI|Countryman": "countryman", "Mercedes-Benz|CLE": "cle", "Peugeot|208": "p208", "Suzuki|Swift": "swift", "Suzuki|Vitara": "vitara", "Dacia|Bigster": "bigster", "Honda|ZR-V": "zrv", "Kia|EV6": "ev6", "BMW|5-serie": "bmw5", "BMW|iX": "ix", "BYD|Seal": "seal", "DFSK|500": "dfsk500", "DFSK|E5": "dfske5", "Honda|Jazz": "jazz", "Lynk & Co|01": "lynk01", "Lynk & Co|08": "lynk08", "Mazda|2": "mazda2", "Mazda|CX-30": "cx30", "Mazda|CX-60": "cx60", "Mercedes-Benz|EQE": "eqe", "Mercedes-Benz|GLS": "gls", "Opel|Astra": "astra", "Subaru|Forester": "forester", "Subaru|Uncharted": "uncharted", "Suzuki|e Vitara": "evitara", "Volvo|ES90": "es90", "XPENG|G6": "g6", "Audi|A3": "a3", "Audi|A2": "a2etron", "Leapmotor|C10": "c10", "Leapmotor|B05": "b05", "Seat|Arona": "arona", "Toyota|Corolla": "corolla", "Subaru|Outback": "outback", "Subaru|E-Outback": "eoutback"};
@@ -98,6 +98,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         return o.split("-").map(d => _BEHALL.has(d) || /\d/.test(d) && d.length <= 3 ? d : d.charAt(0) + d.slice(1).toLowerCase()).join("-");
       }).join(" ");
       if (!egna.some(x => t.toLowerCase().startsWith(mnamn.toLowerCase().split(" ")[0])) && !t.toLowerCase().startsWith(mnamn.toLowerCase())) t = t;
+      t = t.split(" ").filter((o, i, a) => i === 0 || o.toLowerCase() !== a[i - 1].toLowerCase()).join(" ");   // "IONIQ 3 3 Standard" -> "IONIQ 3 Standard"
       return t && t.length > 1 ? t : mnamn;
     }
     // En handlarannons från Bilweb. Kort form för att hålla filen liten:
@@ -106,6 +107,7 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       const o = BWORT[ort] || [];
       mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null; modell = snyggNamn(marke, mnamn, modell);
       const noter = [`Annons hos ${saljare}, uppdaterad ${dat}`];
+      if (mil >= 2500) { noter.push(`Annonsen anger ${mil.toLocaleString("sv-SE")} mil, vilket vi räknar som hela avtalet (${Math.round(mil / 3).toLocaleString("sv-SE")} mil/år)`); mil = Math.round(mil / 3); }
       if (!mil) noter.push("Körsträckan framgår inte av annonsen – fråga handlaren");
       if (forhojd) noter.push(`Priset förutsätter ${forhojd.toLocaleString("sv-SE")} kr i insats/förhöjd första hyra`);
       return B(marke, modell, foto, drivmedel, manad, mil || 1000, null, { mnamn, kaross: kaross || "", kalla: saljare + " (via Bilweb)", url: "https://bilweb.se/" + vag,
@@ -115,9 +117,11 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     // En lagerbil hos Hedin Automotive med Hedins egna privatleasinguppgifter (pris, avgifter, körsträcka):
     // HD(märke, modellnamn, variant, bild, drivmedel, kr/mån, mil/år, uppläggning, avi/mån, ort, [lat, lon], id/slug, service ingår (1/0), karosstyp)
     function HD(marke, mnamn, modell, foto, drivmedel, manad, mil, start, adm, ort, pos, vag, service, kaross, premie) {
+      // Hedin anger ibland körsträckan för hela avtalet (t.ex. 3 000 mil på 36 mån = 1 000 mil/år), inte per år
+      const miltot = mil >= 2500 ? mil : 0; if (miltot) mil = Math.round(mil / 3);
       mnamn = _alias(marke, mnamn); foto = foto || FOTOALIAS[marke + "|" + mnamn] || null; modell = snyggNamn(marke, mnamn, modell);
       return B(marke, modell, foto, drivmedel, manad, mil, null, { mnamn, kaross: kaross || "", kalla: "Hedin Automotive " + ort, url: "https://hedinautomotive.se/bilar/kop-bil/" + vag,
-        start, adm, ort, ortpos: pos || (BWORT[ort] || [])[0] || null, ortlan: (BWORT[ort] || [])[1] || "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + ". Skatt, vinterhjul och försäkring tillkommer" + (premie ? ". Bilen kan ge rätt till elbilspremie – fråga Hedin om den påverkar priset" : ""), tillval: "inga", hedin: true });
+        start, adm, ort, ortpos: pos || (BWORT[ort] || [])[0] || null, ortlan: (BWORT[ort] || [])[1] || "", service: service ? true : null, not: "Lagerbil hos Hedin Automotive " + ort + (miltot ? ". Annonsen anger " + miltot.toLocaleString("sv-SE") + " mil för hela avtalet, det vill säga " + mil.toLocaleString("sv-SE") + " mil/år" : "") + ". Skatt, vinterhjul och försäkring tillkommer" + (premie ? ". Bilen kan ge rätt till elbilspremie – fråga Hedin om den påverkar priset" : ""), tillval: "inga", hedin: true });
     }
 
     const BILAR = [

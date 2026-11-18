@@ -36,7 +36,7 @@ SALJARE = lambda b: re.split(r" \(|,", b["kalla"])[0]
 
 
 def slug(t):
-    t = unicodedata.normalize("NFD", t.lower())
+    t = unicodedata.normalize("NFD", t.replace("+", " plus ").lower())
     t = "".join(c for c in t if unicodedata.category(c) != "Mn")
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 

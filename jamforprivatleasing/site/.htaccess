@@ -18,6 +18,7 @@ RewriteRule ^privatleasing-renault-4\.html$ /privatleasing-renault-4-e-tech.html
 RewriteRule ^privatleasing-citroen-e-c3-aircross\.html$ /privatleasing-citroen-c3-aircross.html [R=301,L]
 RewriteRule ^privatleasing-byd-seal-u-dm-i\.html$ /privatleasing-byd-seal-u.html [R=301,L]
 RewriteRule ^privatleasing-mercedes-benz-c-klass\.html$ /privatleasing-mercedes-benz-c.html [R=301,L]
+RewriteRule ^privatleasing-audi-e-tron\.html$ /privatleasing-audi-q4-e-tron.html [R=301,L]
 RewriteRule ^privatleasing-ds-7-crossback\.html$ /privatleasing-ds-7.html [R=301,L]
 RewriteRule ^privatleasing-opel-mokka-e\.html$ /privatleasing-opel-mokka.html [R=301,L]
 RewriteRule ^privatleasing-nissan-juke-hybrid\.html$ /privatleasing-nissan-juke.html [R=301,L]
