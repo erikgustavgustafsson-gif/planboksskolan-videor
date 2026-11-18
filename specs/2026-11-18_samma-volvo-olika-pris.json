@@ -1,0 +1,63 @@
+{
+  "slug": "2026-11-18_samma-volvo-olika-pris",
+  "title": "Samma Volvo – 14 580 kr dyrare hos en annan handlare",
+  "caption": "Samma Volvo EX30, samma utförande, samma villkor – men 405 kr mer i månaden hos en annan handlare 🚗 Jag har byggt en sajt som jämför privatleasing: jamforprivatleasing.se\n\nHar du kollat priset hos flera handlare? 👇\n\n#privatleasing #bil #volvo #privatekonomi #plånboksskolan",
+  "pinned_comment": "Priser enligt handlarnas annonser 18 nov 2026 (Volvo EX30 P5 Long Range Plus, 36 mån, 1 000 mil/år, ingen insats): Volvo Car Kista 3 790 kr/mån, Bilia Kungälv 4 195 kr/mån. Kan ändras. Jämför själv på jamforprivatleasing.se – min egen sajt.",
+  "sources": [
+    "https://jamforprivatleasing.se/privatleasing-volvo-ex30.html (egen sajt, kontrollerad 18 nov 2026)",
+    "https://bilweb.se/stockholms-lan/volvo-ex30-p5-long-range-plus-privatleasing-3790-kr-man-2027-suv-350582 (Volvo Car Kista 3 790 kr/mån)",
+    "https://bilweb.se/vastra-gotalands-lan/volvo-ex30-p5-long-range-plus-privatleasing-fr-4195-man-2027-suv-420605 (Bilia Kungälv 4 195 kr/mån)"
+  ],
+  "cover": {
+    "title": [
+      "SAMMA VOLVO",
+      "OLIKA PRIS"
+    ],
+    "pill": "Privatleasing",
+    "label": "På tre år:",
+    "big": "14 580 kr",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Samma Volvo, samma utförande. Fyrahundrafem kronor dyrare i månaden hos en annan handlare.",
+      "kicker": "SAMMA VOLVO EX30",
+      "big": "+405 KR/MÅN",
+      "sub": "hos en annan handlare",
+      "image": "media/jp_ex30_sbs.png",
+      "image_width": 1040,
+      "image_y": 1380
+    },
+    {
+      "type": "number",
+      "bg": "navy",
+      "say": "Det blir fjortontusen femhundra kronor på tre år.",
+      "top": "På tre år",
+      "value": 14580,
+      "suffix": " kr",
+      "color": "yellow",
+      "sub": "3 790 mot 4 195 kr/mån",
+      "note": "Annonser 18 nov 2026, 36 mån, 1 000 mil/år"
+    },
+    {
+      "type": "statement",
+      "bg": "mint",
+      "say": "Priset skiljer mellan handlare, så det lönar sig att jämföra.",
+      "title": "SAMMA BIL",
+      "highlight": "OLIKA PRIS",
+      "chip": "jämför alltid",
+      "image": "media/jp_startsida.png",
+      "image_width": 560,
+      "image_y": 1330
+    },
+    {
+      "type": "cta",
+      "bg": "navy",
+      "say": "Jag har byggt en sajt som jämför tvåtusenfemhundra leasingerbjudanden. Jämförprivatleasing punkt se.",
+      "line1": "Jämför 2 500 erbjudanden",
+      "big": "JAMFORPRIVATLEASING.SE",
+      "line2": "Min egen sajt"
+    }
+  ]
+}
