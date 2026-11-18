@@ -1,0 +1,74 @@
+{
+  "slug": "2026-11-18_aktien-att-halla-koll-pa-1-mycronic",
+  "title": "Aktien att hålla koll på #1: Mycronic",
+  "caption": "Aktien att hålla koll på #1: Mycronic 📈 Vinsten mer än fördubblades i senaste rapporten – ändå har aktien fallit sedan oktober. Analytikerna är splittrade. Inget köp- eller säljråd.\n\nVilken aktie ska vi kolla på i morgon? 👇\n\n#aktier #mycronic #börsen #aktienatthållakollpå #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Analytikers bedömningar är ingen garanti. Q3: rörelseresultat +139 % till 610 mkr. 7 analytiker: 2 positiva, 4 neutrala, 1 negativ, snittriktkurs 329 kr (Factset via Placera/Finwire, 6 nov). Kurs: Yahoo Finance.",
+  "sources": [
+    "https://www.privataaffarer.se/placeringar/aktierekar/har-ar-onsdagens-aktierekar-aGZ38/ (Nordea höjer Mycronic till köp, riktkurs 340 kr, +19,05 % mot stängning 285,60 kr)",
+    "https://www.placera.se/nyheter/elon-rusar-pa-annars-oregelbunden-stockholmsbors-2026-11-18 (aktien steg 5,5 % efter höjningen)",
+    "https://finance.yahoo.com/quote/MYCR.ST/history/ (216,60 kr 2 jan, 299,40 kr 18 nov = +38 %; topp 359 kr 6 okt)",
+    "https://www.placera.se/telegram/mycronic-hojda-vinstprognoser-for-mycronic-efter-stark-rapport-riktkursen-sanks-20261106 (7 analytiker, snittriktkurs 329,43 kr, konsensus behåll)",
+    "https://www.placera.se/telegram/mycronic-ai-drivet-momentum-fortsatter-dnb-carnegie-20260715 (AI-driven efterfrågan, DNB Carnegie)"
+  ],
+  "cover": {
+    "title": [
+      "AKTIEN ATT",
+      "HÅLLA KOLL PÅ"
+    ],
+    "pill": "Del 1",
+    "label": "Idag:",
+    "big": "MYCRONIC",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Mycronic: vinsten mer än fördubblades. Ändå har aktien fallit sedan oktober.",
+      "kicker": "AKTIEN ATT HÅLLA KOLL PÅ #1",
+      "big": "MYCRONIC",
+      "sub": "vinsten upp – aktien ner",
+      "image": "media/mycronic_riktkurs.png",
+      "image_width": 760,
+      "image_y": 1450
+    },
+    {
+      "type": "statement",
+      "bg": "mint",
+      "say": "Bolaget gör maskiner som ritar mönstren till chip och skärmar. AI-boomen driver efterfrågan.",
+      "title": "GÖR MASKINER FÖR",
+      "highlight": "CHIP & SKÄRMAR",
+      "chip": "AI driver efterfrågan"
+    },
+    {
+      "type": "number",
+      "bg": "navy",
+      "say": "Rörelseresultatet steg hundratrettionio procent.",
+      "top": "Rörelseresultat Q3",
+      "value": 139,
+      "prefix": "+",
+      "suffix": " %",
+      "color": "green",
+      "sub": "610 miljoner kr",
+      "note": "Placera/Finwire, rapport 22 okt"
+    },
+    {
+      "type": "statement",
+      "bg": "mint",
+      "say": "Analytikerna är splittrade, men snittriktkursen ligger tio procent över dagens kurs.",
+      "title": "SNITTRIKTKURS",
+      "highlight": "329 KR",
+      "chip": "2 köp · 4 behåll · 1 sälj",
+      "image": "media/mycronic_riktkurs.png",
+      "image_width": 760,
+      "image_y": 1400
+    },
+    {
+      "type": "cta",
+      "bg": "navy",
+      "say": "Men om AI-aktierna faller kan Mycronic följa med. Följ Plånboksskolan!",
+      "line1": "Risk: om AI-aktierna faller",
+      "big": "DEL 2 I MORGON",
+      "line2": "Inget köp- eller säljråd."
+    }
+  ]
+}
