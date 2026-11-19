@@ -83,3 +83,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - Ändra aldrig beräkningsmetoden (andel av nypris på 36 mån; <40 % Mycket bra, <45 % Bra, <55 % OK, annars Dyrt) utan att användaren bett om det.
 - Ändra inte design, logotyp, sidstruktur eller texter – bara data. Ta inte bort bildkällorna.
 - `site/statistik.php` (användarens privata statistiksida med hemlig nyckel) ligger medvetet inte i repot, som är publikt. Lägg aldrig in den.
+
+## IndexNow (gratis snabbindexering hos Bing, DuckDuckGo, Ecosia m.fl., från 19 nov 2026)
+- `site/57ef8e3003528ddc515d27fd5530262d.txt` är nyckelfilen och `site/indexnow.php` skickar alla adresser i sitemap.xml. Ta inte bort dem.
+- Efter varje uppladdning till Strato: öppna `https://jamforprivatleasing.se/indexnow.php?k=addd4b77d576202b9419a55f` (svaret ska vara 200 eller 202).
