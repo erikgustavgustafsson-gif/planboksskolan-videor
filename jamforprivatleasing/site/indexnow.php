@@ -18,7 +18,13 @@ $ctx = stream_context_create(['http' => [
   'header' => "Content-Type: application/json; charset=utf-8\r\n",
   'content' => $data, 'timeout' => 30, 'ignore_errors' => true
 ]]);
-$svar = @file_get_contents('https://api.indexnow.org/indexnow', false, $ctx);
-$kod = isset($http_response_header[0]) ? $http_response_header[0] : 'inget svar';
-echo "Skickade " . count($urls) . " adresser till IndexNow.\nSvar: $kod\n";
-echo (strpos($kod, '200') !== false || strpos($kod, '202') !== false) ? "Klart – Bing m.fl. har fått listan.\n" : "Något gick fel – visa den här texten för Claude.\n";
+$ok = false;
+echo "Skickar " . count($urls) . " adresser.\n\n";
+foreach (['https://api.indexnow.org/indexnow', 'https://www.bing.com/indexnow', 'https://yandex.com/indexnow'] as $mal) {
+  $http_response_header = null;
+  $svar = @file_get_contents($mal, false, $ctx);
+  $kod = isset($http_response_header[0]) ? $http_response_header[0] : 'inget svar';
+  echo "$mal\n  $kod\n  " . substr(trim(strip_tags((string)$svar)), 0, 300) . "\n\n";
+  if (strpos($kod, ' 200') !== false || strpos($kod, ' 202') !== false) $ok = true;
+}
+echo $ok ? "Klart – sökmotorerna har fått listan.\n" : "Något gick fel – visa den här texten för Claude.\n";
