@@ -186,6 +186,9 @@ def verifierat_pris(a, block):
     sn = {x for x in sn if 1500 <= x <= 25000}
     m = a.get("manad")
     if "Privatleasing" in block: return block["Privatleasing"]
+    if m:                                                 # handlarens egen lånekalkyl i texten ("1 585 kr/mån med 0,95 % ränta, 30 % kontantinsats")
+        tt = re.sub(r"(\d)[  .](\d{3})", r"\1\2", html.unescape(a.get("besk") or ""))
+        if re.search(r"(?<!\d)%d\s?(?:kr|:-)?/?\s?(?:kr/)?mån[^\n]{0,60}?(?:\d\s?%%\s?(?:ränta|kontantinsats)|ränta)" % m, tt, re.I): return None
     if m in sn: return m
     lan = {v for k, v in block.items() if k != "Privatleasing"}
     if m in lan: return min(sn) if sn else None          # sidans pris är lånekalkylen

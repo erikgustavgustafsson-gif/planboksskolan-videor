@@ -20,12 +20,12 @@
   ]
  },
  "Dacia": {
-  "n": 35,
+  "n": 71,
   "min": 1990,
   "mod": "Sandero",
   "driv": [
-   "Bensin",
-   "Hybrid"
+   "Hybrid",
+   "Bensin"
   ]
  },
  "Ford": {
@@ -58,7 +58,7 @@
   ]
  },
  "Kia": {
-  "n": 376,
+  "n": 378,
   "min": 2896,
   "mod": "EV2",
   "driv": [
@@ -108,7 +108,7 @@
   ]
  },
  "Renault": {
-  "n": 107,
+  "n": 109,
   "min": 3290,
   "mod": "5 E-Tech",
   "driv": [
@@ -159,7 +159,7 @@
   ]
  },
  "Cupra": {
-  "n": 53,
+  "n": 50,
   "min": 2495,
   "mod": "Formentor",
   "driv": [
@@ -273,11 +273,10 @@
   ]
  },
  "Suzuki": {
-  "n": 5,
-  "min": 2999,
-  "mod": "Swift",
+  "n": 4,
+  "min": 3095,
+  "mod": "Vitara",
   "driv": [
-   "Bensin",
    "Hybrid",
    "El"
   ]
@@ -294,7 +293,7 @@
   ]
  },
  "Volkswagen": {
-  "n": 242,
+  "n": 239,
   "min": 1995,
   "mod": "Polo",
   "driv": [
@@ -305,7 +304,7 @@
   ]
  },
  "Volvo": {
-  "n": 54,
+  "n": 56,
   "min": 3790,
   "mod": "EX30",
   "driv": [
