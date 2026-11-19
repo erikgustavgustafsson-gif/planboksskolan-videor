@@ -95,15 +95,36 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     function stat(t, bil) {
       try {
         if (!/^https?:$/.test(location.protocol) || /claude|localhost|127\.0\.0\.1/.test(location.hostname)) return;
+        if (localStorage.getItem("jp_intern") === "1") return;   // ägarens egna besök räknas inte (sätts med ?intern=1)
         const d = new URLSearchParams({ t, p: location.pathname });
-        if (bil) d.set("b", bil.marke + " " + bil.modell);
+        if (bil) { d.set("b", bil.marke + " " + bil.modell); if (bil.kalla) d.set("s", bil.kalla.replace(/ \(via Bilweb\)$/, "").split(/ \(|,/)[0]); }
         navigator.sendBeacon ? navigator.sendBeacon("stat.php", d) : fetch("stat.php", { method: "POST", body: d, keepalive: true });
       } catch (e) {}
     }
+    // Öppna sidan med ?intern=1 för att sluta räkna dina egna besök i den här webbläsaren (?intern=0 slår på igen)
+    try {
+      const iq = new URLSearchParams(location.search).get("intern");
+      if (iq === "1" || iq === "0") {
+        if (iq === "1") localStorage.setItem("jp_intern", "1"); else localStorage.removeItem("jp_intern");
+        const visa = () => { const n = document.createElement("div"); n.setAttribute("role", "status");
+          n.textContent = iq === "1" ? "Klart – dina besök i den här webbläsaren räknas inte längre i statistiken." : "Dina besök räknas igen i statistiken.";
+          n.style.cssText = "position:fixed;left:12px;right:12px;bottom:16px;z-index:9999;background:#0E2A47;color:#fff;padding:12px 14px;border-radius:12px;font:15px/1.4 system-ui,sans-serif;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)";
+          document.body.appendChild(n); setTimeout(() => n.remove(), 6000); };
+        document.body ? visa() : document.addEventListener("DOMContentLoaded", visa);
+      }
+    } catch (e) {}
     stat("visa");
+    // Vilket erbjudande en utlänk går till – så att statistiken kan räknas per säljare
+    let _utlankKarta = null;
+    function utlankBil(href) {
+      try {
+        if (!_utlankKarta) { _utlankKarta = new Map(); BILAR.forEach(b => { if (b.url) _utlankKarta.set(new URL(ut(b.url), location.href).href, b); }); }
+        return _utlankKarta.get(href) || null;
+      } catch (e) { return null; }
+    }
     // Kontot (Mina sidor) – fylls i av konto-delen längst ned när sidan laddat klart
     var KONTO = { inloggad: false, epost: "", namn: "", telefon: "", sparade: [], kontakter: [] }, KONTAKTRADER = {}, KONTAKTNR = 0;
-    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank"); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
+    document.addEventListener("click", e => { const a = e.target.closest('a[target="_blank"]'); if (a && !/wikimedia|creativecommons/.test(a.href)) { stat("utlank", utlankBil(a.href)); if (window.jpHandelse) jpHandelse("utlank", { saljare: a.hostname }); } });
 
     // Gör ett märkesnamn till en adress: "Mercedes-Benz" -> "mercedes-benz", "Škoda" -> "skoda"
     function slug(t) { return t.replace(/\+/g, " plus ").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }

@@ -845,6 +845,16 @@ for fil, text in sidor.items():
     for gammal, ny in TEXTFIX.items():
         if gammal in text: _traff[gammal] += 1; text = text.replace(gammal, ny)
     (UT / fil).write_text(text, encoding="utf-8")
+# Jämförelsesidor som inte längre byggs (paret finns inte kvar) får en liten sida som skickar vidare till Jämför bilar,
+# så att gamla priser inte ligger kvar på servern och Google slutar visa dem.
+_stub = ('<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><meta name="robots" content="noindex, follow">'
+         f'<link rel="canonical" href="{DOMAN}jamfor-bilar.html"><meta http-equiv="refresh" content="0; url=jamfor-bilar.html">'
+         '<title>Jämför bilar sida vid sida</title></head><body><p>Den här jämförelsen finns inte längre. '
+         '<a href="jamfor-bilar.html">Jämför bilar sida vid sida</a></p></body></html>\n')
+_gamla = [f.name for f in UT.glob("jamfor-*-eller-*.html") if f.name not in sidor]
+for _f in _gamla:
+    (UT / _f).write_text(_stub, encoding="utf-8")
+print(len(_gamla), "gamla jämförelsesidor pekar nu vidare till jamfor-bilar.html")
 print("Texträttningar utan träff:", [k[:50] for k, v in _traff.items() if not v])
 shutil.copy(HIT / "stil.css", UT / "stil.css")
 shutil.copy(HIT / "app.js", UT / "app.js")
