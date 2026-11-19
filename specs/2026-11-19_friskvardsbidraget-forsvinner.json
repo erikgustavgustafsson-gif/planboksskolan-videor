@@ -1,0 +1,33 @@
+{
+  "slug": "2026-11-19_friskvardsbidraget-forsvinner",
+  "title": "Upp till 5 000 kr från jobbet försvinner vid nyår",
+  "caption": "Friskvårdsbidraget går inte att spara till nästa år – och många arbetsgivare har sista dag för kvitton långt före 31 december 🏋️ Kolla din deadline i dag. Ont om tid? Årskort eller klippkort går bra, presentkort gör det inte.\n\nHar du använt ditt friskvårdsbidrag i år? 👇\n\n#friskvårdsbidrag #privatekonomi #spartips #förmåner #plånboksskolan",
+  "pinned_comment": "Skattefritt upp till 5 000 kr per år (Skatteverket). Hur mycket du får bestämmer arbetsgivaren, och arbetsgivaren sätter sista dag för kvitton. Betalar arbetsgivaren ut mer än 5 000 kr blir hela bidraget skattepliktigt. Har du använt ditt? 🙋",
+  "sources": [
+    "https://www.skatteverket.se/privat/skatter/arbeteochinkomst/formaner/personalvardmotionochfriskvard.4.7459477810df5bccdd4800014540.html (max 5 000 kr per år; mer = skatt på hela bidraget; betalt under inkomståret)",
+    "https://www.skatteverket.se/omoss/pressochmedia/nyheter/2025/nyheter/friskvardsbidragetskagallaforinnevarandear.5.4a54dc8b19aa6175a152630.html (gäller innevarande år, presentkort är inte skattefria, årskort/klippkort i slutet av året går bra)",
+    "https://hurbra.se/?p=46999 (2026-11-09: arbetsgivaren sätter deadline, vissa stänger redan i november, outnyttjat bidrag kan inte sparas)"
+  ],
+  "cover": {
+    "title": ["FRISKVÅRDS-", "BIDRAGET", "FÖRSVINNER"],
+    "pill": "Kolla din deadline",
+    "label": "Upp till",
+    "big": "5 000 kr",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Upp till femtusen kronor från jobbet kan försvinna vid nyår.",
+     "kicker": "FRISKVÅRDSBIDRAGET", "big": "5 000 KR", "sub": "kan försvinna vid nyår",
+     "punch": ["Har du använt", "dina?"]},
+    {"type": "statement", "say": "Friskvårdsbidraget kan inte sparas till nästa år.",
+     "title": "GÅR INTE ATT SPARA", "lines": ["Oanvänt bidrag"], "highlight": "FÖLJER INTE MED", "chip": "till 2027"},
+    {"type": "cards", "say": "Och vissa arbetsgivare vill ha kvittot redan i november.",
+     "title": "SISTA DAG?",
+     "cards": [["Arbetsgivaren", "bestämmer sista dag"], ["Vissa stänger", "redan i november"], ["Missar du", "är pengarna borta"]],
+     "last_red": true, "stamp": "0 kr"},
+    {"type": "statement", "say": "Ont om tid? Årskort eller klippkort går bra. Presentkort gör det inte.",
+     "title": "ONT OM TID?", "lines": ["Årskort eller klippkort"], "highlight": "GÅR BRA", "chip": "Presentkort gör det inte"},
+    {"type": "cta", "say": "Kolla din deadline i dag, och följ Plånboksskolan.",
+     "line1": "Kolla din deadline", "big": "I DAG.", "line2": "Följ Plånboksskolan"}
+  ]
+}
