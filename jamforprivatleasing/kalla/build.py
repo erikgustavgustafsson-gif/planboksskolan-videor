@@ -100,6 +100,8 @@ MENY = [("index.html", "Start"), ("kampanjer.html", "Mest för pengarna"), ("all
 
 
 def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, ogtitel=None, modell="", forval=None):
+    if len(titel) > 62 and titel.endswith(" | Jämföra Privatleasing"):
+        titel = titel[: -len(" | Jämföra Privatleasing")]   # Google klipper ändå långa titlar, och visar sajtnamnet separat
     url = DOMAN + ("" if fil == "index.html" else fil)
     graf = ld or []
     ldtext = json.dumps({"@context": "https://schema.org", "@graph": graf}, ensure_ascii=False) if graf else ""
@@ -148,7 +150,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
     <div class="wrap fotrad">
       <div><a class="logo" href="index.html" aria-label="Jämföra Privatleasing – till startsidan"><span><b>Jämföra</b> <i>privatleasing</i></span></a><p>Oberoende jämförelse av privatleasing på nya bilar i Sverige.</p></div>
       <div><b>Information</b><a href="sa-jamfor-vi.html">Så jämför vi</a><a href="om-oss.html">Om oss och kontakt</a><a href="integritetspolicy.html">Integritetspolicy</a><a href="#" data-kakor>Kakinställningar</a><a href="villkor.html">Användarvillkor</a><a href="fragor.html">Frågor &amp; svar</a></div>
-      <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Billigaste privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
+      <div><b>Jämför</b><a href="privatleasing-elbil.html">Privatleasing elbil</a><a href="privatleasing-suv.html">Privatleasing SUV</a><a href="billigaste-privatleasing.html">Bästa privatleasingen</a><a href="privatleasing-under-3000.html">Under 3 000 kr/mån</a><a href="jamfor-bilar.html">Jämför bilar sida vid sida</a><a href="rakna.html">Räkna på kostnaden</a></div>
       <div><b>Företag</b><span id="fotforetag"></span></div>
     </div>
   </footer>
@@ -299,8 +301,8 @@ KATEGORIER = [
      "Här visar vi bara bilar där den faktiska kostnaden är högst 3 000 kr i månaden – med insats och avgifter utslagna på 36 månader. Annonspriser som bara ser billiga ut kommer inte med."),
     ("privatleasing-under-4000.html", "Privatleasing under 4 000 kr/mån", "bilar under 4 000 kr/mån", {"tak": 4000, "sort": "total"}, lambda b: not b["milokand"] and b["eff"] <= 4000,
      "Här visar vi bara bilar där den faktiska kostnaden är högst 4 000 kr i månaden – med insats och avgifter utslagna på 36 månader."),
-    ("billigaste-privatleasing.html", "Billigaste privatleasingen just nu", "bilar", {"sort": "total"}, lambda b: True,
-     "Alla bilar, sorterade efter vad de faktiskt kostar på 36 månader. Insats, uppläggningsavgift och aviavgift är inräknade, så att ett lågt annonspris inte kan gömma en dyr start."),
+    ("billigaste-privatleasing.html", "Bästa privatleasingen just nu", "bilar", {"sort": "total"}, lambda b: True,
+     "Den bästa privatleasingen är den som kostar minst på riktigt. Här är alla bilar sorterade efter vad de faktiskt kostar på 36 månader – insats, uppläggningsavgift och aviavgift är inräknade, så att ett lågt annonspris inte kan gömma en dyr start."),
 ]
 KATLANKAR = '<div class="katlankar">' + "".join(
     f'<a href="{f}">{html.escape(h.replace("Privatleasing ", "").replace(" just nu", "").capitalize())}</a>' for f, h, *_ in KATEGORIER) + "</div>"
@@ -480,6 +482,36 @@ def topptabell(urval, n=10):
     rader = "".join(f'<tr><td>{i + 1}</td><td><a href="privatleasing-{b["mkey"]}.html">{html.escape(b["marke"])} {html.escape(b["mnamn"])}</a></td><td>{html.escape(SALJARE(b))}</td><td>{kr(b["eff"])}/mån</td></tr>' for i, b in enumerate(list(per.values())[:n]))
     return f'<div class="svrull"><table class="topptab"><thead><tr><th>#</th><th>Bil</th><th>Säljare</th><th>Faktisk kostnad</th></tr></thead><tbody>{rader}</tbody></table></div>'
 
+EN_SORT = {"elbilar": "en elbil", "laddhybrider": "en laddhybrid", "hybrider": "en hybrid", "bensinbilar": "en bensinbil",
+           "SUV:ar": "en SUV", "kombibilar": "en kombi", "småbilar": "en småbil"}
+
+def kategori_faq(fil, ord_, urval, st):
+    """Korta frågor och svar som matchar hur folk söker ("hur hittar jag bästa privatleasingen på en kombi?"). Bara siffror ur datan."""
+    bb = st["bast"]
+    kanda_ = [b for b in kanda(urval) if b["mil"]]
+    permil = min(kanda_, key=lambda b: b["total"] / (b["mil"] * 3)) if kanda_ else None
+    pm = ""
+    if permil:
+        krm = f'{permil["total"] / (permil["mil"] * 3):.2f}'.replace(".", ",")
+        pm = f' Billigast per mil är {permil["marke"]} {permil["mnamn"]} – {kr(permil["mil"]).replace(" kr", "")} mil/år för {krm} kr/mil.'
+    nu = f'Just nu är billigast {bb["marke"]} {bb["mnamn"]} för {kr(bb["eff"])}/mån i faktisk kostnad hos {SALJARE(bb)}.{pm} Kontrollerat {KONTROLL}.'
+    hur = ("Jämför den faktiska kostnaden i stället för annonspriset: månadshyran gånger 36 plus insats, uppläggningsavgift och aviavgift. "
+           "Kolla sedan hur många mil per år som ingår och vad en övermil kostar, om service ingår och om månadsavgiften är fast eller rörlig. ")
+    if fil == "billigaste-privatleasing.html":
+        fr = [("Vilken är den bästa privatleasingen just nu?", f"Räknat på vad bilen faktiskt kostar på 36 månader är det {bb['marke']} {bb['mnamn']} för {kr(bb['eff'])}/mån hos {SALJARE(bb)}.{pm} Vi jämför {kr(st['n']).replace(' kr', '')} erbjudanden på {st['modeller']} modeller. Kontrollerat {KONTROLL}."),
+              ("Hur hittar jag det bästa leasingavtalet?", hur + "Det är så listan här är sorterad, med alla avgifter inräknade."),
+              ("Vad är en bra privatleasing?", "En bra privatleasing har låg faktisk månadskostnad, ingen eller låg insats, tillräckligt många mil per år för hur du kör och tydliga villkor för övermil och slitage. Det billigaste annonspriset är inte alltid billigast när insatsen räknas in."),
+              ("Är det märkets kampanj eller handlarens pris som är bäst?", "Det varierar. Vi visar både märkenas egna erbjudanden och handlarnas, i samma lista. Handlare har ibland lägre pris på bilar i lager, men kontrollera körsträckan – en del annonser anger den inte.")]
+    elif ord_ in EN_SORT:
+        en = EN_SORT[ord_]
+        fr = [(f"Hur hittar jag bästa privatleasingen på {en}?", hur + nu),
+              (f"Vad kostar det att privatleasa {en}?", f"Just nu från {kr(st['min'])}/mån i faktisk kostnad. Vi jämför {kr(st['n']).replace(' kr', '')} erbjudanden på {st['modeller']} modeller av {ord_}. Försäkring, vinterhjul och fordonsskatt tillkommer oftast."),
+              (f"Vilka kampanjer finns på {ord_} just nu?", f"Alla kampanjer vi hittar hos märkena och handlarna finns i listan på den här sidan, billigast först. Märkenas egna priser är märkta \"Märkets eget pris\". Kontrollerat {KONTROLL}.")]
+    else:
+        return "", None
+    h = '<section class="info alla modellfaq"><h2>Frågor och svar</h2>' + "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>" for q, a in fr) + "</section>"
+    return h, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in fr]}
+
 for fil, h1, ord_, forval, villkor_f, intro in KATEGORIER:
     urval = [b for b in BILAR if villkor_f(b)]
     if not urval:
@@ -490,18 +522,19 @@ for fil, h1, ord_, forval, villkor_f, intro in KATEGORIER:
             ("Topp 10: billigaste privatleasingen", lambda b: True), ("Topp 10: billigaste elbilarna", lambda b: b["drivmedel"] == "El"),
             ("Topp 10: billigaste SUV:arna", lambda b: b.get("kaross") == "SUV"), ("Topp 10: billigaste kombibilarna", lambda b: b.get("kaross") == "Kombi")])
     st = stats(urval); bb = st["bast"]
-    svar = (f'<b>{st["modeller"]} modeller och {st["n"]} erbjudanden</b> just nu. Billigast är <a href="privatleasing-{bb["mkey"]}.html">{html.escape(bb["marke"])} {html.escape(bb["mnamn"])}</a> '
+    faqhtml, faqld = kategori_faq(fil, ord_, urval, st)
+    svar = (f'<b>{st["modeller"]} modeller och {kr(st["n"]).replace(" kr", "")} erbjudanden</b> just nu. Billigast är <a href="privatleasing-{bb["mkey"]}.html">{html.escape(bb["marke"])} {html.escape(bb["mnamn"])}</a> '
             f'för <b>{kr(bb["eff"])}/mån</b> i faktisk kostnad hos {html.escape(SALJARE(bb))}. Kontrollerat {KONTROLL}.')
     sidor[fil] = sida(
         fil,
-        f"{h1} – {st['modeller']} modeller från {kr(st['min'])}/mån ({MANAD}) | Jämföra Privatleasing",
+        f"{h1} – från {kr(st['min'])}/mån, {MANAD}",
         f"Jämför {ord_} med privatleasing: {st['n']} erbjudanden på {st['modeller']} modeller, billigast {bb['marke']} {bb['mnamn']} från {kr(st['min'])}/mån med alla avgifter inräknade. Kontrollerat {KONTROLL}.",
         sidhuvud(html.escape(h1), intro, brod(("alla-bilar.html", "Alla bilar"), (None, html.escape(h1))))
         + f'\n  <div class="wrap" style="padding:0 16px"><p class="direktsvar">{svar}</p>{KATLANKAR}{extra}</div>'
         + lista_html(f"{html.escape(h1)} – billigast först", ejbil=False)
-        + f'\n  <div class="wrap" style="padding:0 16px">{CHECKLISTA}</div>',
+        + f'\n  <div class="wrap" style="padding:0 16px">{faqhtml}{CHECKLISTA}</div>',
         aktiv="alla-bilar.html", sida_typ="kategori", forval=forval,
-        ld=[brod_ld(("alla-bilar.html", "Alla bilar"), (fil, h1))])
+        ld=[brod_ld(("alla-bilar.html", "Alla bilar"), (fil, h1))] + ([faqld] if faqld else []))
 
 # ---------- Jämför bilar sida vid sida ----------
 sidor["jamfor-bilar.html"] = sida(
