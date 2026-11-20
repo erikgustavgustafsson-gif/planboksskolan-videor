@@ -1,0 +1,32 @@
+{
+  "slug": "2026-11-20_ingen-angerratt-i-butik",
+  "title": "Black Friday i butik? Då har du ingen ångerrätt",
+  "caption": "Ångerrätten på 14 dagar gäller när du handlar på nätet – inte när du köper på plats i butiken 🛍️ Öppet köp bestämmer butiken själv, så fråga innan du betalar. Black Friday är 27 november.\n\nVisste du det här? 👇\n\n#blackfriday #ångerrätt #konsument #privatekonomi #plånboksskolan",
+  "pinned_comment": "Konsumentverket: på nätet har du i regel 14 dagars ångerrätt, räknat från dagen efter att du fick varan. I butik finns ingen ångerrätt – öppet köp och bytesrätt bestämmer butiken själv. Köp av privatperson: ingen ångerrätt. Fick du ingen info om ångerrätten kan fristen förlängas upp till ett år.",
+  "sources": [
+    "https://www.konsumentverket.se/konsumentratt-process/angerratt/ (granskad 2026-10-05: 14 dagar på distans, från dagen efter du tog emot varan; ingen ångerrätt i butik; öppet köp bestämmer företagen; ingen ångerrätt vid köp av privatperson)",
+    "https://www.konsumentverket.se/fragor-och-svar/3033889/har-jag-angerratt-enligt-koplagen/ (ångerfristen kan förlängas upp till ett år om info saknas)"
+  ],
+  "cover": {
+    "title": ["INGEN", "ÅNGERRÄTT", "I BUTIKEN"],
+    "pill": "Black Friday 27 nov",
+    "label": "På nätet:",
+    "big": "14 dagar",
+    "big_color": "green"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Black Friday i butiken? Då har du ingen ångerrätt alls.",
+     "kicker": "BLACK FRIDAY 27 NOV", "big": "0 DAGAR", "sub": "ångerrätt i butiken",
+     "punch": ["Visste du", "det?"]},
+    {"type": "cards", "say": "På nätet har du fjorton dagars ångerrätt, från dagen efter att du fick varan.",
+     "title": "NÄTET VS BUTIKEN",
+     "cards": [["På nätet", "14 dagars ångerrätt"], ["Räknas från", "dagen efter leverans"], ["I butiken", "ingen ångerrätt"]],
+     "last_red": true, "stamp": "0 dagar"},
+    {"type": "statement", "say": "I butiken är öppet köp frivilligt. Fråga innan du betalar.",
+     "title": "ÖPPET KÖP?", "lines": ["Butiken bestämmer själv"], "highlight": "FRÅGA FÖRST", "chip": "innan du betalar"},
+    {"type": "statement", "say": "Köper du av en privatperson har du heller ingen ångerrätt.",
+     "title": "BEGAGNAT?", "lines": ["Köp av privatperson"], "highlight": "INGEN ÅNGERRÄTT", "chip": "Konsumentverket"},
+    {"type": "cta", "say": "Spara kvittot, och följ Plånboksskolan.",
+     "line1": "Spara kvittot", "big": "FRÅGA FÖRST.", "line2": "Följ Plånboksskolan"}
+  ]
+}
