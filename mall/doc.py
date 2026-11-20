@@ -138,7 +138,7 @@ def build(spec, audio, out_dir):
     os.makedirs(out_dir, exist_ok=True)
     scenes = spec["scenes"]
     cuts, adur = E.cuts_for(audio, [s["say"] for s in scenes])
-    total = round((adur + 0.8) * FPS) / FPS
+    total = round((adur + 0.8) * FPS) / FPS  # no 30 s cap in doc mode
     bounds = [0.0] + cuts + [total]
     words = []
     for s, a, b in zip(scenes, bounds, bounds[1:]):
@@ -196,6 +196,7 @@ def build(spec, audio, out_dir):
     vm = v0 * 1.5
     t_cia = word_t("CIA")
     t_ring = word_t("Sagan")
+    t_cia = t_cia if any(sc.get("cia") for sc in scenes) else word_t("CIA")
     for fi in range(int(round(total * FPS))):
         t = fi / FPS
         if fi == 0:
@@ -213,20 +214,76 @@ def build(spec, audio, out_dir):
             orb(img, t, W / 2, 1090, r, glow=1 + 0.6 * clamp(1 - abs(t - t_ring) / 0.8))
             paste(img, title, W / 2, 420, alpha=ease_out(prog(lt, 0, 0.4)))
             paste(img, founded, W / 2, 520, alpha=ease_out(prog(lt, 0.2, 0.4)))
-            if t >= t_cia - 0.05:
+            if scenes[si].get("cia") and t >= t_cia - 0.05:
                 p = ease_back(prog(t, t_cia - 0.05, 0.25))
                 L = text_layer("CIA", 210, RED, w="Black", stroke=14, stroke_col=DARK)
                 paste(img, L, W / 2, 1090, scale=0.6 + 0.4 * p, alpha=clamp(1 - (t - t_ring + 0.2) / 0.3) if t > t_ring - 0.2 else 1)
                 tag(img, t, t_cia + 0.25, "CIA:s riskkapitalbolag", W / 2, 1300, col=(240, 240, 240))
             tag(img, t, t_ring, "SAGAN OM RINGEN", W / 2, 760, col=YEL)
+            if not scenes[si].get("cia"):
+                tag(img, t, word_t("allt", a), "SE ALLT, ÖVERALLT", W / 2, 1400, col=CYAN)
+
+        elif kind == "hook":
+            r = 230 * (0.85 + 0.15 * ease_out(prog(lt, 0, 1.2)))
+            orb(img, t, W / 2, 1060, r, glow=0.7 + 0.8 * clamp((t - word_t("CIA", a) + 0.2) / 0.3))
+            paste(img, text_layer("SILICON VALLEY", 72, SOFT, w="Black", shadow=False), W / 2, 380, alpha=ease_out(prog(lt, 0, 0.4)))
+            for k, (x, y, rot) in enumerate([(300, 560, -8), (780, 600, 7), (540, 700, -4)]):
+                st = word_t("ville", a) + 0.25 * k
+                if t >= st and t < word_t("CIA", a) - 0.1:
+                    L = text_layer("NEJ", 120, RED, w="Black", stroke=10, stroke_col=DARK)
+                    paste(img, L, x, y, scale=1.5 - 0.5 * ease_out(prog(t, st, 0.2)), rot=rot)
+            tc = word_t("CIA", a)
+            if t >= tc - 0.05:
+                L = text_layer("CIA", 220, RED, w="Black", stroke=14, stroke_col=DARK)
+                paste(img, L, W / 2, 1060, scale=1.4 - 0.4 * ease_out(prog(t, tc - 0.05, 0.2)))
+                tag(img, t, tc + 0.35, "CIA:s riskkapitalbolag In-Q-Tel", W / 2, 1290, col=(240, 240, 240))
+
+        elif kind == "founders":
+            paste(img, text_layer("GRUNDAT 2003", 90, YEL, w="Black", stroke=8, stroke_col=DARK), W / 2, 430, alpha=ease_out(prog(lt, 0, 0.3)))
+            for k, (name, sub, key) in enumerate([("PETER THIEL", "medgrundare av PayPal", "Thiel"), ("ALEX KARP", "vd för Palantir", "Karp")]):
+                st = word_t(key, a) - 0.1 if word_t(key, a) > a else a + 0.6 + 1.2 * k
+                if t >= st:
+                    pp = ease_back(prog(t, st, 0.35))
+                    card = Image.new("RGBA", (860, 230), (0, 0, 0, 0))
+                    cd = ImageDraw.Draw(card)
+                    cd.rounded_rectangle([0, 0, 859, 229], 36, fill=(24, 36, 70, 240), outline=CYAN + (180,), width=4)
+                    cd.ellipse([40, 45, 180, 185], fill=CYAN + (60,), outline=CYAN + (200,), width=4)
+                    initials = "".join(w_[0] for w_ in name.split())
+                    card.alpha_composite(text_layer(initials, 60, WHITE, w="Black", shadow=False), (62, 72))
+                    card.alpha_composite(text_layer(name, 66, WHITE, w="Black", shadow=False), (215, 38))
+                    card.alpha_composite(text_layer(sub, 40, SOFT, w="Bold", shadow=False), (220, 128))
+                    paste(img, card, W / 2 + 60 * (1 - pp), 760 + 290 * k, alpha=clamp(pp))
+
+        elif kind == "report":
+            paste(img, text_layer("SENASTE RAPPORTEN", 60, SOFT, w="Black", shadow=False), W / 2, 380, alpha=ease_out(prog(lt, 0, 0.3)))
+            pv = ease_out(prog(lt, 0.3, 1.4))
+            paste(img, text_layer(f"+{int(96 * pv)} %", 210, GREEN, stroke=14, stroke_col=DARK), W / 2, 560)
+            paste(img, text_layer("försäljning på ett år · Q3 2026", 44, SOFT, w="ExtraBold", shadow=False), W / 2, 700, alpha=pv)
+            tb = word_t("första", a)
+            bars = [("Företag i USA", 984, YEL), ("Staten i USA", 953, CYAN)]
+            for k, (lab, mn, cc) in enumerate(bars):
+                bp = ease_out(prog(t, tb + 0.2 * k, 0.8))
+                y = 920 + 210 * k
+                d.rounded_rectangle([110, y, 110 + 860 * bp * mn / 984, y + 120], 24, fill=cc + (255,))
+                paste(img, text_layer(lab, 48, DARK, w="Black", shadow=False), 110 + 30 + text_layer(lab, 48, DARK, w="Black", shadow=False).width / 2, y + 60, alpha=clamp(bp * 3))
+                paste(img, text_layer(f"{mn} mn $", 44, WHITE, w="Black", stroke=5, stroke_col=DARK), 900, y + 165, alpha=clamp(bp * 2 - 1))
+            if t > tb + 1.2:
+                tag(img, t, tb + 1.2, "Första gången någonsin", W / 2, 1400, col=YEL)
 
         elif kind == "network":
             network(img, t, ease_out(prog(lt, 0.0, (b - a) * 0.8)))
             paste(img, text_layer("DATA", 170, WHITE, w="Black", stroke=12, stroke_col=DARK), W / 2, 470,
                   alpha=ease_out(prog(lt, 0, 0.3)))
             tag(img, t, word_t("mönster", a), "hittar mönster", W / 2, 640, col=CYAN)
-            tag(img, t, word_t("militärer", a), "MILITÄRER", 300, 1450, col=(240, 240, 240))
-            tag(img, t, word_t("storföretag", a), "STORFÖRETAG", 760, 1450, col=YEL)
+            for k, (lab, x, y) in enumerate([("CIA", 260, 900), ("FBI", 820, 980), ("NSA", 470, 1300)]):
+                tag(img, t, word_t("Kunderna", a) + 0.5 + 0.45 * k, lab, x, y, col=(240, 240, 240))
+            tb = word_t("Usama", a)
+            if t >= tb - 0.1:
+                tag(img, t, tb - 0.1, "Usama bin Ladin?", W / 2, 1120, col=YEL)
+                tbc = word_t("bekräftat", a)
+                if t >= tbc - 0.3:
+                    L = text_layer("OBEKRÄFTAT", 96, RED, w="Black", stroke=10, stroke_col=DARK)
+                    paste(img, L, W / 2, 1230, scale=1.4 - 0.4 * ease_out(prog(t, tbc - 0.3, 0.2)), rot=-6)
 
         elif kind == "chart":
             p = chart_pos(t)
