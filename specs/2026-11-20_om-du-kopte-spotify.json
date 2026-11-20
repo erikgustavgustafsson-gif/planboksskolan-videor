@@ -1,0 +1,71 @@
+{
+  "slug": "2026-11-20_om-du-kopte-spotify",
+  "title": "Om du köpte Spotify för 10 000 kr för fem år sedan",
+  "caption": "10 000 kr i Spotify för fem år sedan 🎧 Först blev det 3 300 kr. Sen 26 000 kr. Den som sålde i panik missade allt. Inget köp- eller säljråd.\n\nHade du hållit i? 👇\n\n#aktier #spotify #börsen #privatekonomi #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Historisk avkastning är ingen garanti. Räknat på Spotifys veckokurser (köpt 22 nov 2021 för 250,89 $, lägst 71,05 $ 31 okt 2022, 583,85 $ 19 nov 2026) inkl. dollarkursen, utan courtage. Källa: Yahoo Finance.",
+  "sources": [
+    "https://finance.yahoo.com/quote/SPOT/history/ (veckokurser 2021–2026)",
+    "https://finance.yahoo.com/quote/SEK=X/history/ (USD/SEK)"
+  ],
+  "subtitles": true,
+  "sub_y": 1020,
+  "cover": {
+    "title": [
+      "10 000 KR I",
+      "SPOTIFY 2021"
+    ],
+    "pill": "Tänk om…",
+    "label": "Värt idag:",
+    "big": "26 000 kr",
+    "big_color": "green"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "bg": "navy",
+      "say": "Tänk om du köpte Spotify för tiotusen kronor för fem år sedan.",
+      "kicker": "TÄNK OM DU KÖPTE…",
+      "big": "10 000 KR",
+      "sub": "Spotify, november 2021",
+      "frames": "media/spotify_frames/%02d.png",
+      "frame_count": 1,
+      "image_width": 900,
+      "image_y": 1520
+    },
+    {
+      "type": "statement",
+      "bg": "navy",
+      "say": "Ett år senare var de värda tretusen trehundra.",
+      "title": "ETT ÅR SENARE",
+      "highlight": "3 300 KR",
+      "frames": "media/spotify_frames/%02d.png",
+      "frame_start": 0,
+      "frame_count": 10,
+      "image_width": 900,
+      "image_y": 1520,
+      "frames_dur": 1.8
+    },
+    {
+      "type": "statement",
+      "bg": "navy",
+      "say": "Många sålde där. Men den som höll i har i dag tjugosextusen kronor.",
+      "title": "DEN SOM HÖLL I",
+      "highlight": "26 000 KR",
+      "frames": "media/spotify_frames/%02d.png",
+      "frame_start": 9,
+      "frame_count": 39,
+      "image_width": 900,
+      "image_y": 1520,
+      "frames_dur": 3.2
+    },
+    {
+      "type": "cta",
+      "bg": "navy",
+      "say": "Det svåra är inte att välja aktie. Det är att sitta still. Följ Plånboksskolan!",
+      "line1": "Det svåra är",
+      "big": "ATT SITTA STILL",
+      "line2": "Inget köp- eller säljråd.",
+      "sub_y": 1450
+    }
+  ]
+}

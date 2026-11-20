@@ -232,6 +232,8 @@ def with_image(fn, s, dur):
     """Optional illustration for any scene type except hook (which places its own):
     "image", "image_width" (default 700), "image_y" (centre, default 1450),
     "image_t" (appear time in s, default 0.35), "cutout"."""
+    if s.get("frames"):
+        return with_frames(fn, s, dur)
     if s["type"] == "hook" or not s.get("image"):
         return fn
     img = load_image(s["image"], s.get("image_width", 700), s.get("cutout", False))
@@ -242,6 +244,105 @@ def with_image(fn, s, dur):
         p = ease_out(prog(t, st, 0.5))
         if p > 0:
             paste(b, img, W / 2, s.get("image_y", 1450) + 70 * (1 - p), alpha=p)
+    return g
+
+
+def with_frames(fn, s, dur):
+    """Animated image (e.g. a chart that draws itself): "frames" is a printf pattern
+    such as "media/x/%02d.png", "frame_count" how many there are, drawn over
+    "frames_dur" seconds (default 85 % of the scene) from "image_t" (default 0)."""
+    f0 = s.get("frame_start", 0)
+    n = s["frame_count"]
+    imgs = [load_image(s["frames"] % (f0 + i), s.get("image_width", 860)) for i in range(n)]
+    st = s.get("image_t", 0.0)
+    fd = s.get("frames_dur", dur * 0.85)
+
+    def g(b, t):
+        fn(b, t)
+        k = int(clamp((t - st) / max(0.01, fd)) * (n - 1))
+        a = ease_out(prog(t, st, 0.25))
+        if a > 0:
+            paste(b, imgs[k], W / 2, s.get("image_y", 1450), alpha=a)
+    return g
+
+
+# ---------------------------------------------------------------- word-by-word subtitles
+def speech_spans(audio, a, b):
+    """Non-silent stretches between a and b (fine-grained, for word timing)."""
+    out = subprocess.run(["ffmpeg", "-hide_banner", "-ss", str(a), "-t", str(b - a), "-i", audio, "-af",
+                          "silencedetect=noise=-32dB:d=0.12", "-f", "null", "-"], capture_output=True, text=True).stderr
+    st = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", out)]
+    en = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", out)]
+    spans, cur = [], 0.0
+    for x, y in zip(st, en + [b - a] * (len(st) - len(en))):
+        if x - cur > 0.05:
+            spans.append((a + cur, a + x))
+        cur = y
+    if (b - a) - cur > 0.05:
+        spans.append((a + cur, b))
+    return spans or [(a, b)]
+
+
+def word_times(audio, text, a, b):
+    """Spread the words of `text` over the speech inside [a, b], by length."""
+    words = text.split()
+    spans = speech_spans(audio, a, b)
+    talk = sum(y - x for x, y in spans)
+    weights = [len(w.strip(".,!?:;")) + 2 for w in words]
+    tot = sum(weights)
+    out, acc = [], 0.0
+    for w, wt in zip(words, weights):
+        pos = talk * acc / tot  # position in speech-time
+        for x, y in spans:
+            if pos <= (y - x):
+                out.append((w, x + pos))
+                break
+            pos -= (y - x)
+        else:
+            out.append((w, spans[-1][1]))
+        acc += wt
+    return out
+
+
+def chunks(times, size=3):
+    """Group words into chunks of up to `size`, breaking after punctuation."""
+    out, cur = [], []
+    for w, t in times:
+        cur.append((w, t))
+        if len(cur) >= size or w[-1] in ".,!?:":
+            out.append(cur)
+            cur = []
+    if cur:
+        out.append(cur)
+    return out
+
+
+def with_subtitles(fn, words, a, y):
+    """Draw the current chunk; the word being spoken is yellow, the rest white."""
+    groups = chunks(words)
+    starts = [g[0][1] - a for g in groups]
+
+    def g(b, t):
+        fn(b, t)
+        idx = max([i for i, s0 in enumerate(starts) if s0 <= t + 0.05] or [None]) if starts else None
+        if idx is None:
+            return
+        grp = groups[idx]
+        f = R.font(84, "Black")
+        sizes = [f.getlength(w + " ") for w, _ in grp]
+        total = sum(sizes) - f.getlength(" ")
+        scale = min(1.0, 980 / max(1, total))
+        size = int(84 * scale)
+        f = R.font(size, "Black")
+        sizes = [f.getlength(w + " ") for w, _ in grp]
+        x = W / 2 - (sum(sizes) - f.getlength(" ")) / 2
+        pop = ease_back(prog(t, starts[idx], 0.18))
+        for (w, wt), sw in zip(grp, sizes):
+            col = YEL if wt - a <= t + 0.05 and (grp.index((w, wt)) == len(grp) - 1 or
+                                                  grp[grp.index((w, wt)) + 1][1] - a > t + 0.05) else WHITE
+            L = text_layer(w, size, col, stroke=10, stroke_col=DARK)
+            paste(b, L, x + f.getlength(w) / 2, y, scale=0.85 + 0.15 * pop)
+            x += sw
     return g
 
 
@@ -259,6 +360,8 @@ def build(spec, audio, out_dir, max_len=30.0):
         bg = s.get("bg") or ("navy" if i % 2 == 0 else "mint")
         dur = b - a
         fn = with_image(SCENES[s["type"]](s, bg, dur), s, dur)
+        if spec.get("subtitles"):
+            fn = with_subtitles(fn, word_times(audio, s["say"], a, b), a, s.get("sub_y", spec.get("sub_y", 1250)))
         p = os.path.join(work, f"s{i}.mp4")
         render_scene_file(p, dur, BG_NAVY if bg == "navy" else BG_MINT, fn, cover_first_frame=(i == 0))
         files.append(p)
