@@ -1,0 +1,29 @@
+{
+  "slug": "2026-11-20_aktien-att-halla-koll-pa-2-truecaller",
+  "title": "Aktien att hålla koll på #2: Truecaller",
+  "caption": "Aktien att hålla koll på #2: Truecaller 📞 Ner nästan 70 % från toppen – men igår steg aktien 12 % när ABG sa köp. Skattetvisten i Indien är den stora frågan. Inget köp- eller säljråd.\n\nAnvänder du Truecaller? 👇\n\n#aktier #truecaller #börsen #aktienatthållakollpå #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Analytikers bedömningar är ingen garanti. ABG höjde till köp, riktkurs 35 kr (19 nov). SEB: behåll, 22 kr. DNB Carnegie: köp, 37 kr. Q3: omsättning 464 mkr (−1 %), förlust pga skattereservering i Indien. 476 milj. användare. Kurs: Yahoo Finance.",
+  "sources": [
+    "https://www.borskollen.se/nyheter/27/morgonkollen-aktuella-borshandelser-du-bor-ha-koll-pa-den-19-november (ABG höjer Truecaller till köp, riktkurs 35 kr)",
+    "https://www.affarsvarlden.se/aktie/truecaller (SEB behåll 22 kr, DNB Carnegie köp 37 kr; negativt resultat pga skattereservering)",
+    "https://www.pressen.se/1371655907.html (nettoomsättning −1 % till 464 mkr Q3 2026)",
+    "https://www.investing.com/news/transcripts/earnings-call-transcript-truecaller-q3-2026-misses-eps-shares-sink-17-93CH-4994877 (476 miljoner MAU, +8 %)",
+    "https://en.wikipedia.org/wiki/Truecaller (350 miljoner användare i Indien)",
+    "https://finance.yahoo.com/quote/TRUE-B.ST/history/ (topp 84 kr 26 feb 2025; 23,21 kr 18 nov, 26,09 kr 19 nov 2026)"
+  ],
+  "cover": {"title": ["AKTIEN ATT", "HÅLLA KOLL PÅ"], "pill": "Del 2", "label": "Idag:", "big": "TRUECALLER", "big_color": "yellow"},
+  "scenes": [
+    {"type":"hook","say":"Truecaller har rasat nästan sjuttio procent från toppen. Igår steg aktien tolv procent, när en analytiker sa köp.",
+     "kicker":"AKTIEN ATT HÅLLA KOLL PÅ #2","big":"TRUECALLER","sub":"−69 % från toppen, +12 % igår",
+     "image":"media/truecaller_riktkurs.png","image_width":760,"image_y":1450},
+    {"type":"statement","bg":"mint","say":"Appen visar vem som ringer, och har fyrahundrasjuttiosex miljoner användare, mest i Indien.",
+     "title":"476 MILJONER","highlight":"ANVÄNDARE","chip":"mest i Indien"},
+    {"type":"statement","bg":"navy","say":"Men i senaste rapporten krympte försäljningen, och en skattetvist i Indien gav förlust.",
+     "title":"FÖRSÄLJNING −1 %","highlight":"FÖRLUST","chip":"skattetvist i Indien"},
+    {"type":"statement","bg":"mint","say":"ABG:s riktkurs är trettiofem kronor, en tredjedel över dagens kurs. SEB säger däremot behåll.",
+     "title":"ABG: KÖP","highlight":"35 KR","chip":"SEB: behåll",
+     "image":"media/truecaller_riktkurs.png","image_width":760,"image_y":1400},
+    {"type":"cta","bg":"navy","say":"Skattetvisten är den stora risken. Följ Plånboksskolan!",
+     "line1":"Risken: skattetvisten","big":"DEL 3 I MORGON","line2":"Inget köp- eller säljråd."}
+  ]
+}
