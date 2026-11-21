@@ -1,0 +1,29 @@
+{
+  "slug": "2026-11-21_julklappen-fran-jobbet-600-kr",
+  "title": "Julklappen från jobbet: 601 kr = skatt på allt",
+  "caption": "Julgåvan från jobbet är skattefri upp till 600 kr inkl. moms i år 🎁 Är den värd mer blir hela gåvan skattepliktig – från första kronan. Kontanter och presentkort som kan bytas mot pengar är aldrig skattefria.\n\nVad fick du i julklapp från jobbet förra året? 👇\n\n#julklapp #skatt #jul #privatekonomi #plånboksskolan",
+  "pinned_comment": "Skatteverket: julgåva till anställda är skattefri om värdet inkl. moms är högst 600 kr (inkomstår 2026, 550 kr 2025). Överstiger den beloppet är gåvan skattepliktig från första kronan. Pengar och presentkort som kan bytas mot pengar är inte skattefria. Presentkort som inte kan bytas mot pengar kan vara skattefria.",
+  "sources": [
+    "https://skatteverket.se/privat/skatter/arbeteochinkomst/formaner/gavor (ändrad 2026-06-17: julgåva skattefri högst 600 kr inkl. moms 2026, 550 kr 2025; över beloppet skattepliktig från första kronan; pengar och presentkort som kan bytas mot pengar ej skattefria)"
+  ],
+  "cover": {
+    "title": ["JULKLAPPEN", "FRÅN JOBBET"],
+    "pill": "Skattefri gräns 2026",
+    "label": "Högst",
+    "big": "600 kr",
+    "big_color": "green"
+  },
+  "scenes": [
+    {"type": "hook", "say": "Sexhundra kronor. Mer får julklappen från jobbet inte vara värd, annars skattar du.",
+     "kicker": "JULKLAPPEN FRÅN JOBBET", "big": "600 KR", "sub": "skattefri gräns 2026",
+     "punch": ["inklusive", "moms"]},
+    {"type": "statement", "say": "En krona över, så blir hela gåvan skattepliktig. Från första kronan.",
+     "title": "601 KR?", "lines": ["Över gränsen"], "highlight": "SKATT PÅ ALLT", "chip": "från första kronan"},
+    {"type": "cards", "say": "Kontanter är aldrig skattefria. Inte heller presentkort som går att byta mot pengar.",
+     "title": "SKATTEFRITT?",
+     "cards": [["Kontanter", "alltid skatt"], ["Inlösbart presentkort", "skatt"], ["Ej inlösbart kort", "kan vara skattefritt"]],
+     "last_red": false},
+    {"type": "cta", "say": "Vet vad gåvan är värd, och följ Plånboksskolan.",
+     "line1": "Gränsen i år", "big": "600 KR.", "line2": "Följ Plånboksskolan"}
+  ]
+}
