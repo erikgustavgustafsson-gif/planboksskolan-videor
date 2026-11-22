@@ -1,0 +1,77 @@
+{
+  "slug": "2026-11-22_black-friday-dyrare-an-september",
+  "title": "Black Friday-rean kan vara dyrare än i september",
+  "caption": "Nästan var tredje vara blev dyrare i oktober, enligt Prisjakt 🏷️ 30-dagarsregeln räknar bara bakåt en månad – så kolla prishistoriken längre än så innan du slår till på Black Friday 27 november.\n\nHar du sett en fejkrea? 👇\n\n#blackfriday #rea #konsument #privatekonomi #plånboksskolan",
+  "pinned_comment": "Prisjakt: knappt 30 % av ca en halv miljon produkter blev dyrare i oktober (TT 8 nov). Prisinformationslagen: vid prissänkning ska butiken ange lägsta pris senaste 30 dagarna – en höjning tidigare än så träffas inte av lagen (Konsumentverket). 1 500 → 1 900 → 1 600 kr är ett räkneexempel. Misstänkt bluffrea? Anmäl till Konsumentverket.",
+  "sources": [
+    "https://www.tv4.se/artikel/tt-261108-blackfriday1-5f34268d/infor-black-friday-se-upp-for-lockpriser (TT 2026-11-08: Prisjakt, knappt 30 % av ca 500 000 produkter dyrare i oktober; 30-dagarsregeln sedan 2022; Konsumentverkets jurist: höjning 31 dagar före träffas inte av lagen)",
+    "https://hurbra.se/priser-hojs-infor-black-friday-2026/ (2026-11-08: Black Friday 27 nov 2026; räkneexempel 1 500 → 1 900 → 1 600 kr)"
+  ],
+  "cover": {
+    "title": [
+      "BLACK FRIDAY",
+      "DYRARE ÄN",
+      "I SEPTEMBER?"
+    ],
+    "pill": "30-dagarsregelns lucka",
+    "label": "Nästan",
+    "big": "3 av 10",
+    "big_color": "yellow"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Black Friday-rean kan vara dyrare än i september.",
+      "kicker": "BLACK FRIDAY 27 NOV",
+      "big": "DYRARE?",
+      "sub": "än i september",
+      "punch": [
+        "Trots",
+        "rea-skylten"
+      ]
+    },
+    {
+      "type": "number",
+      "say": "Nästan var tredje vara blev dyrare i oktober.",
+      "top": "NÄSTAN",
+      "value": 3,
+      "suffix": " av 10",
+      "color": "yellow",
+      "sub": "varor dyrare i oktober",
+      "note": "Prisjakt via TT"
+    },
+    {
+      "type": "statement",
+      "say": "Lagen ser bara trettio dagar bakåt. Höjer butiken tidigare, gäller den inte.",
+      "title": "30-DAGARSREGELN",
+      "lines": [
+        "Rean räknas från",
+        "lägsta pris 30 dagar"
+      ],
+      "highlight": "HÖJT DAG 31? OK",
+      "chip": "enligt Konsumentverket"
+    },
+    {
+      "type": "number",
+      "say": "Femtonhundra i september. Sextonhundra på rea.",
+      "top": "Sep 1 500 → okt 1 900 kr",
+      "value": 1600,
+      "suffix": " kr",
+      "color": "yellow",
+      "sub": "Black Friday-pris",
+      "value2": 100,
+      "prefix2": "+",
+      "suffix2": " kr",
+      "color2": "red",
+      "sub2": "mot september",
+      "note": "Räkneexempel"
+    },
+    {
+      "type": "cta",
+      "say": "Kolla prishistoriken, och följ Plånboksskolan.",
+      "line1": "Innan du köper:",
+      "big": "KOLLA PRISET",
+      "line2": "Följ Plånboksskolan"
+    }
+  ]
+}
