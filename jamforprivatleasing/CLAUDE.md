@@ -83,6 +83,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - Ändra aldrig beräkningsmetoden (andel av nypris på 36 mån; <40 % Mycket bra, <45 % Bra, <55 % OK, annars Dyrt) utan att användaren bett om det.
 - Ändra inte design, logotyp, sidstruktur eller texter – bara data. Ta inte bort bildkällorna.
 - `site/statistik.php` (användarens privata statistiksida med hemlig nyckel) ligger medvetet inte i repot, som är publikt. Lägg aldrig in den.
+- `site/oversikt.php` (22 nov 2026) är Eriks statistiksida som går ut med vanliga zip-paketet. Den innehåller bara SHA-256 av nyckeln, aldrig själva nyckeln – skriv aldrig in nyckeln i repot, i commit-meddelanden eller i rapporter. Öppnas med `oversikt.php?nyckel=…`.
 
 ## IndexNow (gratis snabbindexering hos Bing, DuckDuckGo, Ecosia m.fl., från 19 nov 2026)
 - `site/57ef8e3003528ddc515d27fd5530262d.txt` är nyckelfilen och `site/indexnow.php` skickar alla adresser i sitemap.xml. Ta inte bort dem.
