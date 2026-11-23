@@ -4275,7 +4275,30 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
     if (document.getElementById("fotforetag")) document.getElementById("fotforetag").innerHTML = [FORETAG.namn + " (enskild firma)", FORETAG.orgnr && "Org.nr " + FORETAG.orgnr, FORETAG.epost].filter(Boolean).map(esc).join("<br>");
     // ---------- Jämför handlare: alla erbjudanden på en modell, billigast först ----------
     const jamfor = document.getElementById("jamfor");
-    let jmfRegion = "Alla", jmfMil = 0, jmfFors = 0, jmfVisa = 20;
+    let jmfRegion = "Alla", jmfMil = 0, jmfFors = 0, jmfVisa = 20, jmfDriv = "Alla", jmfNiva = "Alla", jmfMot = "Alla";
+    // Utrustningsnivåer som märkena använder – för att kunna filtrera erbjudandena på samma modell per version.
+    // Ordningen spelar roll: längre namn först ("GT-Line" före "GT").
+    const NIVAORD = ["Calligraphy", "Prime", "N Line", "N-Line", "ProMax", "Proline", "Instyle", "Intense", "Invite", "Engage", "Evolve", "Explore", "Essence", "Trend", "Business", "GS", "GT-Line", "GT Line", "ST-Line", "R-Line", "AMG Line", "M Sport", "GR Sport", "N-Connecta", "N-Design", "Esprit Alpine", "Black Edition",
+      "Allure", "Active", "Style", "Action", "Advance", "Advanced", "Plus", "Ultra", "Core", "Essential", "Ultimate", "Life", "Pro", "Pure", "Max", "GTX",
+      "Executive", "Comfort", "Elegant", "Luxury", "Excite", "Exclusive", "Selection", "Sportline", "Ambition", "Evolution", "Techno", "Iconic", "Equilibre",
+      "Titanium", "Premium", "Select", "Tekna", "Acenta", "Visia", "Expression", "Journey", "Extreme", "Edition", "Boost", "Design", "Performance", "GT"];
+    const NIVARE = NIVAORD.map(n => [n.replace("GT Line", "GT-Line").replace("N Line", "N-Line"), new RegExp("(^|[\\s/(])" + n.replace(/[-\s]/g, "[-\\s]?") + "(?=$|[\\s/),.])", "i")]);
+    // Batteri och drivning – för elbilar och bilar där märket anger det i stället för utrustningsnivå
+    const MOTORRE = [["Fyrhjulsdrift", /\b(AWD|4WD|4x4|4MOTION|quattro|xDrive|Twin Motor|Dual Motor|All-?Wheel)\b/i],
+      ["Long Range", /\b(Long Range|LR|Extended Range|Ext\.? Range|Maximal räckvidd|Large battery)\b/i],
+      ["Standard Range", /\b(Standard Range|SR|Single Motor|Short Range)\b/i]];
+    function motor(r) {
+      const t = r.modell.replace(r.mnamn, "");
+      const kwh = t.match(/(\d{2,3})(?:[.,]\d)?\s?kWh/i) || t.match(/\bEV(\d{2})\b/);   // batteristorlek, t.ex. "77 kWh" eller Renaults "EV52"
+      if (kwh) return kwh[1] + " kWh";
+      for (const [namn, re] of MOTORRE) if (re.test(t)) return namn;
+      return "";
+    }
+    function niva(r) {
+      const t = " " + r.modell.replace(r.mnamn, "") + " ";
+      for (const [namn, re] of NIVARE) if (re.test(t)) return namn;
+      return "";
+    }
     try { jmfFors = Number(localStorage.getItem("jp_fors")) || 0; } catch (e) {}
     const MAN = ["jan", "feb", "mars", "apr", "maj", "juni", "juli", "aug", "sep", "okt", "nov", "dec"];
     const datumKort = d => { const [, m, dag] = d.split("-"); return Number(dag) + " " + MAN[Number(m) - 1]; };
@@ -4309,14 +4332,29 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
         return { ...bil, m, total, medfors, ingar, eff: medfors == null ? null : medfors / 36, krmil: total == null || bil.milokand ? null : medfors / (ingar * 3),
           andel: total != null && bil.nypris && !jmfMil ? (total - (bil.forsakring || 0) * 36) / bil.nypris : null, avst: avstand(bil) };
       });
-      const kanda = alla.filter(r => !r.milokand && r.eff != null);
+      // Version: drivmedel och utrustningsnivå. Billigast räknas inom vald version, så att man jämför samma bil.
+      const drivN = {}; alla.forEach(r => drivN[r.drivmedel] = (drivN[r.drivmedel] || 0) + 1);
+      const drivK = Object.keys(drivN).sort((a, b) => drivN[b] - drivN[a]);
+      if (!drivN[jmfDriv]) jmfDriv = "Alla";
+      const efterDriv = alla.filter(r => jmfDriv === "Alla" || r.drivmedel === jmfDriv);
+      const nivaN = {}; efterDriv.forEach(r => { const n = niva(r) || "Övriga"; nivaN[n] = (nivaN[n] || 0) + 1; });
+      const nivaK = Object.keys(nivaN).filter(n => n !== "Övriga").sort((a, b) => nivaN[b] - nivaN[a]);
+      const visaNiva = nivaK.length > 1 && (efterDriv.length - (nivaN["Övriga"] || 0)) / efterDriv.length >= 0.5;
+      if (!visaNiva || !nivaN[jmfNiva]) jmfNiva = "Alla";
+      const efterNiva = efterDriv.filter(r => jmfNiva === "Alla" || (niva(r) || "Övriga") === jmfNiva);
+      const motN = {}; efterNiva.forEach(r => { const n = motor(r) || "Övriga"; motN[n] = (motN[n] || 0) + 1; });
+      const motK = Object.keys(motN).filter(n => n !== "Övriga").sort((a, b) => (parseInt(a) || 999) - (parseInt(b) || 999) || ["Standard Range", "Long Range", "Fyrhjulsdrift"].indexOf(a) - ["Standard Range", "Long Range", "Fyrhjulsdrift"].indexOf(b));
+      const visaMot = motK.length > 1 && (efterNiva.length - (motN["Övriga"] || 0)) / efterNiva.length >= 0.5;
+      if (!visaMot || !motN[jmfMot]) jmfMot = "Alla";
+      const urval = efterNiva.filter(r => jmfMot === "Alla" || (motor(r) || "Övriga") === jmfMot);
+      const kanda = urval.filter(r => !r.milokand && r.eff != null);
       const b0 = alla[0], lagst = kanda.length ? Math.min(...kanda.map(r => r.eff)) : null;
-      const lan = {}; alla.forEach(r => r.lan.forEach(l => lan[l] = (lan[l] || 0) + 1));
+      const lan = {}; urval.forEach(r => r.lan.forEach(l => lan[l] = (lan[l] || 0) + 1));
       const lankn = Object.keys(lan).sort((a, b) => (a === "Hela Sverige" ? -1 : b === "Hela Sverige" ? 1 : a.localeCompare(b, "sv")));
       if (jmfRegion !== "Alla" && !lan[jmfRegion]) jmfRegion = "Alla";
       const sortSel = document.getElementById("jmfsort"), s = sortSel ? sortSel.value : "manad";
       // Väljer man ett län visas även erbjudanden som gäller i hela landet – de går att hämta där också
-      let rader = alla.filter(r => jmfRegion === "Alla" || r.lan.includes(jmfRegion) || (jmfRegion !== "Hela Sverige" && r.lan[0] === "Hela Sverige"));
+      let rader = urval.filter(r => jmfRegion === "Alla" || r.lan.includes(jmfRegion) || (jmfRegion !== "Hela Sverige" && r.lan[0] === "Hela Sverige"));
       const big = Number.MAX_SAFE_INTEGER, e = r => r.eff ?? big;
       rader.sort((a, b) => s === "krmil" ? (a.krmil ?? big) - (b.krmil ?? big) : s === "total" ? (a.medfors ?? big) - (b.medfors ?? big) : s === "nara" ? (a.avst ?? (a.lokal ? big : -1)) - (b.avst ?? (b.lokal ? big : -1)) || e(a) - e(b) : e(a) - e(b) || (a.milokand ? 1 : 0) - (b.milokand ? 1 : 0) || (a.m ?? big) - (b.m ?? big));
       const tal = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -4328,6 +4366,12 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
           ${milval.length > 1 ? `<div><label>Hur långt kör du per år?</label><div class="chips" id="jmfmil"><button type="button" data-mil="0" class="${!jmfMil ? "vald" : ""}">Som i erbjudandet</button>${milval.map(v => `<button type="button" data-mil="${v}" class="${jmfMil === v ? "vald" : ""}">${milTxt(v)}</button>`).join("")}</div></div>` : ""}
           <div><label for="jmffors">Din bilförsäkring, kr/mån <small>(valfritt – räknas in där den inte redan ingår)</small></label><input id="jmffors" type="number" inputmode="numeric" min="0" step="50" value="${jmfFors || ""}" placeholder="t.ex. 600"></div>
         </div>
+        ${drivK.length > 1 || visaNiva || visaMot ? `<div class="jmfversion">
+          <p class="jmfvrub">Jämför samma version${jmfDriv !== "Alla" || jmfNiva !== "Alla" || jmfMot !== "Alla" ? ` – visar ${urval.length} av ${alla.length}` : ""}</p>
+          ${drivK.length > 1 ? `<div class="jmfregion"><span>Drivmedel:</span><button type="button" data-driv="Alla" class="${jmfDriv === "Alla" ? "vald" : ""}">Alla</button>${drivK.map(d => `<button type="button" data-driv="${esc(d)}" class="${jmfDriv === d ? "vald" : ""}">${esc(d)} <i>${drivN[d]}</i></button>`).join("")}</div>` : ""}
+          ${visaNiva ? `<div class="jmfregion"><span>Utrustning:</span><button type="button" data-niva="Alla" class="${jmfNiva === "Alla" ? "vald" : ""}">Alla</button>${nivaK.map(n => `<button type="button" data-niva="${esc(n)}" class="${jmfNiva === n ? "vald" : ""}">${esc(n)} <i>${nivaN[n]}</i></button>`).join("")}${nivaN["Övriga"] ? `<button type="button" data-niva="Övriga" class="${jmfNiva === "Övriga" ? "vald" : ""}">Ej angiven <i>${nivaN["Övriga"]}</i></button>` : ""}</div>` : ""}
+          ${visaMot ? `<div class="jmfregion"><span>Batteri/drivning:</span><button type="button" data-mot="Alla" class="${jmfMot === "Alla" ? "vald" : ""}">Alla</button>${motK.map(n => `<button type="button" data-mot="${esc(n)}" class="${jmfMot === n ? "vald" : ""}">${esc(n)} <i>${motN[n]}</i></button>`).join("")}${motN["Övriga"] ? `<button type="button" data-mot="Övriga" class="${jmfMot === "Övriga" ? "vald" : ""}">Ej angiven <i>${motN["Övriga"]}</i></button>` : ""}</div>` : ""}
+        </div>` : ""}
         <div class="jmfkontroll">
           <select id="jmfsort" aria-label="Sortera erbjudandena">
             <option value="manad">Lägsta faktiska månadskostnad</option><option value="total">Lägsta totalkostnad</option><option value="krmil">Lägsta pris per mil</option>${MINPLATS ? `<option value="nara">Närmast mig</option>` : ""}
@@ -4395,6 +4439,9 @@ if (typeof KONFIG === "undefined") var KONFIG = {};
       });
       jamfor.addEventListener("click", e => {
         const l = e.target.closest("button[data-lan]"); if (l) { jmfRegion = l.dataset.lan; jmfVisa = 20; ritaJamfor(); return; }
+        const dv = e.target.closest("button[data-driv]"); if (dv) { jmfDriv = dv.dataset.driv; jmfNiva = "Alla"; jmfMot = "Alla"; jmfVisa = 20; ritaJamfor(); return; }
+        const nv = e.target.closest("button[data-niva]"); if (nv) { jmfNiva = nv.dataset.niva; jmfMot = "Alla"; jmfVisa = 20; ritaJamfor(); return; }
+        const mv = e.target.closest("button[data-mot]"); if (mv) { jmfMot = mv.dataset.mot; jmfVisa = 20; ritaJamfor(); return; }
         if (e.target.id === "jmfmer") { jmfVisa += 20; ritaJamfor(); return; }
         const m = e.target.closest("#jmfmil button[data-mil]"); if (m) { jmfMil = Number(m.dataset.mil); ritaJamfor(); }
       });
