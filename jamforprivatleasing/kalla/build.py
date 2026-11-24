@@ -367,7 +367,7 @@ antal_bilar = sum(m["n"] for m in MARKEN.values())
 # ---------- Startsidan ----------
 sidor["index.html"] = sida(
     "index.html",
-    f"Jämför privatleasing – {len({b['mkey'] for b in BILAR})} bilmodeller, billigast först ({MANAD}) | Jämföra Privatleasing",
+    f"Jämföra Privatleasing – jämför {len({b['mkey'] for b in BILAR})} bilmodeller, billigast först",
     f"Jämför {antal_bilar} privatleasingerbjudanden från märken och handlare på {len({b['mkey'] for b in BILAR})} nya bilmodeller. Insats och avgifter inräknade, billigast överst, kontrollerat varje dag.",
     f"""
   {HERO}
