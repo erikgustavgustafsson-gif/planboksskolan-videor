@@ -85,7 +85,7 @@ assert "Kan jag leasa bilen hos er?" in FAQ_LD
 EJBIL = ""   # formuläret "Hittar du inte din bil?" används inte när vi bara jämför
 
 HERO = """<header class="hero foto">
-    <img class="herobil" src="bilder/tiguan-960.webp" alt="" width="960" height="600" decoding="async">
+    <img class="herobil" src="bilder/hero-960.webp" alt="" width="960" height="600" decoding="async">
     <div class="wrap herotext">
       <h1>Jämför privatleasing på alla nya bilar</h1>
       <p class="heroingress">Märkenas och handlarnas erbjudanden sida vid sida – med insats och avgifter inräknade, billigast först och kontrollerade varje dag.</p>
@@ -160,7 +160,7 @@ def sida(fil, titel, beskr, innehall, aktiv="", sida_typ="", marke="", ld=None, 
       <ul id="kallor"></ul>
     </details>
   </section>
-  <footer>Jämföra Privatleasing · priser kontrollerade {KONTROLL} · nybilspriser från Skatteverket · foton från Wikimedia Commons</footer>
+  <footer>Jämföra Privatleasing · priser kontrollerade {KONTROLL} · nybilspriser från Skatteverket · bilder från biltillverkarna</footer>
 
   <script src="samtycke.js?v=__VER__"></script>
   <script src="paket.js?v=__VER__"></script>
@@ -624,7 +624,6 @@ sidor["sa-jamfor-vi.html"] = sida(
     <h2>När vi inte vet</h2>
     <p>Står körsträckan inte i handlarens annons gissar vi inte. Då står det "Körsträcka: fråga handlaren", vi räknar inget pris per mil och erbjudandet kan inte bli märkt Billigast. Saknas uppgift om service står det "fråga säljaren".</p>
     <h2>Betyget</h2>
-    <p>För erbjudanden där vi vet bilens nypris visar vi hur stor del av nypriset du betalar på 36 månader: under 40 % är Mycket bra, under 45 % Bra, under 55 % OK och däröver Dyrt.</p>
     <h2>Hur vi tjänar pengar</h2>
     <p>Jämföra Privatleasing är oberoende. Vissa länkar till säljare kan vara annonslänkar – då står det "Annonslänk" vid knappen, och vi kan få ersättning om du går vidare. <b>Ingen kan betala för att hamna högre upp.</b> Ordningen bestäms bara av priset.</p>
     <h2>Hittar du ett fel?</h2>
@@ -687,7 +686,7 @@ for par in PAR:
              ("Billigaste säljare", cell(a, b, lambda s2: (None, html.escape(SALJARE(s2["bast"]))))),
              ("Dyraste erbjudandet", cell(a, b, lambda s2: (None, kr(s2["max"]) + "/mån"))),
              ("Erbjudanden hos oss", cell(a, b, lambda s2: (s2["n"], f'{s2["n"]} st från {s2["saljare"]} säljare'), lagre=False))]
-    huvud = "".join(f'<th scope="col"><a href="privatleasing-{k}.html">{f"""<img src="bilder/{s2["bast"]["foto"]}-480.webp" alt="{html.escape(n)}" width="480" height="300" loading="lazy">""" if s2["bast"]["foto"] else ""}<span>{html.escape(s2["bast"]["marke"])}</span><b>{html.escape(s2["bast"]["mnamn"])}</b></a></th>' for k, s2, n in ((par[0], a, na), (par[1], b, nb)))
+    huvud = "".join(f'<th scope="col"><a href="privatleasing-{k}.html">{f"""<img src="bilder/{s2["bast"]["foto"]}-480.webp" alt="{html.escape(n)}" width="480" height="360" loading="lazy">""" if s2["bast"]["foto"] else ""}<span>{html.escape(s2["bast"]["marke"])}</span><b>{html.escape(s2["bast"]["mnamn"])}</b></a></th>' for k, s2, n in ((par[0], a, na), (par[1], b, nb)))
     fil = parfil(par)
     andra = [p for k in par for p in JMFMED.get(k, []) if p != par][:6]
     sidor[fil] = sida(

@@ -141,7 +141,7 @@
       .car a.piclink { grid-row: auto; }
       .cta { display: block; text-align: center; }
       .kallor ul { columns: 1; }
-      .car img.pic { height: 190px; }
+      .car img.pic { height: auto; aspect-ratio: 4 / 3; }
       .price { text-align: left; }
     }
 
@@ -990,7 +990,7 @@
       .summary .stat b { font-size: 21px; line-height: 1.2; margin: 2px 0; }
       .list { gap: 16px; }
       .car { grid-template-columns: 260px minmax(0, 1fr) minmax(300px, 340px); gap: 10px 28px; padding: 22px 24px; border-radius: 18px; align-items: start; }
-      .car .pic { width: 260px; height: 163px; border-radius: 12px; }
+      .car .pic { width: 260px; height: 195px; border-radius: 12px; }
       .car a.piclink { grid-row: 1 / span 4; }
       .car h3 { font-size: 22px; margin-top: 2px; }
       .car .brand { font-size: 12.5px; }
@@ -1013,7 +1013,7 @@
     }
     @media (min-width: 1100px) and (max-width: 1400px) {
       .car { grid-template-columns: 220px minmax(0, 1fr) minmax(260px, 300px); }
-      .car .pic { width: 220px; height: 138px; }
+      .car .pic { width: 220px; height: 165px; }
     }
     @media (min-width: 1100px) { header.hero.foto h1 { max-width: 1000px; } }
     @media (min-width: 1700px) {
@@ -1021,7 +1021,7 @@
       section.topp .wrap { max-width: 1680px; }
       #alla { grid-template-columns: 330px minmax(0, 1fr); column-gap: 44px; }
       .car { grid-template-columns: 300px minmax(0, 1fr) minmax(330px, 380px); gap: 10px 36px; padding: 26px 30px; }
-      .car .pic { width: 300px; height: 188px; }
+      .car .pic { width: 300px; height: 225px; }
       .jmflista { grid-template-columns: 1fr 1fr 1fr; }
       .raknasida, .textsida { margin-left: auto; margin-right: auto; }
     }
@@ -1419,18 +1419,20 @@ html[data-tema] .temaknapp:hover { border-color: var(--t-navtext); }
 html[data-tema="ljus"] .temaknapp .ikon-sol, html[data-tema="mork"] .temaknapp .ikon-mane { display: none; }
 @media (min-width: 900px) { html[data-tema] .temaknapp { order: 3; margin: 0 0 0 14px; } html[data-tema] .navrad { display: flex; align-items: center; } html[data-tema] .navlankar { margin-left: auto; } }
 
-/* Bilbilder: frilagda bilar (genomskinlig bakgrund) på en gemensam "scen" med mjuk markskugga */
-html[data-tema] { --t-scen: radial-gradient(58% 16% at 50% 90%, rgba(15,33,56,.22), rgba(15,33,56,0) 70%), linear-gradient(180deg, #F4F7FA 0%, #E6ECF2 100%); }
-html[data-tema="mork"] { --t-scen: radial-gradient(58% 16% at 50% 90%, rgba(0,0,0,.55), rgba(0,0,0,0) 70%), radial-gradient(90% 80% at 50% 35%, #1B3350 0%, #112337 60%, #0C1B2C 100%); }
+/* Bilbilder (24 nov 2026): tillverkarnas egna foton, med bakgrund, som fyller hela bildytan (4:3) */
+html[data-tema] { --t-scen: linear-gradient(180deg, #F4F7FA 0%, #E6ECF2 100%); }
+html[data-tema="mork"] { --t-scen: linear-gradient(180deg, #1B3350 0%, #0C1B2C 100%); }
 html[data-tema] .tkort .tbild, html[data-tema] .car .pic, html[data-tema] .car a.piclink, html[data-tema] .jmfbild, html[data-tema] .mssparade img, html[data-tema] .kkbild { background: var(--t-scen); }
-html[data-tema] .car img.pic { background: var(--t-scen); object-fit: contain; }
-html[data-tema] .jmfbild img { object-fit: contain; max-height: 320px; }
-html[data-tema] .tkort .tbild img { object-fit: contain; }
-html[data-tema] .herobil { background: var(--t-scen); }
-/* Foton som inte gick att frilägga visas som vanliga foton som fyller rutan */
-html[data-tema] img[src*="bilder/born-"], html[data-tema] img[src*="bilder/bz4xt-"], html[data-tema] img[src*="bilder/ex30cc-"], html[data-tema] img[src*="bilder/formentor-"], html[data-tema] img[src*="bilder/golf-"], html[data-tema] img[src*="bilder/ix2-"], html[data-tema] img[src*="bilder/passat-"], html[data-tema] img[src*="bilder/peaq-"], html[data-tema] img[src*="bilder/picanto-"], html[data-tema] img[src*="bilder/q4-"] { object-fit: cover !important; background: none !important; }
-html[data-tema] .tkort .tbild { aspect-ratio: 16 / 10; border-radius: 0; }
-html[data-tema] .tkort .tbild img { width: 100%; height: 100%; object-fit: contain; }
+html[data-tema] .car img.pic, html[data-tema] .tkort .tbild img, html[data-tema] .jmfbild img, html[data-tema] .svtab thead img, html[data-tema] .svbild img { object-fit: cover; }
+html[data-tema] .jmfbild img { max-height: 320px; width: 100%; aspect-ratio: 4 / 3; }
+html[data-tema] .herobil { background: none; }
+html[data-tema] .tkort .tbild { aspect-ratio: 4 / 3; border-radius: 0; }
+html[data-tema] .tkort .tbild img { width: 100%; height: 100%; }
+/* Topplistan: stora kort, tre i taget på dator, ett i taget på mobil – bläddra i sidled */
+html[data-tema] .topplista { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 31.5%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; gap: 20px; }
+html[data-tema] .tkort { scroll-snap-align: start; }
+@media (max-width: 639px) { html[data-tema] .topplista { grid-auto-columns: 92%; gap: 12px; } }
+@media (min-width: 640px) and (max-width: 900px) { html[data-tema] .topplista { grid-auto-columns: 48%; } }
 html[data-tema] .tkort .tinner { border-top: 0; }
 html[data-tema] .tkort .thuvud { border-top: 0; padding-top: 0; }
 @media (min-width: 900px) {
@@ -1457,7 +1459,7 @@ html[data-tema] .tkort .tfot .cta { flex: 1 1 100%; text-align: center; padding:
 .svbil { position: relative; padding-top: 14px; }
 .svbil a { display: block; text-decoration: none; color: var(--t-text, #0F2138) !important; }
 .svbild { display: block; aspect-ratio: 16 / 10; border-radius: 12px; background: var(--t-scen, #EEF2F6); margin-bottom: 8px; overflow: hidden; }
-.svbild img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.svbild img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .svbil small { display: block; font-size: 13px; color: var(--t-dampad, #56677B); font-weight: 500; }
 .svbil b { display: block; font-family: "Bricolage", "Inter", sans-serif; font-size: 19px; line-height: 1.15; letter-spacing: -0.015em; }
 .svbort { position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--t-kort, #fff); color: var(--t-text, #0F2138); box-shadow: 0 1px 4px rgba(0,0,0,.2); font-size: 14px; cursor: pointer; display: grid; place-content: center; }
@@ -1511,7 +1513,7 @@ html[data-tema] .svtab tbody th { background: var(--t-yta); color: var(--t-dampa
 html[data-tema] .svtab thead a, html[data-tema] .svtab a:not(.cta) { color: var(--t-text) !important; }
 html[data-tema] .svtab thead span { text-transform: none; letter-spacing: 0; color: var(--t-dampad); }
 html[data-tema] .svtab td.bast { background: var(--t-mintljus); color: var(--t-accent); }
-html[data-tema] .svtab thead img { object-fit: contain; background: var(--t-scen); }
+html[data-tema] .svtab thead img { object-fit: cover; background: var(--t-scen); }
 html[data-tema] .infokort div { background: var(--t-kort); color: var(--t-text); border: 1px solid var(--t-linje); box-shadow: none; }
 html[data-tema] .infokort div h3 { color: var(--t-text) !important; } html[data-tema] .infokort div p { color: var(--t-dampad) !important; }
 html[data-tema] .tagg.ja { background: #DFF5EC; color: #11734B !important; } html[data-tema] .tagg.oft { background: #FFF4D6; color: #8A5A00 !important; } html[data-tema] .tagg.nej { background: #FBE3E2; color: #A23431 !important; }

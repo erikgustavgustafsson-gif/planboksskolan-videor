@@ -36,7 +36,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
    - **Lokala erbjudanden:** är `kalla` en ny handlare/ort, lägg till orten i `ORT` och en regel i `ORTREGLER` i app.js (annars visas "fråga var bilen hämtas").
 2. **Nypris** ska alltid finnas. Källor: märkets prislista/konfigurator → pressmeddelande → Skatteverkets nybilspriser → motortidningar.
 3. **Nya modeller:** VW, Kia, Volvo, Škoda, Mercedes-Benz och Tesla ska ha alla modeller som erbjuds med privatleasing.
-4. **Bilder:** nya bilar behöver en bild av bilen ny, snett framifrån, 960×600 jpg i `site/bilder/`. Endast Wikimedia Commons-foton med CC BY / CC BY-SA / CC0 (aldrig pressbilder, aldrig retuscherade märkesbilder). Fotograf, fil och licens i `FOTON`.
+4. **Bilder (ändrat 24 nov 2026 på Eriks begäran):** vi använder tillverkarnas egna bilder (märkets svenska sajt, pressida, eller märkets kampanjbild hos auktoriserad återförsäljare om märkets sajt spärrar automatisk åtkomst – försök aldrig ta sig runt spärrar). Hela fotot med bakgrund, inget friläggande. Rätt modell och generation, helst snett framifrån, ingen text i bilden. Beskärs till 4:3 med bilen i mitten: `bilder/<nyckel>-960.webp` (960×720), `-480.webp` (480×360) och `<nyckel>.jpg`. Registrera upphov och källsida i `kalla/bildkallor.tsv` och i `const BILDKALLOR` i kalla/app.js. Wikimedia-bilder (FOTON) finns bara kvar där ingen tillverkarbild hittats (Tesla Model 3/Y, DFSK 500). Startsidans stora bil är `bilder/hero-960.webp` (frilagd, rör inte).
 5. **Uppdatera `const KONTROLL`** i kalla/app.js (t.ex. "8 nov 2026").
 6. **Bygg och testa:** `python3 kalla/build.py`, `node --check site/app.js`, öppna `site/index.html`, `site/alla-bilar.html` och en märkessida i Playwright (desktop + mobil, inga JS-fel, öppna konfiguratorn för en bil) och titta på en skärmbild.
 7. **Publicera** ändrade filer från `site/` till artifact-sluggen ovan, commit och push till `main`.
@@ -68,7 +68,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 ## Kakor och mätning (13 nov 2026)
 - `site/samtycke.js` innehåller kakrutan och Eriks ID:n (objektet `SPARNING`; Google Analytics `G-LX38W0PK9Q` är påslaget, övriga tomma = avstängda). **Ändra aldrig ID:na och skriv aldrig över filen.** Inget får laddas från andra företag utanför den filen – allt sådant kräver besökarens samtycke.
 - Slås fler tjänster på (Ads, Meta, TikTok, AdSense) måste integritetspolicyn uppdateras samtidigt. Prisbevakningen (bevaka.php) ligger kvar på grenen `kakor-senare`.
-- Nya bilbilder: använd det snabba flödet i `verktyg/bildflode/LASMIG.md`.
+- Nya bilbilder: se punkt 4 under Daglig körning (tillverkarnas bilder). Det gamla friläggningsflödet i `verktyg/bildflode/` används inte längre.
 
 ## Konto och kontakt med säljare (16 nov 2026)
 - `site/konto.php`: Mina sidor. Inloggning med e-postlänk (inga lösenord), sparade bilar, kontakthistorik, radera konto. Data i `data/konto-<slump>/` på servern – **aldrig i repot**, och data/ ska aldrig skrivas över av zip-paketet.
@@ -80,7 +80,7 @@ Sidan hette tidigare Leasingkollen. **Använd aldrig namnet Leasingkollen eller 
 - Topp 5 (`const TOPP`) = Sveriges mest privatleasade modeller. Kontrollera statistiken en gång i månaden.
 - Mercedes-Benz.se och tesla.com blockerar automatiska webbläsare – kontrollera via WebSearch och återförsäljare.
 - Peugeot via Ayvens har obligatorisk försäkring 395 kr/mån (fältet `forsakring`).
-- Ändra aldrig beräkningsmetoden (andel av nypris på 36 mån; <40 % Mycket bra, <45 % Bra, <55 % OK, annars Dyrt) utan att användaren bett om det.
+- Ändra aldrig beräkningsmetoden (andel av nypris på 36 mån) utan att användaren bett om det. Märket "Mycket bra/Bra/OK/Dyrt" visas inte längre på sidan (borttaget 24 nov 2026 på Eriks begäran) – lägg inte tillbaka det.
 - Ändra inte design, logotyp, sidstruktur eller texter – bara data. Ta inte bort bildkällorna.
 - `site/statistik.php` (användarens privata statistiksida med hemlig nyckel) ligger medvetet inte i repot, som är publikt. Lägg aldrig in den.
 - `site/oversikt.php` (22 nov 2026) är Eriks statistiksida som går ut med vanliga zip-paketet. Den innehåller bara SHA-256 av nyckeln, aldrig själva nyckeln – skriv aldrig in nyckeln i repot, i commit-meddelanden eller i rapporter. Öppnas med `oversikt.php?nyckel=…`.
