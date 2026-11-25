@@ -1,0 +1,74 @@
+{
+  "slug": "2026-11-25_borsraset-vad-gor-du",
+  "title": "Nasdaq: sämsta veckan sedan pandemin – sälja nu?",
+  "caption": "Nasdaq föll 10 % förra veckan – sämsta veckan sedan pandemin 📉 Stockholmsbörsen tappade över 5 % och CNN:s rädsloindex stod på 10 av 100. Ingen vet vad som händer härnäst – tänk på när du behöver pengarna. Inget köp- eller säljråd.\n\nHar du gjort något med dina fonder? 👇\n\n#börsen #aktier #fonder #pension #plånboksskolan",
+  "pinned_comment": "Inget köp- eller säljråd. Placera 23 nov: Nasdaq −10 % förra veckan (sämsta sedan pandemins början), Stockholmsbörsen −5 %, CNN Fear & Greed 10 (extrem rädsla). Handelsbankens Mattias Sundling: sedan 80-talet har 10 % ras på S&P 500 följts av recession 6 gånger, 17 gånger inte. Swedbanks Robert Oldstrand: \"Det kan lika gärna gå ner 10 % till.\" Historisk avkastning är ingen garanti.",
+  "sources": [
+    "https://www.placera.se/intervju/strateg-ser-koplage-efter-raset-kan-lika-garna-ga-ner-10-till-2026-11-23 (2026-11-23: Nasdaq −10 % förra veckan, sämsta sedan pandemins början; OMXS över −5 % under veckan; Sundling 6 recessioner vs 17 utan efter 10 % ras S&P 500 sedan 80-talet; Oldstrand 'kan lika gärna gå ner 10 % till')",
+    "https://www.placera.se/nyheter/fear-greed-index-rasar-extrem-radsla-pa-wall-street-2026-11-23 (2026-11-23: CNN Fear & Greed 10, extrem rädsla, 18 i torsdags)",
+    "https://www.borskollen.se/nyheter/27/ai-rally-globalt-men-stockholmsborsen-ser-ut-att-backa-efter-lyftet-i-mandags (2026-11-24: OMXS +2,5 % måndag, −1,2 % tisdag, +7,0 % i år)"
+  ],
+  "cover": {
+    "title": [
+      "BÖRSEN RASAR",
+      "SÄLJA NU?"
+    ],
+    "pill": "Sämsta veckan sedan 2020",
+    "label": "Nasdaq på en vecka",
+    "big": "−10 %",
+    "big_color": "red"
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "say": "Nasdaq rasade tio procent på en vecka – värst sedan pandemin.",
+      "kicker": "NASDAQ FÖRRA VECKAN",
+      "big": "−10 %",
+      "sub": "värst sedan pandemin",
+      "punch": [
+        "Sälja nu?"
+      ]
+    },
+    {
+      "type": "number",
+      "say": "Rädsloindexet föll till tio av hundra.",
+      "top": "RÄDSLOINDEX",
+      "value": 10,
+      "suffix": " av 100",
+      "color": "red",
+      "sub": "extrem rädsla",
+      "note": "CNN Fear & Greed via Placera"
+    },
+    {
+      "type": "number",
+      "say": "Sedan åttiotalet: sex sådana ras följdes av recession. Sjutton inte.",
+      "top": "10 % RAS SEDAN 80-TALET",
+      "value": 17,
+      "suffix": " gånger",
+      "color": "green",
+      "sub": "ingen recession",
+      "value2": 6,
+      "suffix2": " gånger",
+      "color2": "red",
+      "sub2": "recession",
+      "note": "S&P 500 – Handelsbanken via Placera"
+    },
+    {
+      "type": "statement",
+      "say": "Men det kan lika gärna falla tio procent till, säger Swedbank.",
+      "title": "INGEN VET",
+      "lines": [
+        "Swedbanks strateg:"
+      ],
+      "highlight": "−10 % TILL?",
+      "chip": "lika gärna, enligt Swedbank"
+    },
+    {
+      "type": "cta",
+      "say": "Tänk på när du behöver pengarna. Följ Plånboksskolan.",
+      "line1": "Tänk på din",
+      "big": "HORISONT",
+      "line2": "Följ Plånboksskolan"
+    }
+  ]
+}
