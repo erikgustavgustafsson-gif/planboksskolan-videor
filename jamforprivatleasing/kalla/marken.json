@@ -1,6 +1,6 @@
 {
  "BMW": {
-  "n": 41,
+  "n": 42,
   "min": 2795,
   "mod": "1-serie",
   "driv": [
@@ -11,7 +11,7 @@
   ]
  },
  "BYD": {
-  "n": 33,
+  "n": 48,
   "min": 3290,
   "mod": "Dolphin G",
   "driv": [
@@ -20,7 +20,7 @@
   ]
  },
  "Dacia": {
-  "n": 73,
+  "n": 72,
   "min": 1990,
   "mod": "Sandero",
   "driv": [
@@ -29,7 +29,7 @@
   ]
  },
  "Ford": {
-  "n": 59,
+  "n": 58,
   "min": 3495,
   "mod": "Puma Gen-E",
   "driv": [
@@ -47,18 +47,18 @@
   ]
  },
  "Hyundai": {
-  "n": 228,
+  "n": 229,
   "min": 2395,
   "mod": "i20",
   "driv": [
-   "Bensin",
    "Hybrid",
+   "Bensin",
    "El",
    "Laddhybrid"
   ]
  },
  "Kia": {
-  "n": 383,
+  "n": 386,
   "min": 2896,
   "mod": "EV2",
   "driv": [
@@ -151,12 +151,13 @@
   ]
  },
  "Cupra": {
-  "n": 50,
+  "n": 53,
   "min": 2495,
   "mod": "Formentor",
   "driv": [
    "El",
    "Bensin",
+   "Hybrid",
    "Laddhybrid"
   ]
  },
@@ -254,7 +255,7 @@
   ]
  },
  "Skoda": {
-  "n": 69,
+  "n": 70,
   "min": 2395,
   "mod": "Kamiq",
   "driv": [
@@ -274,7 +275,7 @@
   ]
  },
  "Toyota": {
-  "n": 71,
+  "n": 72,
   "min": 2995,
   "mod": "Aygo X",
   "driv": [
@@ -286,8 +287,8 @@
  },
  "Volkswagen": {
   "n": 244,
-  "min": 1995,
-  "mod": "Polo",
+  "min": 2395,
+  "mod": "T-Roc",
   "driv": [
    "Bensin",
    "Hybrid",
