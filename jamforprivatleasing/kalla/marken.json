@@ -10,15 +10,6 @@
    "Laddhybrid"
   ]
  },
- "BYD": {
-  "n": 38,
-  "min": 3290,
-  "mod": "Dolphin G",
-  "driv": [
-   "El",
-   "Laddhybrid"
-  ]
- },
  "Dacia": {
   "n": 71,
   "min": 1990,
@@ -47,7 +38,7 @@
   ]
  },
  "Hyundai": {
-  "n": 239,
+  "n": 246,
   "min": 2395,
   "mod": "i20",
   "driv": [
@@ -58,7 +49,7 @@
   ]
  },
  "Kia": {
-  "n": 389,
+  "n": 393,
   "min": 2896,
   "mod": "EV2",
   "driv": [
@@ -77,7 +68,7 @@
   ]
  },
  "MINI": {
-  "n": 24,
+  "n": 25,
   "min": 2995,
   "mod": "Cooper",
   "driv": [
@@ -98,7 +89,7 @@
   ]
  },
  "Nissan": {
-  "n": 153,
+  "n": 152,
   "min": 2899,
   "mod": "Juke",
   "driv": [
@@ -127,8 +118,8 @@
   ]
  },
  "Audi": {
-  "n": 135,
-  "min": 2795,
+  "n": 136,
+  "min": 2695,
   "mod": "A3 Sportback",
   "driv": [
    "El",
@@ -136,6 +127,15 @@
    "Hybrid",
    "Laddhybrid",
    "Diesel"
+  ]
+ },
+ "BYD": {
+  "n": 34,
+  "min": 3290,
+  "mod": "Dolphin G",
+  "driv": [
+   "Laddhybrid",
+   "El"
   ]
  },
  "Citroën": {
@@ -156,8 +156,8 @@
   "driv": [
    "El",
    "Bensin",
-   "Hybrid",
-   "Laddhybrid"
+   "Laddhybrid",
+   "Hybrid"
   ]
  },
  "DFSK": {
@@ -187,12 +187,11 @@
   ]
  },
  "Lynk & Co": {
-  "n": 2,
+  "n": 1,
   "min": 4895,
   "mod": "01",
   "driv": [
-   "Laddhybrid",
-   "Hybrid"
+   "Laddhybrid"
   ]
  },
  "Mazda": {
@@ -238,7 +237,7 @@
   ]
  },
  "Polestar": {
-  "n": 9,
+  "n": 10,
   "min": 6995,
   "mod": "4",
   "driv": [
@@ -274,7 +273,7 @@
   ]
  },
  "Toyota": {
-  "n": 73,
+  "n": 74,
   "min": 2995,
   "mod": "Aygo X",
   "driv": [
@@ -296,7 +295,7 @@
   ]
  },
  "Volvo": {
-  "n": 58,
+  "n": 59,
   "min": 3790,
   "mod": "EX30",
   "driv": [
